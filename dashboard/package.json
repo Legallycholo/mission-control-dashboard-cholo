@@ -34,6 +34,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "node-domexception": "^2.0.2"
   }
 }
