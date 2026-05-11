@@ -107,15 +107,15 @@ export default function CompetitividadPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Competitividad</h1>
-          <p className="text-zinc-400 mt-1">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Competitividad</h1>
+          <p className="text-zinc-600 mt-1">
             Compara precios en tiempo real contra la competencia vía Google Shopping.
           </p>
         </div>
         {searchesLeft !== null && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-white/10 bg-zinc-950/50 text-sm">
-            <CreditCard className="w-4 h-4 text-zinc-500" />
-            <span className="text-zinc-400">{searchesLeft.toLocaleString()} créditos restantes</span>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 bg-white/85 text-sm">
+            <CreditCard className="w-4 h-4 text-zinc-600" />
+            <span className="text-zinc-600">{searchesLeft.toLocaleString()} créditos restantes</span>
           </div>
         )}
       </div>
@@ -123,18 +123,18 @@ export default function CompetitividadPage() {
       {/* Search Form */}
       <form
         onSubmit={handleSearch}
-        className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl space-y-4"
+        className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl space-y-4"
       >
-        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">Buscar Producto</h2>
+        <h2 className="text-sm font-semibold text-zinc-600 uppercase tracking-widest">Buscar Producto</h2>
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
             <input
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder='ej. "iPhone 15 128GB" o "Xiaomi Redmi Note 13"'
-              className="w-full bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
             />
           </div>
           <input
@@ -144,15 +144,15 @@ export default function CompetitividadPage() {
             value={ourPrice}
             onChange={e => setOurPrice(e.target.value)}
             placeholder="Nuestro precio (USD)"
-            className="w-full md:w-48 bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+            className="w-full md:w-48 bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
           />
           <select
             value={country}
             onChange={e => setCountry(e.target.value)}
-            className="w-full md:w-36 bg-zinc-900/60 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+            className="w-full md:w-36 bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
           >
             {COUNTRY_OPTIONS.map(c => (
-              <option key={c.value} value={c.value} className="bg-zinc-900">{c.label}</option>
+              <option key={c.value} value={c.value} className="bg-zinc-50">{c.label}</option>
             ))}
           </select>
           <button
@@ -221,12 +221,12 @@ export default function CompetitividadPage() {
           )}
 
           {/* Results list */}
-          <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+          <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-lg font-bold text-white">Resultados Google Shopping</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  {result.competitors.length} resultados · <span className="text-zinc-300">"{result.query}"</span>
+                <h2 className="text-lg font-bold text-zinc-900">Resultados Google Shopping</h2>
+                <p className="text-xs text-zinc-600 mt-0.5">
+                  {result.competitors.length} resultados · <span className="text-zinc-600">"{result.query}"</span>
                   {result.ourPrice ? ` · Nuestro precio: ${fmt(result.ourPrice)}` : ''}
                 </p>
               </div>
@@ -242,10 +242,10 @@ export default function CompetitividadPage() {
 
       {/* Empty state */}
       {!result && !loading && !error && (
-        <div className="p-16 rounded-3xl border border-white/10 bg-zinc-950/50 text-center">
+        <div className="p-16 rounded-3xl border border-zinc-200 bg-white/85 text-center">
           <ShieldCheck className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
-          <h3 className="text-white font-semibold text-lg mb-2">Busca un producto para comparar</h3>
-          <p className="text-zinc-500 text-sm max-w-sm mx-auto">
+          <h3 className="text-zinc-900 font-semibold text-lg mb-2">Busca un producto para comparar</h3>
+          <p className="text-zinc-600 text-sm max-w-sm mx-auto">
             Ingresa el nombre del producto y opcionalmente tu precio para ver cómo te posicionas frente a la competencia en Google Shopping.
           </p>
         </div>
@@ -279,7 +279,7 @@ function PriceBanner({ ourPrice, avgCompetitor, lowestCompetitor }: {
             ? `Eres ${Math.abs(vsAvgPct)}% más barato que el promedio`
             : `Eres ${Math.abs(vsAvgPct)}% más caro que el promedio`}
         </p>
-        <p className="text-xs text-zinc-500 mt-0.5">
+        <p className="text-xs text-zinc-600 mt-0.5">
           Precio promedio competencia: {fmt(avgCompetitor)}
           {vsLowest !== null && (vsLowest
             ? ' · Eres el más barato del mercado 🎯'
@@ -298,17 +298,17 @@ function CompetitorRow({ competitor: c, ourPrice, rank }: {
   const isEqual       = hasComparison && c.extractedPrice === ourPrice!;
 
   return (
-    <div className="flex items-start gap-4 p-4 rounded-2xl border border-white/5 bg-zinc-900/30 hover:bg-zinc-900/60 transition-colors">
+    <div className="flex items-start gap-4 p-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/30 hover:bg-zinc-50 transition-colors">
       <span className="text-zinc-600 font-mono text-xs w-5 pt-1 flex-shrink-0">{rank}</span>
       {c.thumbnail ? (
-        <img src={c.thumbnail} alt={c.title} className="w-14 h-14 rounded-xl object-cover bg-zinc-800 flex-shrink-0" />
+        <img src={c.thumbnail} alt={c.title} className="w-14 h-14 rounded-xl object-cover bg-zinc-100 flex-shrink-0" />
       ) : (
-        <div className="w-14 h-14 rounded-xl bg-zinc-800 flex-shrink-0" />
+        <div className="w-14 h-14 rounded-xl bg-zinc-100 flex-shrink-0" />
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-white text-sm font-medium leading-snug line-clamp-2">{c.title}</p>
+        <p className="text-zinc-900 text-sm font-medium leading-snug line-clamp-2">{c.title}</p>
         <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-          <span className="text-zinc-400 text-xs font-medium">{c.source}</span>
+          <span className="text-zinc-600 text-xs font-medium">{c.source}</span>
           {c.rating && (
             <span className="flex items-center gap-1 text-xs text-amber-400">
               <Star className="w-3 h-3" />
@@ -316,7 +316,7 @@ function CompetitorRow({ competitor: c, ourPrice, rank }: {
             </span>
           )}
           {c.delivery && (
-            <span className="flex items-center gap-1 text-xs text-zinc-500">
+            <span className="flex items-center gap-1 text-xs text-zinc-600">
               <Truck className="w-3 h-3" />
               {c.delivery}
             </span>
@@ -324,11 +324,11 @@ function CompetitorRow({ competitor: c, ourPrice, rank }: {
         </div>
       </div>
       <div className="flex-shrink-0 text-right">
-        <p className="text-white font-bold">{c.price}</p>
+        <p className="text-zinc-900 font-bold">{c.price}</p>
         {hasComparison && (
           <p className={cn(
             'text-xs font-medium mt-0.5',
-            isCheaper ? 'text-rose-400' : isEqual ? 'text-zinc-400' : 'text-emerald-400'
+            isCheaper ? 'text-rose-400' : isEqual ? 'text-zinc-600' : 'text-emerald-400'
           )}>
             {isCheaper
               ? `${Math.abs(c.diffPct!)}% más barato`
@@ -341,7 +341,7 @@ function CompetitorRow({ competitor: c, ourPrice, rank }: {
             href={c.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[10px] text-zinc-600 hover:text-zinc-300 mt-1 transition-colors"
+            className="inline-flex items-center gap-1 text-[10px] text-zinc-600 hover:text-zinc-600 mt-1 transition-colors"
           >
             Ver <ExternalLink className="w-2.5 h-2.5" />
           </a>
@@ -362,15 +362,15 @@ function KpiCard({ label, value, sub, color, icon: Icon }: {
     amber:   'text-amber-400   bg-amber-500/10   border-amber-500/20',
   };
   return (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium text-zinc-400 leading-tight">{label}</p>
+        <p className="text-xs font-medium text-zinc-600 leading-tight">{label}</p>
         <div className={cn('p-1.5 rounded-lg border', styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-white tracking-tight">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1">{sub}</p>
+      <p className="text-2xl font-bold text-zinc-900 tracking-tight">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1">{sub}</p>
       <div className={cn('absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity', styles[color].split(' ')[1])} />
     </div>
   );

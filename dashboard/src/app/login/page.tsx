@@ -47,17 +47,17 @@ function LoginForm() {
         {/* Logo / Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 mb-4 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
-            <span className="text-2xl font-black text-blue-400">G</span>
+            <span className="text-2xl font-black text-blue-600">G</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">GMS PRO</h1>
-          <p className="text-zinc-500 text-sm mt-1">Dashboard de KPIs · E-commerce</p>
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight">GMS PRO</h1>
+          <p className="text-zinc-600 text-sm mt-1">Dashboard de KPIs · E-commerce</p>
         </div>
 
         {/* Card */}
         <div className="glass-card">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white">Bienvenido de vuelta</h2>
-            <p className="text-zinc-500 text-sm mt-1">Ingresa tus credenciales para continuar</p>
+            <h2 className="text-xl font-semibold text-zinc-900">Bienvenido de vuelta</h2>
+            <p className="text-zinc-600 text-sm mt-1">Ingresa tus credenciales para continuar</p>
           </div>
 
           {error && (
@@ -68,7 +68,7 @@ function LoginForm() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-600 mb-1.5">
                 Correo electrónico
               </label>
               <input
@@ -77,12 +77,12 @@ function LoginForm() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="tu@email.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-white/8 transition-all"
+                className="w-full bg-zinc-100/80 border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-zinc-100 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-600 mb-1.5">
                 Contraseña
               </label>
               <input
@@ -91,7 +91,7 @@ function LoginForm() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-white/8 transition-all"
+                className="w-full bg-zinc-100/80 border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-zinc-100 transition-all"
               />
             </div>
 
@@ -106,7 +106,7 @@ function LoginForm() {
 
           <p className="text-center text-sm text-zinc-600 mt-6">
             ¿No tienes acceso?{' '}
-            <Link href="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
               Solicitar acceso
             </Link>
           </p>
@@ -124,7 +124,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center px-4 text-zinc-500 text-sm">
+        <div className="min-h-screen flex items-center justify-center px-4 text-zinc-600 text-sm">
           Cargando…
         </div>
       }

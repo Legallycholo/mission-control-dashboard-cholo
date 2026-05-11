@@ -27,18 +27,18 @@ export default function PendingPage() {
             </svg>
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-2">Acceso pendiente</h2>
-          <p className="text-zinc-400 text-sm leading-relaxed mb-2">
+          <h2 className="text-2xl font-bold text-zinc-900 mb-2">Acceso pendiente</h2>
+          <p className="text-zinc-600 text-sm leading-relaxed mb-2">
             Tu cuenta está pendiente de aprobación por un administrador de GMS PRO.
           </p>
           <p className="text-zinc-600 text-xs leading-relaxed">
             Una vez aprobado, podrás ingresar automáticamente. No necesitas hacer nada más.
           </p>
 
-          <div className="mt-8 pt-6 border-t border-white/5">
+          <div className="mt-8 pt-6 border-t border-zinc-200/70">
             <button
               onClick={handleSignOut}
-              className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="text-sm text-zinc-600 hover:text-zinc-600 transition-colors"
             >
               Cerrar sesión
             </button>

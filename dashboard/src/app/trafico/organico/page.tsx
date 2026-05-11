@@ -130,30 +130,30 @@ export default function TraficoOrganicoPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Tráfico Orgánico (SEO)</h1>
-          <p className="text-zinc-400 mt-1">Rendimiento en motores de búsqueda vía Google Search Console.</p>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Tráfico Orgánico (SEO)</h1>
+          <p className="text-zinc-600 mt-1">Rendimiento en motores de búsqueda vía Google Search Console.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
-            <CalendarDays className="w-4 h-4 text-zinc-400 ml-2" />
+          <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 p-1.5 rounded-xl backdrop-blur-md">
+            <CalendarDays className="w-4 h-4 text-zinc-600 ml-2" />
             <input 
               type="date" 
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
-            <span className="text-zinc-500">-</span>
+            <span className="text-zinc-600">-</span>
             <input 
               type="date" 
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
           </div>
           <button 
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-white/5"
+            className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -194,11 +194,11 @@ export default function TraficoOrganicoPage() {
       </div>
 
       {/* Trend Chart */}
-      <div className="w-full p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+      <div className="w-full p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
         <div className="flex items-center justify-between mb-6 relative z-10">
           <div>
-            <h2 className="text-lg font-bold text-white">Evolución de Clics vs Impresiones</h2>
-            <p className="text-sm text-zinc-400">Rendimiento diario orgánico</p>
+            <h2 className="text-lg font-bold text-zinc-900">Evolución de Clics vs Impresiones</h2>
+            <p className="text-sm text-zinc-600">Rendimiento diario orgánico</p>
           </div>
         </div>
         
@@ -248,10 +248,10 @@ export default function TraficoOrganicoPage() {
                   axisLine={false}
                   tickFormatter={(val) => val >= 1000 ? `${(val/1000).toFixed(1)}k` : val}
                 />
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
                 <RechartsTooltip 
-                  contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
-                  itemStyle={{ color: '#fff' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
+                  itemStyle={{ color: '#18181b' }}
                   labelFormatter={(label) => `Fecha: ${label}`}
                 />
                 <Area 
@@ -277,7 +277,7 @@ export default function TraficoOrganicoPage() {
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-zinc-500">No hay datos</div>
+            <div className="w-full h-full flex items-center justify-center text-zinc-600">No hay datos</div>
           )}
         </div>
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -285,8 +285,8 @@ export default function TraficoOrganicoPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Top Queries Table */}
-        <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
-          <h2 className="text-lg font-bold text-white mb-6 relative z-10">Top Consultas (Keywords)</h2>
+        <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
+          <h2 className="text-lg font-bold text-zinc-900 mb-6 relative z-10">Top Consultas (Keywords)</h2>
           <div className="relative z-10 overflow-x-auto">
             {loading ? (
               <div className="w-full h-48 flex items-center justify-center">
@@ -294,7 +294,7 @@ export default function TraficoOrganicoPage() {
               </div>
             ) : data && data.topQueries && data.topQueries.length > 0 ? (
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/50">
+                <thead className="text-xs text-zinc-600 uppercase bg-zinc-50">
                   <tr>
                     <th className="px-4 py-3 rounded-tl-lg">Keyword</th>
                     <th className="px-4 py-3 text-right">Clics</th>
@@ -305,12 +305,12 @@ export default function TraficoOrganicoPage() {
                 </thead>
                 <tbody>
                   {data.topQueries.slice(0, 50).map((q, i) => (
-                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr key={i} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
                       <td className="px-4 py-3 font-medium text-blue-400 truncate max-w-[200px]" title={q.query}>
                         {q.query}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium text-white">{formatNumber(q.clicks)}</td>
-                      <td className="px-4 py-3 text-right text-zinc-400">{formatNumber(q.impressions)}</td>
+                      <td className="px-4 py-3 text-right font-medium text-zinc-900">{formatNumber(q.clicks)}</td>
+                      <td className="px-4 py-3 text-right text-zinc-600">{formatNumber(q.impressions)}</td>
                       <td className="px-4 py-3 text-right text-purple-400">{formatPos(q.position)}</td>
                       <td className="px-4 py-3 text-right text-amber-400">{formatPercent(q.ctr)}</td>
                     </tr>
@@ -318,14 +318,14 @@ export default function TraficoOrganicoPage() {
                 </tbody>
               </table>
             ) : (
-              <div className="w-full h-48 flex items-center justify-center text-zinc-500">No hay datos</div>
+              <div className="w-full h-48 flex items-center justify-center text-zinc-600">No hay datos</div>
             )}
           </div>
         </div>
 
         {/* Top Pages Table */}
-        <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
-          <h2 className="text-lg font-bold text-white mb-6 relative z-10">Top Páginas de Aterrizaje</h2>
+        <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
+          <h2 className="text-lg font-bold text-zinc-900 mb-6 relative z-10">Top Páginas de Aterrizaje</h2>
           <div className="relative z-10 overflow-x-auto">
             {loading ? (
               <div className="w-full h-48 flex items-center justify-center">
@@ -333,7 +333,7 @@ export default function TraficoOrganicoPage() {
               </div>
             ) : data && data.topPages && data.topPages.length > 0 ? (
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/50">
+                <thead className="text-xs text-zinc-600 uppercase bg-zinc-50">
                   <tr>
                     <th className="px-4 py-3 rounded-tl-lg">URL</th>
                     <th className="px-4 py-3 text-right">Clics</th>
@@ -344,11 +344,11 @@ export default function TraficoOrganicoPage() {
                   {data.topPages.slice(0, 50).map((p, i) => {
                     const shortUrl = p.page.replace('https://gsmpro.cl', '').replace('https://www.gsmpro.cl', '');
                     return (
-                      <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                      <tr key={i} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
                         <td className="px-4 py-3 font-medium text-zinc-200 truncate max-w-[280px]" title={p.page}>
                           {shortUrl}
                         </td>
-                        <td className="px-4 py-3 text-right font-medium text-white">{formatNumber(p.clicks)}</td>
+                        <td className="px-4 py-3 text-right font-medium text-zinc-900">{formatNumber(p.clicks)}</td>
                         <td className="px-4 py-3 text-right text-purple-400">{formatPos(p.position)}</td>
                       </tr>
                     );
@@ -356,7 +356,7 @@ export default function TraficoOrganicoPage() {
                 </tbody>
               </table>
             ) : (
-              <div className="w-full h-48 flex items-center justify-center text-zinc-500">No hay datos</div>
+              <div className="w-full h-48 flex items-center justify-center text-zinc-600">No hay datos</div>
             )}
           </div>
         </div>
@@ -374,23 +374,23 @@ function KpiCard({ title, value, icon: Icon, color, loading }: { title: string, 
     amber: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
     purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
     rose: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
-    zinc: 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20',
+    zinc: 'text-zinc-600 bg-zinc-500/10 border-zinc-500/20',
   };
 
   return (
-    <div className="p-5 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl flex flex-col relative overflow-hidden group">
+    <div className="p-5 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl flex flex-col relative overflow-hidden group">
       <div className="flex justify-between items-start relative z-10">
-        <p className="text-sm font-medium text-zinc-400">{title}</p>
+        <p className="text-sm font-medium text-zinc-600">{title}</p>
         <div className={cn("p-2 rounded-xl border", colorStyles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
       <div className="mt-4 relative z-10">
         {loading ? (
-           <div className="h-8 w-24 bg-white/5 rounded animate-pulse" />
+           <div className="h-8 w-24 bg-zinc-100/80 rounded animate-pulse" />
         ) : (
           <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-bold text-white tracking-tight">{value}</h3>
+            <h3 className="text-3xl font-bold text-zinc-900 tracking-tight">{value}</h3>
           </div>
         )}
       </div>

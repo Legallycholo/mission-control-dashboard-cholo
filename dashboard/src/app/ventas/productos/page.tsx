@@ -117,30 +117,30 @@ export default function VentasProductosPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Ventas: Análisis de Productos</h1>
-          <p className="text-zinc-400 mt-1">Rendimiento por SKU, Variantes y Marcas.</p>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Ventas: Análisis de Productos</h1>
+          <p className="text-zinc-600 mt-1">Rendimiento por SKU, Variantes y Marcas.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
-            <CalendarDays className="w-4 h-4 text-zinc-400 ml-2" />
+          <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 p-1.5 rounded-xl backdrop-blur-md">
+            <CalendarDays className="w-4 h-4 text-zinc-600 ml-2" />
             <input 
               type="date" 
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
-            <span className="text-zinc-500">-</span>
+            <span className="text-zinc-600">-</span>
             <input 
               type="date" 
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
           </div>
           <button 
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-white/5"
+            className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -151,12 +151,12 @@ export default function VentasProductosPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Top Brands Chart */}
-        <div className="lg:col-span-1 p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl flex flex-col relative overflow-hidden group">
+        <div className="lg:col-span-1 p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl flex flex-col relative overflow-hidden group">
           <div className="flex items-center gap-2 mb-6 relative z-10">
             <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
               <Tag className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-bold text-white">Top 10 Marcas</h2>
+            <h2 className="text-lg font-bold text-zinc-900">Top 10 Marcas</h2>
           </div>
           
           <div className="relative z-10 w-full" style={{ height: data?.topBrands ? Math.max(150, data.topBrands.slice(0, 10).length * 45 + 50) : 350 }}>
@@ -171,12 +171,12 @@ export default function VentasProductosPage() {
                   layout="vertical"
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={true} vertical={false} />
-                  <XAxis type="number" stroke="#52525b" fontSize={12} tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
-                  <YAxis type="category" dataKey="brand" stroke="#52525b" fontSize={11} width={80} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" horizontal={true} vertical={false} />
+                  <XAxis type="number" stroke="#71717a" fontSize={12} tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} />
+                  <YAxis type="category" dataKey="brand" stroke="#71717a" fontSize={11} width={80} />
                   <RechartsTooltip 
-                    cursor={{fill: '#27272a', opacity: 0.4}}
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
+                    cursor={{fill: '#e4e4e7', opacity: 0.45}}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
                     formatter={(value: any) => [formatCurrency(Number(value)), 'Ingresos']}
                   />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
@@ -187,19 +187,19 @@ export default function VentasProductosPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-[350px] flex items-center justify-center text-zinc-500">No hay datos</div>
+              <div className="w-full h-[350px] flex items-center justify-center text-zinc-600">No hay datos</div>
             )}
           </div>
           <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
         </div>
 
         {/* Top Products Table */}
-        <div className="lg:col-span-2 p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
+        <div className="lg:col-span-2 p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
           <div className="flex items-center gap-2 mb-6 relative z-10">
             <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
               <Package className="w-5 h-5" />
             </div>
-            <h2 className="text-lg font-bold text-white">Ranking de Productos (Top 50)</h2>
+            <h2 className="text-lg font-bold text-zinc-900">Ranking de Productos (Top 50)</h2>
           </div>
           
           <div className="relative z-10 overflow-x-auto">
@@ -209,7 +209,7 @@ export default function VentasProductosPage() {
               </div>
             ) : data && data.topProducts && data.topProducts.length > 0 ? (
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/50">
+                <thead className="text-xs text-zinc-600 uppercase bg-zinc-50">
                   <tr>
                     <th className="px-4 py-3 rounded-tl-lg">Producto</th>
                     <th className="px-4 py-3">Marca</th>
@@ -220,17 +220,17 @@ export default function VentasProductosPage() {
                 </thead>
                 <tbody>
                   {data.topProducts.slice(0, 50).map((product, i) => (
-                    <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr key={i} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
                       <td className="px-4 py-3 font-medium text-zinc-200 truncate max-w-[200px]" title={product.title}>
                         {product.title}
                       </td>
-                      <td className="px-4 py-3 text-zinc-400">
+                      <td className="px-4 py-3 text-zinc-600">
                         {product.brand}
                       </td>
                       <td className="px-4 py-3 text-right font-medium text-emerald-400">
                         {product.quantity}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium text-white">
+                      <td className="px-4 py-3 text-right font-medium text-zinc-900">
                         {formatCurrency(product.revenue)}
                       </td>
                       <td className="px-4 py-3 text-right text-purple-400 font-mono text-xs">
@@ -241,7 +241,7 @@ export default function VentasProductosPage() {
                 </tbody>
               </table>
             ) : (
-              <div className="w-full h-48 flex items-center justify-center text-zinc-500">No hay datos</div>
+              <div className="w-full h-48 flex items-center justify-center text-zinc-600">No hay datos</div>
             )}
           </div>
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl" />

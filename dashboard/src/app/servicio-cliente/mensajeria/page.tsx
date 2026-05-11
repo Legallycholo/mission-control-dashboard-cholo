@@ -116,30 +116,30 @@ export default function SupportPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Mensajería CRM</h1>
-          <p className="text-zinc-400 mt-1">Chat de soporte Crisp · Análisis de rendimiento, SLA e inteligencia emocional.</p>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Mensajería CRM</h1>
+          <p className="text-zinc-600 mt-1">Chat de soporte Crisp · Análisis de rendimiento, SLA e inteligencia emocional.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
-            <CalendarDays className="w-4 h-4 text-zinc-400 ml-2" />
+          <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 p-1.5 rounded-xl backdrop-blur-md">
+            <CalendarDays className="w-4 h-4 text-zinc-600 ml-2" />
             <input 
               type="date" 
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2 [&::-webkit-calendar-picker-indicator]:invert"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2 "
             />
-            <span className="text-zinc-500">-</span>
+            <span className="text-zinc-600">-</span>
             <input 
               type="date" 
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2 [&::-webkit-calendar-picker-indicator]:invert"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2 "
             />
           </div>
           <button 
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-white/5"
+            className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -172,14 +172,14 @@ export default function SupportPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Sentiment Chart */}
-        <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+        <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
           <div className="flex items-center gap-2 mb-6 relative z-10">
             <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
               <Smile className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Inteligencia Emocional (NLP)</h2>
-              <p className="text-xs text-zinc-400">Análisis de sentimiento diario de los usuarios</p>
+              <h2 className="text-lg font-bold text-zinc-900">Inteligencia Emocional (NLP)</h2>
+              <p className="text-xs text-zinc-600">Análisis de sentimiento diario de los usuarios</p>
             </div>
           </div>
           
@@ -203,10 +203,10 @@ export default function SupportPage() {
                     }}
                   />
                   <YAxis stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
                   <RechartsTooltip 
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '1rem', color: '#fff' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '1rem', color: '#18181b' }}
+                    itemStyle={{ color: '#18181b' }}
                     labelFormatter={(label) => `Fecha: ${label}`}
                   />
                   <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
@@ -216,21 +216,21 @@ export default function SupportPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500">No hay datos suficientes para el análisis NLP</div>
+              <div className="w-full h-full flex items-center justify-center text-zinc-600">No hay datos suficientes para el análisis NLP</div>
             )}
           </div>
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
         </div>
 
         {/* Leaderboard Chart (TTFR) */}
-        <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+        <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
           <div className="flex items-center gap-2 mb-6 relative z-10">
             <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-400">
               <Clock className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Tiempos de Respuesta (TTFR)</h2>
-              <p className="text-xs text-zinc-400">Promedio de minutos en responder al cliente (SLA)</p>
+              <h2 className="text-lg font-bold text-zinc-900">Tiempos de Respuesta (TTFR)</h2>
+              <p className="text-xs text-zinc-600">Promedio de minutos en responder al cliente (SLA)</p>
             </div>
           </div>
           
@@ -244,17 +244,17 @@ export default function SupportPage() {
                 <BarChart data={agentData} layout="vertical" margin={{ top: 0, right: 30, left: 20, bottom: 0 }}>
                   <XAxis type="number" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `${val}m`} />
                   <YAxis type="category" dataKey="operator_name" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" horizontal={true} vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" horizontal={true} vertical={false} />
                   <RechartsTooltip 
-                    cursor={{fill: '#27272a', opacity: 0.4}}
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '1rem', color: '#fff' }}
+                    cursor={{fill: '#e4e4e7', opacity: 0.4}}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '1rem', color: '#18181b' }}
                     formatter={(value: any) => [`${Number(value).toFixed(1)} mins`, 'TTFR Promedio']}
                   />
                   <Bar dataKey="avg_ttfr" fill="#06b6d4" radius={[0, 4, 4, 0]} barSize={24} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500">No hay datos de operadores</div>
+              <div className="w-full h-full flex items-center justify-center text-zinc-600">No hay datos de operadores</div>
             )}
           </div>
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -262,12 +262,12 @@ export default function SupportPage() {
       </div>
 
       {/* Agents Table */}
-      <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
+      <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
         <div className="flex items-center gap-2 mb-6 relative z-10">
           <div className="p-2 bg-rose-500/20 rounded-lg text-rose-400">
             <UserCheck className="w-5 h-5" />
           </div>
-          <h2 className="text-lg font-bold text-white">Rendimiento por Operador</h2>
+          <h2 className="text-lg font-bold text-zinc-900">Rendimiento por Operador</h2>
         </div>
         
         <div className="relative z-10 overflow-x-auto">
@@ -277,7 +277,7 @@ export default function SupportPage() {
             </div>
           ) : agentData.length > 0 ? (
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/50">
+              <thead className="text-xs text-zinc-600 uppercase bg-zinc-50">
                 <tr>
                   <th className="px-4 py-3 rounded-tl-lg">Operador</th>
                   <th className="px-4 py-3 text-right">Tickets Atendidos</th>
@@ -288,14 +288,14 @@ export default function SupportPage() {
               </thead>
               <tbody>
                 {agentData.map((agent, i) => (
-                  <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="px-4 py-3 font-medium text-white flex items-center gap-2">
+                  <tr key={i} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
+                    <td className="px-4 py-3 font-medium text-zinc-900 flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 to-orange-400 flex items-center justify-center text-[10px] font-bold">
                         {agent.operator_name.substring(0, 2).toUpperCase()}
                       </div>
                       {agent.operator_name}
                     </td>
-                    <td className="px-4 py-3 text-right text-zinc-300">
+                    <td className="px-4 py-3 text-right text-zinc-600">
                       {agent.total_tickets}
                     </td>
                     <td className="px-4 py-3 text-right text-emerald-400 font-medium">
@@ -312,7 +312,7 @@ export default function SupportPage() {
               </tbody>
             </table>
           ) : (
-            <div className="w-full h-32 flex items-center justify-center text-zinc-500">No hay datos de SLA en este período.</div>
+            <div className="w-full h-32 flex items-center justify-center text-zinc-600">No hay datos de SLA en este período.</div>
           )}
         </div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl" />
@@ -331,15 +331,15 @@ function KpiCard({ title, value, icon: Icon, color }: { title: string, value: st
   };
 
   return (
-    <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl flex flex-col relative overflow-hidden group">
+    <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl flex flex-col relative overflow-hidden group">
       <div className="flex justify-between items-start relative z-10">
-        <p className="text-sm font-medium text-zinc-400">{title}</p>
+        <p className="text-sm font-medium text-zinc-600">{title}</p>
         <div className={cn("p-2 rounded-xl border", colorStyles[color])}>
           <Icon className="w-5 h-5" />
         </div>
       </div>
       <div className="mt-4 relative z-10 flex items-baseline gap-2">
-        <h3 className="text-4xl font-bold text-white tracking-tight">{value}</h3>
+        <h3 className="text-4xl font-bold text-zinc-900 tracking-tight">{value}</h3>
       </div>
       {/* Background glow effect */}
       <div className={cn("absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500", colorStyles[color].split(' ')[1])} />

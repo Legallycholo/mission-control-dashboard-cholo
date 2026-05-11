@@ -284,16 +284,16 @@ export default function TrendsDashboard() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">SerpApi Trends</h1>
-          <p className="text-zinc-400 mt-1 text-sm">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">SerpApi Trends</h1>
+          <p className="text-zinc-600 mt-1 text-sm">
             Compare search terms in real time with Google Trends via SerpApi.
           </p>
         </div>
         {rateLimit !== null && rateLimit.searchesLeft !== null && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/10 bg-zinc-950/50 shrink-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-200 bg-white/85 shrink-0">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-            <span className="text-xs text-zinc-400">
-              API: <span className="text-white font-semibold">{rateLimit.searchesLeft}</span> searches left
+            <span className="text-xs text-zinc-600">
+              API: <span className="text-zinc-900 font-semibold">{rateLimit.searchesLeft}</span> searches left
             </span>
           </div>
         )}
@@ -306,23 +306,23 @@ export default function TrendsDashboard() {
         <div className="flex-1 min-w-0 space-y-4">
 
           {/* ── Search card ── */}
-          <div className="p-4 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl space-y-3">
+          <div className="p-4 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl space-y-3">
             {/* Primary term row */}
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
                 <input
                   type="text"
                   value={primaryTerm}
                   onChange={e => setPrimaryTerm(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
                   placeholder="Search term…"
-                  className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
                 />
               </div>
               <button
                 onClick={() => setCompareTerms(prev => [...prev, ''])}
-                className="flex items-center gap-1.5 px-3 py-2.5 border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white rounded-xl text-sm transition-all shrink-0"
+                className="flex items-center gap-1.5 px-3 py-2.5 border border-zinc-200 bg-zinc-100/80 hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 rounded-xl text-sm transition-all shrink-0"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Compare
@@ -355,12 +355,12 @@ export default function TrendsDashboard() {
                     }}
                     onKeyDown={e => e.key === 'Enter' && handleSearch()}
                     placeholder={`Compare term ${i + 2}…`}
-                    className="w-full pl-8 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+                    className="w-full pl-8 pr-4 py-2.5 bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
                   />
                 </div>
                 <button
                   onClick={() => setCompareTerms(prev => prev.filter((_, idx) => idx !== i))}
-                  className="p-2.5 border border-white/10 bg-white/5 hover:bg-rose-500/10 hover:border-rose-500/20 text-zinc-500 hover:text-rose-400 rounded-xl transition-all shrink-0"
+                  className="p-2.5 border border-zinc-200 bg-zinc-100/80 hover:bg-rose-500/10 hover:border-rose-500/20 text-zinc-600 hover:text-rose-400 rounded-xl transition-all shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -372,28 +372,28 @@ export default function TrendsDashboard() {
               <select
                 value={geo}
                 onChange={e => setGeo(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-xl text-white text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
+                className="bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
               >
                 {GEO_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value} className="bg-zinc-900">{o.label}</option>
+                  <option key={o.value} value={o.value} className="bg-zinc-50">{o.label}</option>
                 ))}
               </select>
               <select
                 value={dateRange}
                 onChange={e => setDateRange(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-xl text-white text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
+                className="bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
               >
                 {DATE_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value} className="bg-zinc-900">{o.label}</option>
+                  <option key={o.value} value={o.value} className="bg-zinc-50">{o.label}</option>
                 ))}
               </select>
               <select
                 value={gprop}
                 onChange={e => setGprop(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-xl text-white text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
+                className="bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 text-xs px-3 py-2 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
               >
                 {GPROP_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value} className="bg-zinc-900">{o.label}</option>
+                  <option key={o.value} value={o.value} className="bg-zinc-50">{o.label}</option>
                 ))}
               </select>
             </div>
@@ -440,7 +440,7 @@ export default function TrendsDashboard() {
                 <button
                   onClick={handleSave}
                   disabled={!data || loading}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-all"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-zinc-200 bg-zinc-100/80 hover:bg-zinc-100 text-zinc-600 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-all"
                 >
                   <Save className="w-3.5 h-3.5" />
                   Save
@@ -448,7 +448,7 @@ export default function TrendsDashboard() {
                 <button
                   onClick={() => data && exportCSV(data.timeline, data.queries)}
                   disabled={!data || loading}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-all"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-zinc-200 bg-zinc-100/80 hover:bg-zinc-100 text-zinc-600 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-medium transition-all"
                 >
                   <Download className="w-3.5 h-3.5" />
                   Export CSV
@@ -466,44 +466,44 @@ export default function TrendsDashboard() {
                   </>
                 ) : data && (
                   <>
-                    <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+                    <div className="p-4 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
                       <div className="flex items-center gap-1.5 mb-2">
-                        <Search className="w-3.5 h-3.5 text-zinc-500" />
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">Terms</p>
+                        <Search className="w-3.5 h-3.5 text-zinc-600" />
+                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Terms</p>
                       </div>
-                      <p className="text-sm font-semibold text-white leading-snug line-clamp-2">
+                      <p className="text-sm font-semibold text-zinc-900 leading-snug line-clamp-2">
                         {data.queries.join(', ')}
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+                    <div className="p-4 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
                       <div className="flex items-center gap-1.5 mb-2">
                         <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">Best Performing</p>
+                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Best Performing</p>
                       </div>
-                      <p className="text-sm font-semibold text-white truncate">{bestPerforming}</p>
-                      <p className="text-[10px] text-zinc-500 mt-0.5">avg {bestAvg} · peak {bestPeak}</p>
+                      <p className="text-sm font-semibold text-zinc-900 truncate">{bestPerforming}</p>
+                      <p className="text-[10px] text-zinc-600 mt-0.5">avg {bestAvg} · peak {bestPeak}</p>
                     </div>
 
-                    <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+                    <div className="p-4 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
                       <div className="flex items-center gap-1.5 mb-2">
                         <MapPin className="w-3.5 h-3.5 text-blue-400" />
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">Top Region</p>
+                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Top Region</p>
                       </div>
-                      <p className="text-sm font-semibold text-white">{data.topRegion}</p>
+                      <p className="text-sm font-semibold text-zinc-900">{data.topRegion}</p>
                     </div>
 
-                    <div className="p-4 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+                    <div className="p-4 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
                       <div className="flex items-center gap-1.5 mb-2">
-                        <Clock className="w-3.5 h-3.5 text-zinc-500" />
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">Updated</p>
+                        <Clock className="w-3.5 h-3.5 text-zinc-600" />
+                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Updated</p>
                       </div>
                       {fetchedDate ? (
                         <>
-                          <p className="text-sm font-semibold text-white tabular-nums">
+                          <p className="text-sm font-semibold text-zinc-900 tabular-nums">
                             {fetchedDate.toLocaleTimeString('en-US', { hour12: false })}
                           </p>
-                          <p className="text-[10px] text-zinc-500 mt-0.5 tabular-nums">
+                          <p className="text-[10px] text-zinc-600 mt-0.5 tabular-nums">
                             {fetchedDate.toLocaleDateString('en-GB')}
                           </p>
                         </>
@@ -519,7 +519,7 @@ export default function TrendsDashboard() {
 
           {/* ── Chart ── */}
           {showPanels && (
-            <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
+            <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
               {loading ? (
                 <div className="space-y-4">
                   <Skeleton className="h-5 w-48 rounded-lg" />
@@ -529,11 +529,11 @@ export default function TrendsDashboard() {
                 <>
                   <div className="flex items-start justify-between mb-5">
                     <div>
-                      <h2 className="text-base font-bold text-white">Interest Over Time</h2>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">Click a legend item to toggle it</p>
+                      <h2 className="text-base font-bold text-zinc-900">Interest Over Time</h2>
+                      <p className="text-[11px] text-zinc-600 mt-0.5">Click a legend item to toggle it</p>
                     </div>
                     {overlays.length > 0 && (
-                      <span className="flex items-center gap-1.5 text-xs text-zinc-500 shrink-0">
+                      <span className="flex items-center gap-1.5 text-xs text-zinc-600 shrink-0">
                         <span className="inline-block w-5 border-t-2 border-dashed border-zinc-500" />
                         {totalOverlayLines(overlays)} overlay{totalOverlayLines(overlays) !== 1 ? 's' : ''} · dashed lines
                       </span>
@@ -547,7 +547,7 @@ export default function TrendsDashboard() {
                         margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
                         barCategoryGap="0%"
                       >
-                        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
                         <XAxis
                           dataKey="date"
                           stroke="#52525b"
@@ -570,17 +570,17 @@ export default function TrendsDashboard() {
                             const filtered = payload.filter(p => p.dataKey !== '_seasonalBg');
                             if (!filtered.length) return null;
                             return (
-                              <div className="bg-zinc-950 border border-zinc-800 rounded-2xl px-3.5 py-3 text-xs min-w-[160px]">
-                                <p className="text-zinc-400 font-medium mb-2">{label}</p>
+                              <div className="bg-white border border-zinc-200 rounded-2xl px-3.5 py-3 text-xs min-w-[160px]">
+                                <p className="text-zinc-600 font-medium mb-2">{label}</p>
                                 {filtered.map(p => (
                                   <div key={String(p.dataKey)} className="flex items-center gap-2 mb-1.5 last:mb-0">
                                     <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
-                                    <span className="text-zinc-300 flex-1 truncate max-w-[160px]">{String(p.dataKey)}</span>
-                                    <span className="text-white font-semibold tabular-nums">{p.value}</span>
+                                    <span className="text-zinc-600 flex-1 truncate max-w-[160px]">{String(p.dataKey)}</span>
+                                    <span className="text-zinc-900 font-semibold tabular-nums">{p.value}</span>
                                   </div>
                                 ))}
                                 {isSeasonal && (
-                                  <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-zinc-800">
+                                  <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-zinc-200">
                                     <span className="w-2 h-2 rounded-sm bg-violet-500/60 shrink-0" />
                                     <span className="text-violet-400">Seasonal peak</span>
                                   </div>
@@ -655,7 +655,7 @@ export default function TrendsDashboard() {
                   <button
                     onClick={loadRelated}
                     disabled={relatedLoading}
-                    className="flex items-center gap-2 w-full justify-center py-3.5 rounded-3xl border border-dashed border-white/10 hover:border-white/20 text-zinc-500 hover:text-zinc-300 text-sm font-medium transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 w-full justify-center py-3.5 rounded-3xl border border-dashed border-zinc-200 hover:border-zinc-300 text-zinc-600 hover:text-zinc-600 text-sm font-medium transition-all disabled:opacity-50"
                   >
                     {relatedLoading
                       ? <RefreshCw className="w-4 h-4 animate-spin" />
@@ -676,10 +676,10 @@ export default function TrendsDashboard() {
 
           {/* ── Empty state ── */}
           {!loading && !data && !error && (
-            <div className="p-16 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl text-center">
+            <div className="p-16 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl text-center">
               <Activity className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
-              <h3 className="text-white font-semibold text-lg mb-2">Enter a term to get started</h3>
-              <p className="text-zinc-500 text-sm">Type a search term and click Search.</p>
+              <h3 className="text-zinc-900 font-semibold text-lg mb-2">Enter a term to get started</h3>
+              <p className="text-zinc-600 text-sm">Type a search term and click Search.</p>
             </div>
           )}
         </div>
@@ -714,16 +714,16 @@ function SavedSearchesSidebar({
     <div className="w-72 shrink-0">
       <div className="sticky top-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white">Saved Searches</h2>
+          <h2 className="text-sm font-bold text-zinc-900">Saved Searches</h2>
           {savedSearches.length > 0 && (
-            <span className="text-xs bg-white/10 text-zinc-300 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-xs bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full font-medium">
               {savedSearches.length} saved
             </span>
           )}
         </div>
 
         {savedSearches.length === 0 ? (
-          <div className="p-5 rounded-2xl border border-dashed border-white/10 text-center">
+          <div className="p-5 rounded-2xl border border-dashed border-zinc-200 text-center">
             <p className="text-xs text-zinc-600">No saved searches yet.</p>
             <p className="text-[10px] text-zinc-700 mt-1">
               Run a search then click Save to store it here.
@@ -743,8 +743,8 @@ function SavedSearchesSidebar({
                 <div
                   key={s.id}
                   className={cn(
-                    'p-3 rounded-2xl border bg-zinc-950/50 backdrop-blur-xl space-y-2.5 transition-colors',
-                    isLoaded ? 'border-blue-500/30' : 'border-white/10',
+                    'p-3 rounded-2xl border bg-white/85 backdrop-blur-xl space-y-2.5 transition-colors',
+                    isLoaded ? 'border-blue-500/30' : 'border-zinc-200',
                   )}
                 >
                   <p className="text-xs font-semibold text-zinc-200 truncate">
@@ -756,13 +756,13 @@ function SavedSearchesSidebar({
 
                   {/* Filter chips */}
                   <div className="flex flex-wrap gap-1">
-                    <span className="text-[10px] px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-zinc-500">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-zinc-100/80 border border-zinc-200 rounded text-zinc-600">
                       {geoLabel}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-zinc-500">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-zinc-100/80 border border-zinc-200 rounded text-zinc-600">
                       {dateRangeLabel}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-zinc-500">
+                    <span className="text-[10px] px-1.5 py-0.5 bg-zinc-100/80 border border-zinc-200 rounded text-zinc-600">
                       {gpropLabel}
                     </span>
                   </div>
@@ -792,7 +792,7 @@ function SavedSearchesSidebar({
                         'flex-1 text-[10px] py-1.5 rounded-lg border font-medium transition-all',
                         isLoaded
                           ? 'border-blue-500/30 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'
-                          : 'border-white/10 bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white',
+                          : 'border-zinc-200 bg-zinc-100/80 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900',
                       )}
                     >
                       {isLoaded ? 'Unload' : 'Load'}
@@ -800,14 +800,14 @@ function SavedSearchesSidebar({
                     <button
                       onClick={() => onRemove(s.id)}
                       title="Remove"
-                      className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-zinc-500 hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
+                      className="p-1.5 rounded-lg border border-zinc-200 bg-zinc-100/80 text-zinc-600 hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => onExport(s)}
                       title="Export CSV"
-                      className="p-1.5 rounded-lg border border-white/10 bg-white/5 text-zinc-500 hover:text-zinc-300 hover:bg-white/10 transition-all"
+                      className="p-1.5 rounded-lg border border-zinc-200 bg-zinc-100/80 text-zinc-600 hover:text-zinc-600 hover:bg-zinc-100 transition-all"
                     >
                       <Download className="w-3 h-3" />
                     </button>
@@ -826,12 +826,12 @@ function SavedSearchesSidebar({
 
 function ComparisonTableSkeleton({ rows = 2 }: { rows?: number }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-zinc-950/50 overflow-hidden">
-      <div className="px-5 py-4 border-b border-white/5">
+    <div className="rounded-3xl border border-zinc-200 bg-white/85 overflow-hidden">
+      <div className="px-5 py-4 border-b border-zinc-200/70">
         <Skeleton className="h-4 w-40 rounded" />
       </div>
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="px-5 py-3.5 border-b border-white/5 last:border-0 flex gap-6">
+        <div key={i} className="px-5 py-3.5 border-b border-zinc-200/70 last:border-0 flex gap-6">
           <Skeleton className="h-3.5 w-24 rounded" />
           <Skeleton className="h-3.5 w-10 rounded ml-auto" />
           <Skeleton className="h-3.5 w-10 rounded" />
@@ -856,20 +856,20 @@ function ComparisonTable({ data }: { data: TrendsData }) {
   });
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-white/5">
-        <h2 className="text-sm font-bold text-white">Detailed Comparison</h2>
+    <div className="rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-zinc-200/70">
+        <h2 className="text-sm font-bold text-zinc-900">Detailed Comparison</h2>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/5">
-              <th className="text-left  text-xs text-zinc-500 font-medium px-5 py-3">Term</th>
-              <th className="text-right text-xs text-zinc-500 font-medium px-4 py-3">Average</th>
-              <th className="text-right text-xs text-zinc-500 font-medium px-4 py-3">Peak</th>
-              <th className="text-right text-xs text-zinc-500 font-medium px-4 py-3">Peak Date</th>
-              <th className="text-right text-xs text-zinc-500 font-medium px-4 py-3">Momentum</th>
-              <th className="text-left  text-xs text-zinc-500 font-medium px-4 py-3">Seasonality</th>
+            <tr className="border-b border-zinc-200/70">
+              <th className="text-left  text-xs text-zinc-600 font-medium px-5 py-3">Term</th>
+              <th className="text-right text-xs text-zinc-600 font-medium px-4 py-3">Average</th>
+              <th className="text-right text-xs text-zinc-600 font-medium px-4 py-3">Peak</th>
+              <th className="text-right text-xs text-zinc-600 font-medium px-4 py-3">Peak Date</th>
+              <th className="text-right text-xs text-zinc-600 font-medium px-4 py-3">Momentum</th>
+              <th className="text-left  text-xs text-zinc-600 font-medium px-4 py-3">Seasonality</th>
             </tr>
           </thead>
           <tbody>
@@ -878,24 +878,24 @@ function ComparisonTable({ data }: { data: TrendsData }) {
               const mText =
                 dir === 'rising'    ? 'text-emerald-400' :
                 dir === 'declining' ? 'text-rose-400'    :
-                'text-zinc-400';
+                'text-zinc-600';
               return (
-                <tr key={row.query} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
+                <tr key={row.query} className="border-b border-zinc-200/70 last:border-0 hover:bg-white/[0.02] transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: row.color }} />
-                      <span className="text-white font-medium">{row.query}</span>
+                      <span className="text-zinc-900 font-medium">{row.query}</span>
                     </div>
                   </td>
-                  <td className="text-right px-4 py-3.5 text-zinc-300 tabular-nums">{row.avg}/100</td>
-                  <td className="text-right px-4 py-3.5 text-zinc-300 tabular-nums font-semibold">{row.peak.value}/100</td>
-                  <td className="text-right px-4 py-3.5 text-zinc-500 text-xs tabular-nums">{row.peak.date || '—'}</td>
+                  <td className="text-right px-4 py-3.5 text-zinc-600 tabular-nums">{row.avg}/100</td>
+                  <td className="text-right px-4 py-3.5 text-zinc-600 tabular-nums font-semibold">{row.peak.value}/100</td>
+                  <td className="text-right px-4 py-3.5 text-zinc-600 text-xs tabular-nums">{row.peak.date || '—'}</td>
                   <td className="text-right px-4 py-3.5">
                     <span className={cn('tabular-nums text-xs', mText)}>
                       {row.momentum.percentage > 0 ? '+' : ''}{row.momentum.percentage}%
                     </span>
                   </td>
-                  <td className="px-4 py-3.5 text-zinc-400 text-xs">{row.months}</td>
+                  <td className="px-4 py-3.5 text-zinc-600 text-xs">{row.months}</td>
                 </tr>
               );
             })}
@@ -915,7 +915,7 @@ function RelatedQueriesSection({
 
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-bold text-white">Related Queries</h2>
+      <h2 className="text-sm font-bold text-zinc-900">Related Queries</h2>
       {queries.map((q, qi) => {
         const related = relatedData[q];
         if (!related) return null;
@@ -923,47 +923,47 @@ function RelatedQueriesSection({
         const color  = LINE_COLORS[qi % LINE_COLORS.length];
 
         return (
-          <div key={q} className="rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl overflow-hidden">
+          <div key={q} className="rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
             <button
               onClick={() => setExpanded(isOpen ? null : q)}
               className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
             >
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                <span className="text-sm font-semibold text-white">{q}</span>
-                <span className="text-xs text-zinc-500">
+                <span className="text-sm font-semibold text-zinc-900">{q}</span>
+                <span className="text-xs text-zinc-600">
                   {(related.top?.length ?? 0)} top · {(related.rising?.length ?? 0)} rising
                 </span>
               </div>
-              <ChevronDown className={cn('w-4 h-4 text-zinc-500 transition-transform', isOpen && 'rotate-180')} />
+              <ChevronDown className={cn('w-4 h-4 text-zinc-600 transition-transform', isOpen && 'rotate-180')} />
             </button>
 
             {isOpen && (
-              <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-white/5 pt-5">
+              <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-zinc-200/70 pt-5">
                 <div>
-                  <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider mb-3">Top</p>
+                  <p className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-3">Top</p>
                   <div className="space-y-2">
                     {(related.top || []).slice(0, 10).map(rq => {
                       const pct = Math.min(100, parseInt(rq.value, 10) || 0);
                       return (
                         <div key={rq.query} className="flex items-center gap-3">
-                          <div className="flex-1 relative h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className="flex-1 relative h-1.5 bg-zinc-100/80 rounded-full overflow-hidden">
                             <div
                               className="absolute inset-y-0 left-0 rounded-full"
                               style={{ width: `${pct}%`, backgroundColor: color + '80' }}
                             />
                           </div>
-                          <span className="text-xs text-zinc-300 min-w-0 flex-shrink truncate max-w-[200px] text-right">
+                          <span className="text-xs text-zinc-600 min-w-0 flex-shrink truncate max-w-[200px] text-right">
                             {rq.query}
                           </span>
-                          <span className="text-xs text-zinc-500 tabular-nums w-7 text-right shrink-0">{pct}</span>
+                          <span className="text-xs text-zinc-600 tabular-nums w-7 text-right shrink-0">{pct}</span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider mb-3">Rising</p>
+                  <p className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-3">Rising</p>
                   <div className="flex flex-wrap gap-2">
                     {(related.rising || []).slice(0, 12).map(rq => {
                       const isBreakout = rq.value === 'Breakout';

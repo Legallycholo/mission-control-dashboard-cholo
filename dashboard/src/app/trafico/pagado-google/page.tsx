@@ -157,34 +157,34 @@ export default function TraficoGoogleAdsPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Tráfico Pagado (Google Ads)</h1>
-          <p className="text-zinc-400 mt-1">Rendimiento de campañas pagadas y ROAS.</p>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Tráfico Pagado (Google Ads)</h1>
+          <p className="text-zinc-600 mt-1">Rendimiento de campañas pagadas y ROAS.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
-            <CalendarDays className="w-4 h-4 text-zinc-400 ml-2" />
+          <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 p-1.5 rounded-xl backdrop-blur-md">
+            <CalendarDays className="w-4 h-4 text-zinc-600 ml-2" />
             <input
               type="date"
               id="gads-start-date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
-            <span className="text-zinc-500">-</span>
+            <span className="text-zinc-600">-</span>
             <input
               type="date"
               id="gads-end-date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
           </div>
           <button
             id="gads-export-csv"
             onClick={handleExportCSV}
             disabled={!data}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -199,8 +199,8 @@ export default function TraficoGoogleAdsPage() {
           <div>
             <p className="text-sm font-semibold text-amber-300">Conexión pendiente</p>
             <p className="text-sm text-amber-400/80 mt-1">{error}</p>
-            <p className="text-xs text-zinc-500 mt-2">
-              Completa las variables <code className="text-zinc-400">GOOGLE_ADS_*</code> en el archivo <code className="text-zinc-400">.env</code> para activar este módulo.
+            <p className="text-xs text-zinc-600 mt-2">
+              Completa las variables <code className="text-zinc-600">GOOGLE_ADS_*</code> en el archivo <code className="text-zinc-600">.env</code> para activar este módulo.
             </p>
           </div>
         </div>
@@ -278,11 +278,11 @@ export default function TraficoGoogleAdsPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
         {/* Trend: Clicks & Cost */}
-        <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+        <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
           <div className="flex items-center justify-between mb-6 relative z-10">
             <div>
-              <h2 className="text-lg font-bold text-white">Clics vs Gasto Diario</h2>
-              <p className="text-sm text-zinc-400">Evolución diaria del rendimiento</p>
+              <h2 className="text-lg font-bold text-zinc-900">Clics vs Gasto Diario</h2>
+              <p className="text-sm text-zinc-600">Evolución diaria del rendimiento</p>
             </div>
           </div>
 
@@ -332,10 +332,10 @@ export default function TraficoGoogleAdsPage() {
                     axisLine={false}
                     tickFormatter={(val) => `$${val}`}
                   />
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
                   <RechartsTooltip
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
+                    itemStyle={{ color: '#18181b' }}
                     labelFormatter={(label) => `Fecha: ${label}`}
                     formatter={(value: any, name: any) => {
                       if (name === 'cost') return [`$${Number(value).toFixed(2)}`, 'Gasto'];
@@ -365,7 +365,7 @@ export default function TraficoGoogleAdsPage() {
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500">
+              <div className="w-full h-full flex items-center justify-center text-zinc-600">
                 {error ? 'Esperando conexión con Google Ads' : 'No hay datos para este rango'}
               </div>
             )}
@@ -374,11 +374,11 @@ export default function TraficoGoogleAdsPage() {
         </div>
 
         {/* Trend: Conversions */}
-        <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+        <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
           <div className="flex items-center justify-between mb-6 relative z-10">
             <div>
-              <h2 className="text-lg font-bold text-white">Conversiones Diarias</h2>
-              <p className="text-sm text-zinc-400">Acciones completadas por día</p>
+              <h2 className="text-lg font-bold text-zinc-900">Conversiones Diarias</h2>
+              <p className="text-sm text-zinc-600">Acciones completadas por día</p>
             </div>
           </div>
 
@@ -409,9 +409,9 @@ export default function TraficoGoogleAdsPage() {
                     axisLine={false}
                     allowDecimals={false}
                   />
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
                   <RechartsTooltip
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
                     itemStyle={{ color: '#10b981' }}
                     labelFormatter={(label) => `Fecha: ${label}`}
                     formatter={(value: any) => [Number(value).toFixed(0), 'Conversiones']}
@@ -426,7 +426,7 @@ export default function TraficoGoogleAdsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500">
+              <div className="w-full h-full flex items-center justify-center text-zinc-600">
                 {error ? 'Esperando conexión con Google Ads' : 'No hay datos para este rango'}
               </div>
             )}
@@ -436,8 +436,8 @@ export default function TraficoGoogleAdsPage() {
       </div>
 
       {/* Campaigns Table */}
-      <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
-        <h2 className="text-lg font-bold text-white mb-6 relative z-10">Desglose por Campaña</h2>
+      <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
+        <h2 className="text-lg font-bold text-zinc-900 mb-6 relative z-10">Desglose por Campaña</h2>
         <div className="relative z-10 overflow-x-auto">
           {loading ? (
             <div className="w-full h-48 flex items-center justify-center">
@@ -445,7 +445,7 @@ export default function TraficoGoogleAdsPage() {
             </div>
           ) : data && data.campaigns && data.campaigns.length > 0 ? (
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-zinc-400 uppercase bg-zinc-900/50">
+              <thead className="text-xs text-zinc-600 uppercase bg-zinc-50">
                 <tr>
                   <th className="px-4 py-3 rounded-tl-lg">Campaña</th>
                   <th className="px-4 py-3 text-center">Estado</th>
@@ -460,8 +460,8 @@ export default function TraficoGoogleAdsPage() {
               </thead>
               <tbody>
                 {data.campaigns.map((campaign) => (
-                  <tr key={campaign.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="px-4 py-3 font-medium text-white truncate max-w-[240px]" title={campaign.name}>
+                  <tr key={campaign.id} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
+                    <td className="px-4 py-3 font-medium text-zinc-900 truncate max-w-[240px]" title={campaign.name}>
                       <div className="flex items-center gap-2">
                         <ChannelBadge type={campaign.channelType} />
                         <span className="truncate">{campaign.name}</span>
@@ -470,10 +470,10 @@ export default function TraficoGoogleAdsPage() {
                     <td className="px-4 py-3 text-center">
                       <StatusBadge status={campaign.status} />
                     </td>
-                    <td className="px-4 py-3 text-right text-zinc-400">{formatNumber(campaign.impressions)}</td>
-                    <td className="px-4 py-3 text-right font-medium text-white">{formatNumber(campaign.clicks)}</td>
+                    <td className="px-4 py-3 text-right text-zinc-600">{formatNumber(campaign.impressions)}</td>
+                    <td className="px-4 py-3 text-right font-medium text-zinc-900">{formatNumber(campaign.clicks)}</td>
                     <td className="px-4 py-3 text-right text-amber-400">{formatPercent(campaign.ctr)}</td>
-                    <td className="px-4 py-3 text-right text-zinc-300">{formatCurrencyDecimal(campaign.avgCpc)}</td>
+                    <td className="px-4 py-3 text-right text-zinc-600">{formatCurrencyDecimal(campaign.avgCpc)}</td>
                     <td className="px-4 py-3 text-right text-rose-400 font-medium">{formatCurrencyDecimal(campaign.cost)}</td>
                     <td className="px-4 py-3 text-right text-emerald-400 font-medium">{campaign.conversions}</td>
                     <td className="px-4 py-3 text-right">
@@ -491,7 +491,7 @@ export default function TraficoGoogleAdsPage() {
               </tbody>
             </table>
           ) : (
-            <div className="w-full h-48 flex items-center justify-center text-zinc-500">
+            <div className="w-full h-48 flex items-center justify-center text-zinc-600">
               {error ? 'Configura las credenciales para ver el desglose de campañas' : 'No hay campañas activas en este periodo'}
             </div>
           )}
@@ -520,7 +520,7 @@ function KpiCard({ title, value, icon: Icon, color, loading, subtitle }: {
     purple: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
     rose: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
     indigo: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
-    zinc: 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20',
+    zinc: 'text-zinc-600 bg-zinc-500/10 border-zinc-500/20',
   };
 
   const bgGlow: Record<string, string> = {
@@ -534,20 +534,20 @@ function KpiCard({ title, value, icon: Icon, color, loading, subtitle }: {
   };
 
   return (
-    <div className="p-5 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl flex flex-col relative overflow-hidden group hover:shadow-xl transition-all duration-300">
+    <div className="p-5 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl flex flex-col relative overflow-hidden group hover:shadow-xl transition-all duration-300">
       <div className="flex justify-between items-start relative z-10">
-        <p className="text-sm font-medium text-zinc-400">{title}</p>
+        <p className="text-sm font-medium text-zinc-600">{title}</p>
         <div className={cn("p-2 rounded-xl border", colorStyles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
       <div className="mt-4 relative z-10">
         {loading ? (
-          <div className="h-8 w-24 bg-white/5 rounded animate-pulse" />
+          <div className="h-8 w-24 bg-zinc-100/80 rounded animate-pulse" />
         ) : (
-          <h3 className="text-2xl font-bold text-white tracking-tight">{value}</h3>
+          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">{value}</h3>
         )}
-        {subtitle && <p className="text-xs text-zinc-500 mt-1">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-zinc-600 mt-1">{subtitle}</p>}
       </div>
       <div className={cn(
         "absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500",
@@ -566,7 +566,7 @@ function StatusBadge({ status }: { status: string }) {
       "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium",
       isEnabled && "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
       isPaused && "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-      !isEnabled && !isPaused && "bg-zinc-500/10 text-zinc-400 border border-zinc-500/20"
+      !isEnabled && !isPaused && "bg-zinc-500/10 text-zinc-600 border border-zinc-500/20"
     )}>
       <span className={cn(
         "w-1.5 h-1.5 rounded-full",
@@ -589,10 +589,10 @@ function ChannelBadge({ type }: { type: string }) {
     DEMAND_GEN: { label: 'DGen', color: 'text-indigo-400' },
   };
 
-  const info = labels[type] || { label: type, color: 'text-zinc-400' };
+  const info = labels[type] || { label: type, color: 'text-zinc-600' };
 
   return (
-    <span className={cn("text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/5", info.color)}>
+    <span className={cn("text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-zinc-100/80", info.color)}>
       {info.label}
     </span>
   );

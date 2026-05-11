@@ -112,8 +112,8 @@ export default function LanzamientosPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Lanzamientos de Productos</h1>
-          <p className="text-zinc-400 mt-1">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Lanzamientos de Productos</h1>
+          <p className="text-zinc-600 mt-1">
             Monitoreo autónomo de novedades del mercado vía Vertex AI.
           </p>
         </div>
@@ -129,23 +129,23 @@ export default function LanzamientosPage() {
 
       {/* Scan selector */}
       <div className="flex items-center gap-3 flex-wrap">
-        <Calendar className="w-4 h-4 text-zinc-500 flex-shrink-0" />
-        <span className="text-sm text-zinc-400 font-medium">Escaneo:</span>
+        <Calendar className="w-4 h-4 text-zinc-600 flex-shrink-0" />
+        <span className="text-sm text-zinc-600 font-medium">Escaneo:</span>
         <select
-          className="bg-zinc-900/60 border border-white/10 text-white rounded-xl px-4 py-2 text-sm outline-none focus:border-blue-500/50 transition-colors"
+          className="bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2 text-sm outline-none focus:border-blue-500/50 transition-colors"
           value={selectedScan || ''}
           onChange={e => setSelectedScan(e.target.value)}
           disabled={loading || scanDates.length === 0}
         >
           {scanDates.length === 0 && <option>Sin ejecuciones</option>}
           {scanDates.map((d, i) => (
-            <option key={d} value={d} className="bg-zinc-900">
+            <option key={d} value={d} className="bg-zinc-50">
               {i === 0 ? '🟢 Último: ' : '🕐 Anterior: '}{formatDate(d)}
             </option>
           ))}
         </select>
         {!loading && selectedScan && (
-          <span className="text-xs text-zinc-500">{grouped[selectedScan]?.length ?? 0} productos detectados</span>
+          <span className="text-xs text-zinc-600">{grouped[selectedScan]?.length ?? 0} productos detectados</span>
         )}
       </div>
 
@@ -168,10 +168,10 @@ export default function LanzamientosPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           {/* Pie chart */}
-          <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+          <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
             <div className="flex items-center gap-2 mb-5">
               <Cpu className="w-5 h-5 text-blue-400" />
-              <h2 className="text-base font-bold text-white">Por Categoría</h2>
+              <h2 className="text-base font-bold text-zinc-900">Por Categoría</h2>
             </div>
             {pieData.length > 0 ? (
               <>
@@ -182,8 +182,8 @@ export default function LanzamientosPage() {
                         {pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '0.75rem', color: '#fff', fontSize: '12px' }}
-                        itemStyle={{ color: '#fff' }}
+                        contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '0.75rem', color: '#18181b', fontSize: '12px' }}
+                        itemStyle={{ color: '#18181b' }}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -193,9 +193,9 @@ export default function LanzamientosPage() {
                     <div key={entry.name} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                        <span className="text-zinc-400 truncate max-w-[120px]">{entry.name}</span>
+                        <span className="text-zinc-600 truncate max-w-[120px]">{entry.name}</span>
                       </div>
-                      <span className="text-zinc-300 font-mono">{entry.value}</span>
+                      <span className="text-zinc-600 font-mono">{entry.value}</span>
                     </div>
                   ))}
                 </div>
@@ -206,28 +206,28 @@ export default function LanzamientosPage() {
           </div>
 
           {/* Table */}
-          <div className="md:col-span-2 p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+          <div className="md:col-span-2 p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
             <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <Search className="w-5 h-5 text-violet-400" />
-                <h2 className="text-base font-bold text-white">Resultados del Escaneo</h2>
+                <h2 className="text-base font-bold text-zinc-900">Resultados del Escaneo</h2>
               </div>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Filtrar..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="bg-zinc-900/60 border border-white/10 text-white text-xs rounded-xl pl-8 pr-3 py-2 w-44 outline-none focus:border-blue-500/50 transition-colors placeholder:text-zinc-600"
+                  className="bg-zinc-50 border border-zinc-200 text-zinc-900 text-xs rounded-xl pl-8 pr-3 py-2 w-44 outline-none focus:border-blue-500/50 transition-colors placeholder:text-zinc-600"
                 />
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-[10px] text-zinc-500 uppercase">
-                  <tr className="bg-zinc-900/50">
+                <thead className="text-[10px] text-zinc-600 uppercase">
+                  <tr className="bg-zinc-50">
                     <th className="px-4 py-3 rounded-tl-xl">Producto / Marca</th>
                     <th className="px-4 py-3">Categoría</th>
                     <th className="px-4 py-3 hidden md:table-cell">Specs clave</th>
@@ -236,18 +236,18 @@ export default function LanzamientosPage() {
                 </thead>
                 <tbody>
                   {display.map((row, i) => (
-                    <tr key={row.id ?? i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <tr key={row.id ?? i} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
                       <td className="px-4 py-3">
-                        <p className="font-medium text-white leading-snug">{row.producto}</p>
+                        <p className="font-medium text-zinc-900 leading-snug">{row.producto}</p>
                         <p className="text-blue-400 text-xs mt-0.5">{row.marca}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-xs px-2 py-0.5 rounded-lg bg-zinc-800/80 border border-white/5 text-zinc-300">
+                        <span className="text-xs px-2 py-0.5 rounded-lg bg-zinc-100/80 border border-zinc-200/70 text-zinc-600">
                           {row.categoria}
                         </span>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
-                        <p className="text-zinc-500 text-xs max-w-[200px] truncate" title={row.especificaciones_clave}>
+                        <p className="text-zinc-600 text-xs max-w-[200px] truncate" title={row.especificaciones_clave}>
                           {row.especificaciones_clave}
                         </p>
                       </td>
@@ -294,15 +294,15 @@ function KpiCard({ label, value, sub, icon: Icon, color }: {
     amber:   'text-amber-400   bg-amber-500/10   border-amber-500/20',
   };
   return (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium text-zinc-400 leading-tight">{label}</p>
+        <p className="text-xs font-medium text-zinc-600 leading-tight">{label}</p>
         <div className={cn('p-1.5 rounded-lg border', styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-white tracking-tight">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1">{sub}</p>
+      <p className="text-2xl font-bold text-zinc-900 tracking-tight">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1">{sub}</p>
       <div className={cn('absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity', styles[color].split(' ')[1])} />
     </div>
   );

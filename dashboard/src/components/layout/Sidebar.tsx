@@ -160,9 +160,9 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-64 h-[calc(100vh-2rem)] fixed top-4 left-4 border border-white/10 bg-zinc-950/40 backdrop-blur-3xl shadow-2xl shadow-black/50 z-50 flex flex-col rounded-3xl overflow-hidden">
+    <aside className="w-64 h-[calc(100vh-2rem)] fixed top-4 left-4 border border-zinc-200 bg-white/90 backdrop-blur-3xl shadow-2xl shadow-zinc-300/40 z-50 flex flex-col rounded-3xl overflow-hidden">
       <div className="p-6">
-        <h1 className="text-xl font-bold tracking-tighter text-white flex items-center gap-2">
+        <h1 className="text-xl font-bold tracking-tighter text-zinc-900 flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/20">
             <span className="text-white font-bold text-sm">GS</span>
           </div>
@@ -188,15 +188,15 @@ export function Sidebar() {
                   className={cn(
                     "w-full group relative flex items-center justify-between px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-300 outline-none",
                     isActive && !isExpanded
-                      ? "bg-white/10 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
-                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
+                      : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <item.icon className={cn("w-4 h-4 transition-colors duration-300", isActive ? "text-blue-400" : "text-zinc-500 group-hover:text-zinc-300")} />
+                    <item.icon className={cn("w-4 h-4 transition-colors duration-300", isActive ? "text-blue-600" : "text-zinc-500 group-hover:text-zinc-800")} />
                     {item.name}
                   </div>
-                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-500" /> : <ChevronRight className="w-4 h-4 text-zinc-500" />}
+                  {isExpanded ? <ChevronDown className="w-4 h-4 text-zinc-600" /> : <ChevronRight className="w-4 h-4 text-zinc-600" />}
                 </button>
               ) : (
                 <Link
@@ -204,21 +204,21 @@ export function Sidebar() {
                   className={cn(
                     "group relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-300",
                     pathname === item.href 
-                      ? "bg-white/10 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
-                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
+                      : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
                   )}
                 >
                   {pathname === item.href && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
                   )}
-                  <item.icon className={cn("w-4 h-4 transition-colors duration-300", pathname === item.href ? "text-blue-400" : "text-zinc-500 group-hover:text-zinc-300")} />
+                  <item.icon className={cn("w-4 h-4 transition-colors duration-300", pathname === item.href ? "text-blue-600" : "text-zinc-500 group-hover:text-zinc-800")} />
                   {item.name}
                 </Link>
               )}
 
               {/* Sub-items list */}
               {hasSubItems && isExpanded && (
-                <div className="mt-1 mb-2 ml-4 pl-4 border-l border-white/10 space-y-1 overflow-hidden transition-all duration-300">
+                <div className="mt-1 mb-2 ml-4 pl-4 border-l border-zinc-200 space-y-1 overflow-hidden transition-all duration-300">
                   {visibleSubItems.map((sub) => (
                     <Link
                       key={sub.name}
@@ -226,8 +226,8 @@ export function Sidebar() {
                       className={cn(
                         "block px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-300",
                         pathname === sub.href
-                          ? "bg-white/10 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
-                          : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+                          ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                          : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
                       )}
                     >
                       {sub.name}
@@ -241,13 +241,13 @@ export function Sidebar() {
       </nav>
 
       <div className="p-4 mt-auto space-y-2">
-        <div className="relative overflow-hidden group p-4 rounded-2xl flex items-center gap-3 border border-white/5 bg-white/5">
+        <div className="relative overflow-hidden group p-4 rounded-2xl flex items-center gap-3 border border-zinc-200/70 bg-zinc-100/80">
           <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/30 shrink-0">
             {(profile?.full_name?.[0] ?? profile?.email?.[0] ?? 'U').toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-white truncate">{profile?.full_name ?? 'Usuario'}</p>
-            <p className="text-xs text-zinc-400 truncate">{profile?.email ?? ''}</p>
+            <p className="text-sm font-semibold text-zinc-900 truncate">{profile?.full_name ?? 'Usuario'}</p>
+            <p className="text-xs text-zinc-600 truncate">{profile?.email ?? ''}</p>
           </div>
           <button
             onClick={async () => {
@@ -255,7 +255,7 @@ export function Sidebar() {
               router.push('/login');
             }}
             title="Cerrar sesión"
-            className="text-zinc-600 hover:text-zinc-300 transition-colors shrink-0"
+            className="text-zinc-500 hover:text-zinc-800 transition-colors shrink-0"
           >
             <LogOut className="w-4 h-4" />
           </button>

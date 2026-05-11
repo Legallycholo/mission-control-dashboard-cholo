@@ -42,32 +42,32 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8 animate-fade-in max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-white">Preferencias</h1>
-        <p className="text-zinc-400 text-sm mt-1">Administra tu perfil y configuración de cuenta</p>
+        <h1 className="text-2xl font-bold text-zinc-900">Preferencias</h1>
+        <p className="text-zinc-600 text-sm mt-1">Administra tu perfil y configuración de cuenta</p>
       </div>
 
       {/* Profile card */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-          <User className="w-4 h-4 text-zinc-400" />
-          <h2 className="text-sm font-semibold text-white">Perfil</h2>
+      <div className="rounded-2xl border border-zinc-200 bg-zinc-100/80 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <User className="w-4 h-4 text-zinc-600" />
+          <h2 className="text-sm font-semibold text-zinc-900">Perfil</h2>
         </div>
         <div className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Nombre completo</label>
+            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">Nombre completo</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Tu nombre"
-              className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-blue-500/50 focus:bg-white/8 transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200 text-zinc-900 text-sm placeholder:text-zinc-600 focus:outline-none focus:border-blue-500/50 focus:bg-zinc-100 transition-colors"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Correo electrónico</label>
-            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10">
-              <Mail className="w-4 h-4 text-zinc-500 shrink-0" />
-              <span className="text-sm text-zinc-300">{profile?.email ?? '—'}</span>
+            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">Correo electrónico</label>
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200">
+              <Mail className="w-4 h-4 text-zinc-600 shrink-0" />
+              <span className="text-sm text-zinc-600">{profile?.email ?? '—'}</span>
             </div>
           </div>
           <button
@@ -81,20 +81,20 @@ export default function SettingsPage() {
       </div>
 
       {/* Account info card */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-          <Shield className="w-4 h-4 text-zinc-400" />
-          <h2 className="text-sm font-semibold text-white">Cuenta</h2>
+      <div className="rounded-2xl border border-zinc-200 bg-zinc-100/80 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <Shield className="w-4 h-4 text-zinc-600" />
+          <h2 className="text-sm font-semibold text-zinc-900">Cuenta</h2>
         </div>
         <div className="p-6 grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1">
-            <p className="text-xs text-zinc-500 uppercase tracking-wider">Rol</p>
-            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${profile?.role === 'admin' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-white/5 text-zinc-400 border border-white/10'}`}>
+          <div className="p-4 rounded-xl bg-zinc-100/80 border border-zinc-200 space-y-1">
+            <p className="text-xs text-zinc-600 uppercase tracking-wider">Rol</p>
+            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${profile?.role === 'admin' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-zinc-100/80 text-zinc-600 border border-zinc-200'}`}>
               {profile?.role ?? '—'}
             </span>
           </div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-1">
-            <p className="text-xs text-zinc-500 uppercase tracking-wider">Estado</p>
+          <div className="p-4 rounded-xl bg-zinc-100/80 border border-zinc-200 space-y-1">
+            <p className="text-xs text-zinc-600 uppercase tracking-wider">Estado</p>
             <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
               profile?.approval_status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
               profile?.approval_status === 'pending'  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :

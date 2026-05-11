@@ -4,8 +4,8 @@ export default function TraficoMetaAdsPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Tráfico Pagado (Meta Ads)</h1>
-        <p className="text-zinc-400 mt-1">Rendimiento de campañas en Facebook e Instagram.</p>
+        <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Tráfico Pagado (Meta Ads)</h1>
+        <p className="text-zinc-600 mt-1">Rendimiento de campañas en Facebook e Instagram.</p>
       </div>
 
       <div className="w-full min-h-[500px] p-12 rounded-2xl border border-blue-500/20 bg-blue-500/5 backdrop-blur-xl flex flex-col items-center justify-center text-center relative overflow-hidden group">
@@ -13,13 +13,13 @@ export default function TraficoMetaAdsPage() {
         <div className="absolute top-0 left-0 w-64 h-64 bg-[#0668E1]/20 rounded-full blur-3xl opacity-50" />
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#E1306C]/10 rounded-full blur-3xl opacity-50" />
         
-        <div className="bg-zinc-950/50 p-6 rounded-2xl border border-white/5 shadow-2xl relative z-10 max-w-md">
+        <div className="bg-white/85 p-6 rounded-2xl border border-zinc-200/70 shadow-2xl relative z-10 max-w-md">
           <div className="mx-auto w-16 h-16 bg-[#0668E1]/20 text-[#0668E1] flex items-center justify-center rounded-2xl mb-6 shadow-inner">
             <Share2 className="w-8 h-8" />
           </div>
           
-          <h2 className="text-2xl font-bold text-white mb-3">Módulo en Construcción</h2>
-          <p className="text-zinc-400 mb-6 leading-relaxed">
+          <h2 className="text-2xl font-bold text-zinc-900 mb-3">Módulo en Construcción</h2>
+          <p className="text-zinc-600 mb-6 leading-relaxed">
             Estamos diseñando la arquitectura de datos para extraer métricas de Facebook e Instagram Ads hacia BigQuery. 
             Muy pronto podrás unificar todo tu gasto publicitario en un solo panel.
           </p>

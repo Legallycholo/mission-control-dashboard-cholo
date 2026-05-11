@@ -129,29 +129,29 @@ export default function MercadoHubPage() {
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="text-xs font-medium text-zinc-500 uppercase tracking-widest">Módulo</span>
+            <span className="text-xs font-medium text-zinc-600 uppercase tracking-widest">Módulo</span>
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Inteligencia de Mercado</h1>
-          <p className="text-zinc-400 mt-1 max-w-xl">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Inteligencia de Mercado</h1>
+          <p className="text-zinc-600 mt-1 max-w-xl">
             Centro de análisis competitivo: tendencias, precios, dimensión de mercado y posicionamiento en Google Shopping.
           </p>
         </div>
 
         {/* SerpApi Credits Widget */}
-        <div className="flex-shrink-0 p-4 rounded-2xl border border-white/10 bg-zinc-950/60 backdrop-blur-xl min-w-[220px]">
+        <div className="flex-shrink-0 p-4 rounded-2xl border border-zinc-200 bg-white/60 backdrop-blur-xl min-w-[220px]">
           <div className="flex items-center gap-2 mb-2">
-            <CreditCard className="w-4 h-4 text-zinc-500" />
-            <span className="text-xs text-zinc-500 font-medium">SerpApi Credits</span>
+            <CreditCard className="w-4 h-4 text-zinc-600" />
+            <span className="text-xs text-zinc-600 font-medium">SerpApi Credits</span>
           </div>
           {loadingAccount ? (
-            <div className="h-6 w-24 rounded bg-white/5 animate-pulse" />
+            <div className="h-6 w-24 rounded bg-zinc-100/80 animate-pulse" />
           ) : account ? (
             <>
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-zinc-900">
                 {account.searchesLeft?.toLocaleString() ?? '—'}
-                <span className="text-sm text-zinc-500 font-normal ml-1">restantes</span>
+                <span className="text-sm text-zinc-600 font-normal ml-1">restantes</span>
               </p>
-              <div className="mt-2 w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+              <div className="mt-2 w-full h-1.5 rounded-full bg-zinc-100/80 overflow-hidden">
                 <div
                   className={cn("h-full rounded-full transition-all", creditsPct && creditsPct > 30 ? "bg-emerald-500" : creditsPct && creditsPct > 10 ? "bg-amber-500" : "bg-rose-500")}
                   style={{ width: `${creditsPct ?? 0}%` }}
@@ -175,7 +175,7 @@ export default function MercadoHubPage() {
 
       {/* Phase Cards */}
       <div>
-        <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-widest mb-4">Módulos del sistema</h2>
+        <h2 className="text-sm font-medium text-zinc-600 uppercase tracking-widest mb-4">Módulos del sistema</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {phases.map(phase => {
             const StatusIcon = statusConfig[phase.status].icon;
@@ -187,7 +187,7 @@ export default function MercadoHubPage() {
               <Link
                 key={phase.id}
                 href={phase.href}
-                className="group relative p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl overflow-hidden hover:border-white/20 transition-all duration-300 hover:shadow-xl block"
+                className="group relative p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden hover:border-zinc-300 transition-all duration-300 hover:shadow-xl block"
               >
                 {/* Glow */}
                 <div className={cn("absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity", glow)} />
@@ -208,8 +208,8 @@ export default function MercadoHubPage() {
                   <p className="text-[10px] font-medium text-zinc-600 mb-1 uppercase tracking-widest">Fase {phase.id}</p>
 
                   {/* Name + description */}
-                  <h3 className="text-lg font-bold text-white mb-2">{phase.name}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed mb-4">{phase.description}</p>
+                  <h3 className="text-lg font-bold text-zinc-900 mb-2">{phase.name}</h3>
+                  <p className="text-sm text-zinc-600 leading-relaxed mb-4">{phase.description}</p>
 
                   {/* Stat if any */}
                   {phase.stat && (
@@ -220,7 +220,7 @@ export default function MercadoHubPage() {
                   )}
 
                   {/* CTA */}
-                  <div className="flex items-center gap-1.5 text-sm font-medium text-zinc-400 group-hover:text-white transition-colors">
+                  <div className="flex items-center gap-1.5 text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">
                     {phase.cta}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -247,15 +247,15 @@ function SummaryCard({ label, value, sub, icon: Icon, color, href }: {
     violet:  'text-violet-400  bg-violet-500/10  border-violet-500/20',
   };
   const inner = (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group h-full">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group h-full">
       <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium text-zinc-400">{label}</p>
+        <p className="text-xs font-medium text-zinc-600">{label}</p>
         <div className={cn("p-1.5 rounded-lg border", styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-xl font-bold text-white tracking-tight">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1">{sub}</p>
+      <p className="text-xl font-bold text-zinc-900 tracking-tight">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1">{sub}</p>
       <div className={cn("absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity", styles[color].split(' ')[1])} />
     </div>
   );

@@ -55,7 +55,7 @@ const STORAGE_KEYS = { keywords: 'gsmpro_pos_keywords', brand: 'gsmpro_pos_brand
 function PositionBadge({ pos, type }: { pos: number | null; type: AdType }) {
   if (pos === null) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-800 text-zinc-500 border border-white/10 rounded-full px-2.5 py-0.5">
+      <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-full px-2.5 py-0.5">
         <XCircle className="w-2.5 h-2.5" /> No aparece
       </span>
     );
@@ -171,38 +171,38 @@ export default function ShoppingPositionPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Posicionamiento Shopping</h1>
-          <p className="text-zinc-400 mt-1">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Posicionamiento Shopping</h1>
+          <p className="text-zinc-600 mt-1">
             Rastrea tu posición orgánica y pagada en Google Shopping por keyword.
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {searchesLeft !== null && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-white/10 bg-zinc-950/50 text-sm">
-              <CreditCard className="w-4 h-4 text-zinc-500" />
-              <span className="text-zinc-400">{searchesLeft.toLocaleString()} créditos</span>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-zinc-200 bg-white/85 text-sm">
+              <CreditCard className="w-4 h-4 text-zinc-600" />
+              <span className="text-zinc-600">{searchesLeft.toLocaleString()} créditos</span>
             </div>
           )}
           <button
             onClick={() => setShowSettings(s => !s)}
-            className={cn('flex items-center gap-2 px-3 py-2 rounded-xl border text-sm transition-all', showSettings ? 'bg-white/10 border-white/20 text-white' : 'border-white/10 text-zinc-400 hover:text-white hover:bg-white/5')}
+            className={cn('flex items-center gap-2 px-3 py-2 rounded-xl border text-sm transition-all', showSettings ? 'bg-zinc-100 border-zinc-300 text-zinc-900' : 'border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70')}
           >
             <Settings className="w-4 h-4" />
             Config.
           </button>
           {/* Paid / Organic toggle */}
-          <div className="flex bg-zinc-900/60 border border-white/10 rounded-xl p-1 gap-1">
+          <div className="flex bg-zinc-50 border border-zinc-200 rounded-xl p-1 gap-1">
             <button
               onClick={() => setAdType('organic')}
               className={cn('px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5',
-                adType === 'organic' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'text-zinc-400 hover:text-white')}
+                adType === 'organic' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'text-zinc-600 hover:text-zinc-900')}
             >
               <TrendingUp className="w-3 h-3" /> Orgánico
             </button>
             <button
               onClick={() => setAdType('paid')}
               className={cn('px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5',
-                adType === 'paid' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-zinc-400 hover:text-white')}
+                adType === 'paid' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-zinc-600 hover:text-zinc-900')}
             >
               <ShoppingCart className="w-3 h-3" /> Pagado
             </button>
@@ -212,26 +212,26 @@ export default function ShoppingPositionPage() {
 
       {/* Settings Panel */}
       {showSettings && (
-        <div className="p-5 rounded-2xl border border-white/10 bg-zinc-950/60 flex flex-col md:flex-row gap-4">
+        <div className="p-5 rounded-2xl border border-zinc-200 bg-white/60 flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest mb-1.5 block">Nombre de nuestra tienda</label>
+            <label className="text-xs text-zinc-600 uppercase tracking-widest mb-1.5 block">Nombre de nuestra tienda</label>
             <input
               type="text"
               value={brand}
               onChange={e => { setBrand(e.target.value); persist(keywords, e.target.value, country); }}
               placeholder="ej. GSMPRO, Importadora GSMPRO"
-              className="w-full bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
             />
             <p className="text-[10px] text-zinc-600 mt-1">Coincidencia parcial — búsqueda no sensible a mayúsculas</p>
           </div>
           <div>
-            <label className="text-xs text-zinc-500 uppercase tracking-widest mb-1.5 block">País</label>
+            <label className="text-xs text-zinc-600 uppercase tracking-widest mb-1.5 block">País</label>
             <select
               value={country}
               onChange={e => { setCountry(e.target.value); persist(keywords, brand, e.target.value); }}
-              className="w-full md:w-36 bg-zinc-900/60 border border-white/10 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+              className="w-full md:w-36 bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
             >
-              {COUNTRY_OPTIONS.map(c => <option key={c.value} value={c.value} className="bg-zinc-900">{c.label}</option>)}
+              {COUNTRY_OPTIONS.map(c => <option key={c.value} value={c.value} className="bg-zinc-50">{c.label}</option>)}
             </select>
           </div>
         </div>
@@ -240,20 +240,20 @@ export default function ShoppingPositionPage() {
       {/* Add keyword + Scan All */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
           <input
             type="text"
             value={newKw}
             onChange={e => setNewKw(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && addKeyword()}
             placeholder='Añadir keyword (ej. "iPhone 15 case")'
-            className="w-full bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+            className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
           />
         </div>
         <button
           onClick={addKeyword}
           disabled={!newKw.trim()}
-          className="flex items-center gap-2 bg-white/10 hover:bg-white/20 disabled:opacity-40 border border-white/10 text-white px-4 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
+          className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 disabled:opacity-40 border border-zinc-200 text-zinc-900 px-4 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
         >
           <Plus className="w-4 h-4" /> Añadir
         </button>
@@ -279,10 +279,10 @@ export default function ShoppingPositionPage() {
 
       {/* Keyword list */}
       {keywords.length === 0 ? (
-        <div className="p-16 rounded-3xl border border-white/10 bg-zinc-950/50 text-center">
+        <div className="p-16 rounded-3xl border border-zinc-200 bg-white/85 text-center">
           <Target className="w-12 h-12 text-zinc-700 mx-auto mb-4" />
-          <h3 className="text-white font-semibold text-lg mb-2">Sin keywords monitoreadas</h3>
-          <p className="text-zinc-500 text-sm max-w-sm mx-auto">
+          <h3 className="text-zinc-900 font-semibold text-lg mb-2">Sin keywords monitoreadas</h3>
+          <p className="text-zinc-600 text-sm max-w-sm mx-auto">
             Añade las keywords de tus productos para ver tu posición en Google Shopping frente a la competencia.
           </p>
         </div>
@@ -295,38 +295,38 @@ export default function ShoppingPositionPage() {
             const isExpanded = expanded === kw;
 
             return (
-              <div key={kw} className="rounded-2xl border border-white/5 bg-zinc-950/40 overflow-hidden">
+              <div key={kw} className="rounded-2xl border border-zinc-200/70 bg-white/90 overflow-hidden">
                 {/* Row */}
                 <div className="flex items-center gap-3 px-4 py-3">
                   {/* Expand toggle */}
                   <button
                     onClick={() => setExpanded(isExpanded ? null : kw)}
                     disabled={!data?.topResults?.length}
-                    className="text-zinc-500 hover:text-zinc-300 disabled:opacity-30 transition-colors"
+                    className="text-zinc-600 hover:text-zinc-600 disabled:opacity-30 transition-colors"
                   >
                     <ChevronDown className={cn('w-4 h-4 transition-transform', isExpanded && 'rotate-180')} />
                   </button>
 
                   {/* Position badge */}
                   {isLoading ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-800 text-zinc-500 border border-white/10 rounded-full px-2.5 py-0.5 animate-pulse">
+                    <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-100 text-zinc-600 border border-zinc-200 rounded-full px-2.5 py-0.5 animate-pulse">
                       Escaneando…
                     </span>
                   ) : data ? (
                     <PositionBadge pos={data.position} type={adType} />
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-900 text-zinc-600 border border-white/5 rounded-full px-2.5 py-0.5">
+                    <span className="inline-flex items-center gap-1 text-[10px] bg-zinc-50 text-zinc-600 border border-zinc-200/70 rounded-full px-2.5 py-0.5">
                       Sin escanear
                     </span>
                   )}
 
                   {/* Keyword */}
-                  <span className="flex-1 text-white text-sm font-medium">{kw}</span>
+                  <span className="flex-1 text-zinc-900 text-sm font-medium">{kw}</span>
 
                   {/* Competitor info */}
                   {data?.appeared && data.topResults[0] && (
-                    <span className="text-zinc-500 text-xs hidden md:block">
-                      Top: <span className="text-zinc-300">{data.topResults[0].source}</span>
+                    <span className="text-zinc-600 text-xs hidden md:block">
+                      Top: <span className="text-zinc-600">{data.topResults[0].source}</span>
                     </span>
                   )}
 
@@ -339,7 +339,7 @@ export default function ShoppingPositionPage() {
                   <button
                     onClick={() => scanSingle(kw)}
                     disabled={isLoading}
-                    className="text-zinc-600 hover:text-zinc-300 transition-colors disabled:opacity-30"
+                    className="text-zinc-600 hover:text-zinc-600 transition-colors disabled:opacity-30"
                   >
                     <RefreshCw className={cn('w-3.5 h-3.5', isLoading && 'animate-spin')} />
                   </button>
@@ -352,8 +352,8 @@ export default function ShoppingPositionPage() {
 
                 {/* Expanded top results */}
                 {isExpanded && data != null && (data.topResults?.length ?? 0) > 0 && (
-                  <div className="border-t border-white/5 bg-zinc-900/30 px-4 py-3">
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-3">
+                  <div className="border-t border-zinc-200/70 bg-zinc-50/30 px-4 py-3">
+                    <p className="text-[10px] text-zinc-600 uppercase tracking-widest mb-3">
                       Top resultados {adType === 'organic' ? 'orgánicos' : 'pagados'}
                     </p>
                     <div className="space-y-2">
@@ -362,23 +362,23 @@ export default function ShoppingPositionPage() {
                           key={i}
                           className={cn(
                             'flex items-center gap-3 rounded-xl px-3 py-2 text-xs',
-                            item.isOurs ? 'bg-blue-500/10 border border-blue-500/20' : 'hover:bg-white/5',
+                            item.isOurs ? 'bg-blue-500/10 border border-blue-500/20' : 'hover:bg-zinc-100/70',
                           )}
                         >
                           {item.thumbnail && (
-                            <img src={item.thumbnail} alt="" className="w-8 h-8 rounded-lg object-cover bg-zinc-800 flex-shrink-0" />
+                            <img src={item.thumbnail} alt="" className="w-8 h-8 rounded-lg object-cover bg-zinc-100 flex-shrink-0" />
                           )}
-                          <span className="text-zinc-500 font-mono w-4 flex-shrink-0">#{item.position}</span>
+                          <span className="text-zinc-600 font-mono w-4 flex-shrink-0">#{item.position}</span>
                           <div className="flex-1 min-w-0">
-                            <p className={cn('font-medium truncate', item.isOurs ? 'text-blue-300' : 'text-zinc-300')}>
+                            <p className={cn('font-medium truncate', item.isOurs ? 'text-blue-300' : 'text-zinc-600')}>
                               {item.source}
                               {item.isOurs && <span className="ml-1.5 text-[9px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded-full border border-blue-500/30">Nosotros</span>}
                             </p>
                             <p className="text-zinc-600 truncate">{item.title}</p>
                           </div>
-                          <span className="text-zinc-400 font-mono flex-shrink-0">{item.price}</span>
+                          <span className="text-zinc-600 font-mono flex-shrink-0">{item.price}</span>
                           {item.link && (
-                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-zinc-300">
+                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-zinc-600">
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
@@ -409,15 +409,15 @@ function KpiCard({ title, value, sub, icon: Icon, color }: {
     violet:  'text-violet-400  bg-violet-500/10  border-violet-500/20',
   };
   return (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3">
-        <p className="text-xs font-medium text-zinc-400 leading-tight">{title}</p>
+        <p className="text-xs font-medium text-zinc-600 leading-tight">{title}</p>
         <div className={cn('p-1.5 rounded-lg border', styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-white tracking-tight">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1">{sub}</p>
+      <p className="text-2xl font-bold text-zinc-900 tracking-tight">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1">{sub}</p>
       <div className={cn('absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity', styles[color].split(' ')[1])} />
     </div>
   );

@@ -113,15 +113,15 @@ export default function TendenciasPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Tendencias de Mercado</h1>
-          <p className="text-zinc-400 mt-1">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Tendencias de Mercado</h1>
+          <p className="text-zinc-600 mt-1">
             Índice de interés 0-100 por marca (Google Trends) con alertas de oportunidad y riesgo.
           </p>
         </div>
         <button
           onClick={fetchData}
           disabled={loading}
-          className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 border border-zinc-200 text-zinc-900 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50"
         >
           <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
           Actualizar
@@ -141,24 +141,24 @@ export default function TendenciasPage() {
       </div>
 
       {noData ? (
-        <div className="p-12 rounded-3xl border border-white/10 bg-zinc-950/50 text-center">
+        <div className="p-12 rounded-3xl border border-zinc-200 bg-white/85 text-center">
           <Activity className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-          <h3 className="text-white font-semibold text-lg mb-2">Sin datos de tendencias todavía</h3>
-          <p className="text-zinc-400 text-sm mb-3">
+          <h3 className="text-zinc-900 font-semibold text-lg mb-2">Sin datos de tendencias todavía</h3>
+          <p className="text-zinc-600 text-sm mb-3">
             Ejecuta el sincronizador. Requiere créditos en SerpApi (mismo plan que Competitividad).
           </p>
-          <code className="block text-xs text-blue-400 bg-zinc-900 rounded-lg px-4 py-2 inline-block">
+          <code className="block text-xs text-blue-400 bg-zinc-50 rounded-lg px-4 py-2 inline-block">
             cd scripts && node sync-market-trends.js --top=10 --dry-run
           </code>
         </div>
       ) : (
         <>
           {/* Gráfico de Líneas */}
-          <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
+          <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h2 className="text-lg font-bold text-white">Evolución de Interés por Marca</h2>
-                <p className="text-xs text-zinc-400 mt-1">Selecciona hasta 10 marcas para comparar</p>
+                <h2 className="text-lg font-bold text-zinc-900">Evolución de Interés por Marca</h2>
+                <p className="text-xs text-zinc-600 mt-1">Selecciona hasta 10 marcas para comparar</p>
               </div>
             </div>
             {/* Brand toggles */}
@@ -170,8 +170,8 @@ export default function TendenciasPage() {
                   className={cn(
                     "px-3 py-1 rounded-full text-xs font-medium border transition-all",
                     selectedBrands.includes(s.keyword)
-                      ? "text-white border-transparent"
-                      : "text-zinc-500 border-white/10 hover:text-zinc-300"
+                      ? "text-zinc-900 border-transparent"
+                      : "text-zinc-600 border-zinc-200 hover:text-zinc-600"
                   )}
                   style={selectedBrands.includes(s.keyword)
                     ? { backgroundColor: LINE_COLORS[selectedBrands.indexOf(s.keyword)] + '33',
@@ -191,11 +191,11 @@ export default function TendenciasPage() {
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
                     <XAxis dataKey="date" stroke="#52525b" fontSize={10} tickLine={false} />
                     <YAxis stroke="#52525b" fontSize={10} tickLine={false} domain={[0, 100]} />
                     <RechartsTooltip
-                      contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '1rem', color: '#fff', fontSize: '12px' }}
+                      contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '1rem', color: '#18181b', fontSize: '12px' }}
                     />
                     <Legend wrapperStyle={{ fontSize: '11px', color: '#a1a1aa' }} />
                     {selectedBrands.map((brand, i) => (
@@ -218,7 +218,7 @@ export default function TendenciasPage() {
 
           {/* Tarjetas de Señales */}
           <div>
-            <h2 className="text-lg font-bold text-white mb-4">Alertas por Marca</h2>
+            <h2 className="text-lg font-bold text-zinc-900 mb-4">Alertas por Marca</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {signals.map(row => {
                 const cfg = SIGNAL_CONFIG[row.signal] ?? SIGNAL_CONFIG.stable;
@@ -230,8 +230,8 @@ export default function TendenciasPage() {
                   )}>
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <p className="text-white font-semibold">{row.keyword}</p>
-                        <p className="text-zinc-500 text-xs mt-0.5">{row.vendor_products} productos activos</p>
+                        <p className="text-zinc-900 font-semibold">{row.keyword}</p>
+                        <p className="text-zinc-600 text-xs mt-0.5">{row.vendor_products} productos activos</p>
                       </div>
                       <div className={cn("p-1.5 rounded-lg", cfg.bg, cfg.border, "border")}>
                         <Icon className={cn("w-4 h-4", cfg.text)} />
@@ -241,11 +241,11 @@ export default function TendenciasPage() {
                       <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full border", cfg.bg, cfg.border, cfg.text)}>
                         {cfg.label}
                       </span>
-                      <span className="text-zinc-400 text-xs font-mono">
+                      <span className="text-zinc-600 text-xs font-mono">
                         {row.latest_value}/100
                       </span>
                     </div>
-                    <p className="text-zinc-300 text-xs leading-relaxed">{row.signal_detail}</p>
+                    <p className="text-zinc-600 text-xs leading-relaxed">{row.signal_detail}</p>
                   </div>
                 );
               })}
@@ -269,15 +269,15 @@ function KpiCard({ title, value, subtitle, icon: Icon, color }: {
     blue:    'text-blue-400    bg-blue-500/10    border-blue-500/20',
   };
   return (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3 relative z-10">
-        <p className="text-xs font-medium text-zinc-400 leading-tight">{title}</p>
+        <p className="text-xs font-medium text-zinc-600 leading-tight">{title}</p>
         <div className={cn("p-1.5 rounded-lg border", styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-white tracking-tight relative z-10">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1 relative z-10">{subtitle}</p>
+      <p className="text-2xl font-bold text-zinc-900 tracking-tight relative z-10">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1 relative z-10">{subtitle}</p>
       <div className={cn("absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity", styles[color].split(' ')[1])} />
     </div>
   );

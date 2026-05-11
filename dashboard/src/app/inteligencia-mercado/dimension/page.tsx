@@ -50,11 +50,11 @@ const CustomTreemapContent = ({ x, y, width, height, name, value }: any) => {
     <g>
       <rect
         x={x} y={y} width={width} height={height}
-        style={{ fill: `hsl(${210 + (value % 60)}, 70%, ${25 + (value % 20)}%)`, stroke: '#18181b', strokeWidth: 2 }}
+        style={{ fill: `hsl(${210 + (value % 60)}, 70%, ${25 + (value % 20)}%)`, stroke: 'rgba(255,255,255,0.12)', strokeWidth: 2 }}
         rx={4}
       />
       <foreignObject x={x + 4} y={y + 4} width={width - 8} height={height - 8}>
-        <div style={{ overflow: 'hidden', color: '#fff', fontSize: `${fontSize}px`, lineHeight: '1.2', fontWeight: 500 }}>
+        <div style={{ overflow: 'hidden', color: '#fafafa', fontSize: `${fontSize}px`, lineHeight: '1.2', fontWeight: 500 }}>
           <div style={{ marginBottom: 2 }}>{name}</div>
           <div style={{ opacity: 0.7, fontSize: `${fontSize - 1}px` }}>{formatCurrency(value)}</div>
         </div>
@@ -125,15 +125,15 @@ export default function DimensionMercadoPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Dimensión de Mercado</h1>
-          <p className="text-zinc-400 mt-1">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Dimensión de Mercado</h1>
+          <p className="text-zinc-600 mt-1">
             Market Size y Market Share estimados a partir de volúmenes de búsqueda (Google Ads).
           </p>
         </div>
         <button
           onClick={fetchData}
           disabled={loading}
-          className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 border border-zinc-200 text-zinc-900 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-50"
         >
           <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
           Actualizar
@@ -178,25 +178,25 @@ export default function DimensionMercadoPage() {
       ) : (
         <>
           {/* View Toggle + Chart */}
-          <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
+          <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
             {/* Toggle */}
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div>
-                <h2 className="text-lg font-bold text-white">Mapa de Mercado por Producto</h2>
-                <p className="text-xs text-zinc-400 mt-1">Área proporcional al Market Size estimado</p>
+                <h2 className="text-lg font-bold text-zinc-900">Mapa de Mercado por Producto</h2>
+                <p className="text-xs text-zinc-600 mt-1">Área proporcional al Market Size estimado</p>
               </div>
-              <div className="flex bg-zinc-900/60 border border-white/10 rounded-xl p-1 gap-1">
+              <div className="flex bg-zinc-50 border border-zinc-200 rounded-xl p-1 gap-1">
                 <button
                   onClick={() => setView('ranking')}
                   className={cn("px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                    view === 'ranking' ? "bg-blue-600 text-white" : "text-zinc-400 hover:text-white")}
+                    view === 'ranking' ? "bg-blue-600 text-white" : "text-zinc-600 hover:text-zinc-900")}
                 >
                   Ranking
                 </button>
                 <button
                   onClick={() => setView('treemap')}
                   className={cn("px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                    view === 'treemap' ? "bg-blue-600 text-white" : "text-zinc-400 hover:text-white")}
+                    view === 'treemap' ? "bg-blue-600 text-white" : "text-zinc-600 hover:text-zinc-900")}
                 >
                   Treemap
                 </button>
@@ -217,7 +217,7 @@ export default function DimensionMercadoPage() {
                     content={<CustomTreemapContent />}
                   >
                     <RechartsTooltip
-                      contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '1rem', color: '#fff', fontSize: '12px' }}
+                      contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '1rem', color: '#18181b', fontSize: '12px' }}
                       formatter={(val: any, _: any, props: any) => [
                         formatCurrency(val),
                         `${props.payload?.fullName || ''} | Búsquedas: ${formatNumber(props.payload?.searches || 0)}`
@@ -233,10 +233,10 @@ export default function DimensionMercadoPage() {
                     <XAxis type="number" stroke="#52525b" fontSize={11} tickLine={false} axisLine={false}
                       tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                     <YAxis type="category" dataKey="name" stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} width={140} />
-                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={true} horizontal={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={true} horizontal={false} />
                     <RechartsTooltip
-                      cursor={{ fill: '#27272a', opacity: 0.4 }}
-                      contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a', borderRadius: '1rem', color: '#fff', fontSize: '12px' }}
+                      cursor={{ fill: '#e4e4e7', opacity: 0.4 }}
+                      contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '1rem', color: '#18181b', fontSize: '12px' }}
                       formatter={(val: any, key: any) => [
                         formatCurrency(val),
                         key === 'marketSize' ? 'Market Size Promedio' : 'Market Share Estimado'
@@ -253,12 +253,12 @@ export default function DimensionMercadoPage() {
           </div>
 
           {/* Products Table */}
-          <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
-            <h2 className="text-lg font-bold text-white mb-5">Detalle por Producto</h2>
+          <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
+            <h2 className="text-lg font-bold text-zinc-900 mb-5">Detalle por Producto</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-zinc-400 uppercase">
-                  <tr className="bg-zinc-900/50 rounded-lg">
+                <thead className="text-xs text-zinc-600 uppercase">
+                  <tr className="bg-zinc-50 rounded-lg">
                     <th className="px-4 py-3 rounded-tl-lg">#</th>
                     <th className="px-4 py-3">Producto</th>
                     <th className="px-4 py-3">Keyword</th>
@@ -269,18 +269,18 @@ export default function DimensionMercadoPage() {
                 </thead>
                 <tbody>
                   {products.map((p, i) => (
-                    <tr key={p.product_id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="px-4 py-3 text-zinc-500 font-mono text-xs">{i + 1}</td>
+                    <tr key={p.product_id} className="border-b border-zinc-200/70 hover:bg-zinc-100/70 transition-colors">
+                      <td className="px-4 py-3 text-zinc-600 font-mono text-xs">{i + 1}</td>
                       <td className="px-4 py-3">
-                        <div className="font-medium text-white text-xs leading-tight max-w-[220px]">{p.product_title}</div>
-                        <div className="text-zinc-500 text-[10px] mt-0.5">{p.vendor}</div>
+                        <div className="font-medium text-zinc-900 text-xs leading-tight max-w-[220px]">{p.product_title}</div>
+                        <div className="text-zinc-600 text-[10px] mt-0.5">{p.vendor}</div>
                       </td>
                       <td className="px-4 py-3">
                         <span className="bg-blue-500/10 text-blue-300 border border-blue-500/20 rounded-lg px-2 py-0.5 text-[10px] font-mono">
                           {p.keyword}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-zinc-300 font-mono text-xs">
+                      <td className="px-4 py-3 text-right text-zinc-600 font-mono text-xs">
                         {formatNumber(p.avg_monthly_searches)}
                       </td>
                       <td className="px-4 py-3 text-right text-blue-400 font-medium text-xs">
@@ -333,8 +333,8 @@ function PendingState() {
         </div>
         <div>
           <p className="text-amber-400 font-semibold">Esperando Google Ads Basic Access</p>
-          <p className="text-zinc-400 text-sm mt-1">
-            El servicio <code className="text-xs bg-zinc-900 px-1.5 py-0.5 rounded text-blue-300">KeywordPlanIdeaService</code> requiere aprobación de Basic Access.
+          <p className="text-zinc-600 text-sm mt-1">
+            El servicio <code className="text-xs bg-zinc-50 px-1.5 py-0.5 rounded text-blue-300">KeywordPlanIdeaService</code> requiere aprobación de Basic Access.
             Puedes usar la calculadora abajo para estimar el mercado manualmente mientras tanto.
           </p>
           <div className="flex items-center gap-2 mt-3 flex-wrap">
@@ -348,39 +348,39 @@ function PendingState() {
       </div>
 
       {/* Formula explainer */}
-      <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
-        <h2 className="text-lg font-bold text-white mb-1">Cómo se calcula el Market Size</h2>
-        <p className="text-zinc-500 text-sm mb-5">La fórmula que usará este módulo cuando Google Ads esté activo:</p>
+      <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
+        <h2 className="text-lg font-bold text-zinc-900 mb-1">Cómo se calcula el Market Size</h2>
+        <p className="text-zinc-600 text-sm mb-5">La fórmula que usará este módulo cuando Google Ads esté activo:</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
           {[
             { step: '1', label: 'Compradores potenciales', formula: 'Búsquedas/mes × 1%', color: 'blue' },
             { step: '2', label: 'Market Size',             formula: 'Compradores × Precio promedio', color: 'violet' },
             { step: '3', label: 'Market Share estimado',   formula: 'Market Size × 5%', color: 'emerald' },
           ].map(item => (
-            <div key={item.step} className="p-4 rounded-2xl border border-white/5 bg-zinc-900/40">
+            <div key={item.step} className="p-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/90">
               <span className="text-[10px] font-mono text-zinc-600">PASO {item.step}</span>
-              <p className="text-white font-semibold mt-1">{item.label}</p>
-              <p className="text-xs font-mono text-zinc-400 mt-1">{item.formula}</p>
+              <p className="text-zinc-900 font-semibold mt-1">{item.label}</p>
+              <p className="text-xs font-mono text-zinc-600 mt-1">{item.formula}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Manual calculator */}
-      <div className="p-6 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl">
+      <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
         <div className="flex items-center gap-2 mb-5">
           <Calculator className="w-5 h-5 text-blue-400" />
-          <h2 className="text-lg font-bold text-white">Calculadora Manual</h2>
+          <h2 className="text-lg font-bold text-zinc-900">Calculadora Manual</h2>
         </div>
         <form onSubmit={calculate} className="flex flex-col md:flex-row gap-3 mb-5">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
             <input
               type="text"
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
               placeholder='Keyword (ej. "iPhone 15 case")'
-              className="w-full bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
             />
           </div>
           <input
@@ -388,14 +388,14 @@ function PendingState() {
             value={searches}
             onChange={e => setSearches(e.target.value)}
             placeholder="Búsquedas/mes"
-            className="w-full md:w-44 bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+            className="w-full md:w-44 bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
           />
           <input
             type="number"
             value={price}
             onChange={e => setPrice(e.target.value)}
             placeholder="Precio USD"
-            className="w-full md:w-36 bg-zinc-900/60 border border-white/10 text-white placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+            className="w-full md:w-36 bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
           />
           <button
             type="submit"
@@ -410,18 +410,18 @@ function PendingState() {
         {preview && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 text-center">
-              <p className="text-xs text-zinc-500 mb-1">Compradores Potenciales</p>
-              <p className="text-2xl font-bold text-white">{preview.buyers.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</p>
+              <p className="text-xs text-zinc-600 mb-1">Compradores Potenciales</p>
+              <p className="text-2xl font-bold text-zinc-900">{preview.buyers.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</p>
               <p className="text-[10px] text-zinc-600 mt-1">personas/mes</p>
             </div>
             <div className="p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5 text-center">
-              <p className="text-xs text-zinc-500 mb-1">Market Size Estimado</p>
-              <p className="text-2xl font-bold text-white">{fmtCurrency(preview.marketSize)}</p>
+              <p className="text-xs text-zinc-600 mb-1">Market Size Estimado</p>
+              <p className="text-2xl font-bold text-zinc-900">{fmtCurrency(preview.marketSize)}</p>
               <p className="text-[10px] text-zinc-600 mt-1">tamaño del mercado</p>
             </div>
             <div className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-center">
-              <p className="text-xs text-zinc-500 mb-1">Market Share Estimado</p>
-              <p className="text-2xl font-bold text-white">{fmtCurrency(preview.marketShare)}</p>
+              <p className="text-xs text-zinc-600 mb-1">Market Share Estimado</p>
+              <p className="text-2xl font-bold text-zinc-900">{fmtCurrency(preview.marketShare)}</p>
               <p className="text-[10px] text-zinc-600 mt-1">nuestra cuota (5%)</p>
             </div>
           </div>
@@ -442,15 +442,15 @@ function KpiCard({ title, value, subtitle, icon: Icon, color }: {
     amber:   'text-amber-400  bg-amber-500/10  border-amber-500/20',
   };
   return (
-    <div className="p-5 rounded-3xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+    <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3 relative z-10">
-        <p className="text-xs font-medium text-zinc-400 leading-tight">{title}</p>
+        <p className="text-xs font-medium text-zinc-600 leading-tight">{title}</p>
         <div className={cn("p-1.5 rounded-lg border", styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <p className="text-2xl font-bold text-white tracking-tight relative z-10">{value}</p>
-      <p className="text-[10px] text-zinc-500 mt-1 relative z-10">{subtitle}</p>
+      <p className="text-2xl font-bold text-zinc-900 tracking-tight relative z-10">{value}</p>
+      <p className="text-[10px] text-zinc-600 mt-1 relative z-10">{subtitle}</p>
       <div className={cn("absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity", styles[color].split(' ')[1])} />
     </div>
   );

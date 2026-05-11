@@ -83,22 +83,22 @@ export default function Home() {
     >
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-white tracking-tight">Resumen Global</h2>
-          <p className="text-zinc-400 mt-1">Métricas principales de E-commerce</p>
+          <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Resumen Global</h2>
+          <p className="text-zinc-600 mt-1">Métricas principales de E-commerce</p>
         </div>
         
-        <div className="flex items-center gap-2 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 p-2 rounded-2xl cursor-pointer">
-          <Calendar className="w-4 h-4 text-zinc-400 ml-2" />
+        <div className="flex items-center gap-2 bg-zinc-100/80 hover:bg-zinc-100 transition-colors border border-zinc-200 p-2 rounded-2xl cursor-pointer">
+          <Calendar className="w-4 h-4 text-zinc-600 ml-2" />
           <select 
             onChange={handleMonthChange}
             defaultValue="04"
-            className="bg-transparent text-sm font-medium text-white px-2 py-1 outline-none cursor-pointer appearance-none"
+            className="bg-transparent text-sm font-medium text-zinc-900 px-2 py-1 outline-none cursor-pointer appearance-none"
           >
-            <option value="all" className="bg-zinc-900">Todo el año (2026)</option>
-            <option value="04" className="bg-zinc-900">Abril 2026</option>
-            <option value="03" className="bg-zinc-900">Marzo 2026</option>
-            <option value="02" className="bg-zinc-900">Febrero 2026</option>
-            <option value="01" className="bg-zinc-900">Enero 2026</option>
+            <option value="all" className="bg-zinc-50">Todo el año (2026)</option>
+            <option value="04" className="bg-zinc-50">Abril 2026</option>
+            <option value="03" className="bg-zinc-50">Marzo 2026</option>
+            <option value="02" className="bg-zinc-50">Febrero 2026</option>
+            <option value="01" className="bg-zinc-50">Enero 2026</option>
           </select>
         </div>
       </motion.div>
@@ -113,7 +113,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <h3 className="text-zinc-400 font-medium text-sm">Ventas Netas (Pagadas)</h3>
+            <h3 className="text-zinc-600 font-medium text-sm">Ventas Netas (Pagadas)</h3>
             <div className="mt-2 h-10">
               {loading ? (
                 <Skeleton className="h-9 w-32" />
@@ -134,7 +134,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <h3 className="text-zinc-400 font-medium text-sm">Órdenes Totales</h3>
+            <h3 className="text-zinc-600 font-medium text-sm">Órdenes Totales</h3>
             <div className="mt-2 h-10">
               {loading ? (
                 <Skeleton className="h-9 w-24" />
@@ -155,7 +155,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <h3 className="text-zinc-400 font-medium text-sm">Emails Abiertos</h3>
+            <h3 className="text-zinc-600 font-medium text-sm">Emails Abiertos</h3>
             <div className="mt-2 h-10">
               {loading ? (
                 <Skeleton className="h-9 w-28" />
@@ -176,7 +176,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <h3 className="text-zinc-400 font-medium text-sm">Satisfacción (CSAT)</h3>
+            <h3 className="text-zinc-600 font-medium text-sm">Satisfacción (CSAT)</h3>
             <div className="mt-2 h-10">
               {loading ? (
                 <Skeleton className="h-9 w-20" />
@@ -193,9 +193,9 @@ export default function Home() {
 
       {/* Overview Chart Container */}
       <motion.div variants={itemVariants} className="glass-card p-8 mt-6">
-         <h3 className="text-xl font-bold text-white mb-6 tracking-tight">Módulo General Activo</h3>
-         <div className="h-72 flex items-center justify-center border border-dashed border-white/10 rounded-2xl bg-black/20">
-           <p className="text-zinc-500 font-medium">Los datos reales están siendo inyectados exitosamente desde BigQuery.</p>
+         <h3 className="text-xl font-bold text-zinc-900 mb-6 tracking-tight">Módulo General Activo</h3>
+         <div className="h-72 flex items-center justify-center border border-dashed border-zinc-200 rounded-2xl bg-black/20">
+           <p className="text-zinc-600 font-medium">Los datos reales están siendo inyectados exitosamente desde BigQuery.</p>
          </div>
       </motion.div>
     </motion.div>

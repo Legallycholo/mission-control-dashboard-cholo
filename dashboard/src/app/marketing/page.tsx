@@ -19,13 +19,13 @@ const itemVariants: Variants = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl shadow-black">
-        <p className="text-zinc-400 text-sm mb-2">{label}</p>
+      <div className="bg-zinc-50/90 backdrop-blur-xl border border-zinc-200 p-4 rounded-2xl shadow-2xl shadow-black">
+        <p className="text-zinc-600 text-sm mb-2">{label}</p>
         {payload.map((entry: any, index: number) => (
           <div key={index} className="flex items-center gap-2 mt-1">
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-            <span className="text-white font-medium">{entry.name}:</span>
-            <span className="text-white font-bold">{entry.value.toLocaleString('es-CL')}</span>
+            <span className="text-zinc-900 font-medium">{entry.name}:</span>
+            <span className="text-zinc-900 font-bold">{entry.value.toLocaleString('es-CL')}</span>
           </div>
         ))}
       </div>
@@ -97,31 +97,31 @@ export default function MarketingPage() {
     <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-10">
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-white tracking-tight">Marketing & SEO</h2>
-          <p className="text-zinc-400 mt-1">Rendimiento de Email Marketing y Búsqueda Orgánica.</p>
+          <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Marketing & SEO</h2>
+          <p className="text-zinc-600 mt-1">Rendimiento de Email Marketing y Búsqueda Orgánica.</p>
         </div>
-        <div className="flex items-center gap-2 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 p-2 rounded-2xl cursor-pointer">
-          <Calendar className="w-4 h-4 text-zinc-400 ml-2" />
-          <select onChange={handleMonthChange} defaultValue="04" className="bg-transparent text-sm font-medium text-white px-2 py-1 outline-none cursor-pointer appearance-none">
-            <option value="all" className="bg-zinc-900">Todo el año</option>
-            <option value="04" className="bg-zinc-900">Abril 2026</option>
-            <option value="03" className="bg-zinc-900">Marzo 2026</option>
-            <option value="02" className="bg-zinc-900">Febrero 2026</option>
-            <option value="01" className="bg-zinc-900">Enero 2026</option>
+        <div className="flex items-center gap-2 bg-zinc-100/80 hover:bg-zinc-100 transition-colors border border-zinc-200 p-2 rounded-2xl cursor-pointer">
+          <Calendar className="w-4 h-4 text-zinc-600 ml-2" />
+          <select onChange={handleMonthChange} defaultValue="04" className="bg-transparent text-sm font-medium text-zinc-900 px-2 py-1 outline-none cursor-pointer appearance-none">
+            <option value="all" className="bg-zinc-50">Todo el año</option>
+            <option value="04" className="bg-zinc-50">Abril 2026</option>
+            <option value="03" className="bg-zinc-50">Marzo 2026</option>
+            <option value="02" className="bg-zinc-50">Febrero 2026</option>
+            <option value="01" className="bg-zinc-50">Enero 2026</option>
           </select>
         </div>
       </motion.div>
 
       {/* Klaviyo Section */}
       <motion.div variants={itemVariants} className="space-y-4">
-        <h3 className="text-xl font-semibold text-white/90 tracking-tight">Email Marketing (Klaviyo)</h3>
+        <h3 className="text-xl font-semibold text-zinc-800 tracking-tight">Email Marketing (Klaviyo)</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="glass-card flex flex-col gap-5 group">
             <div className="p-2.5 bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-xl border border-orange-500/20 w-fit group-hover:scale-110 transition-transform duration-300">
               <Mail className="w-5 h-5 text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">Ingresos Klaviyo (Aprox)</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">Ingresos Klaviyo (Aprox)</h3>
               <div className="mt-2 h-10">
                 {loadingKlaviyo ? <Skeleton className="h-9 w-32" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{formatCurrency(klaviyoData?.attributedRevenue || 0)}</p>}
               </div>
@@ -132,7 +132,7 @@ export default function MarketingPage() {
               <MailOpen className="w-5 h-5 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">Emails Abiertos</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">Emails Abiertos</h3>
               <div className="mt-2 h-10">
                 {loadingKlaviyo ? <Skeleton className="h-9 w-24" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{klaviyoData?.openedCount || 0}</p>}
               </div>
@@ -143,7 +143,7 @@ export default function MarketingPage() {
               <MousePointerClick className="w-5 h-5 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">Clicks en Emails</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">Clicks en Emails</h3>
               <div className="mt-2 h-10">
                 {loadingKlaviyo ? <Skeleton className="h-9 w-20" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{klaviyoData?.clickedCount || 0}</p>}
               </div>
@@ -154,7 +154,7 @@ export default function MarketingPage() {
 
       {/* GSC Section */}
       <motion.div variants={itemVariants} className="space-y-4">
-        <h3 className="text-xl font-semibold text-white/90 flex items-center gap-2 tracking-tight">
+        <h3 className="text-xl font-semibold text-zinc-800 flex items-center gap-2 tracking-tight">
           <Search className="w-6 h-6 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]" />
           Rendimiento Orgánico (Google Search Console)
         </h3>
@@ -165,7 +165,7 @@ export default function MarketingPage() {
               <MousePointer2 className="w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">Total Clicks Orgánicos</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">Total Clicks Orgánicos</h3>
               <div className="mt-2 h-10">
                 {loadingGsc ? <Skeleton className="h-9 w-24" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{totalGscClicks.toLocaleString('es-CL')}</p>}
               </div>
@@ -176,7 +176,7 @@ export default function MarketingPage() {
               <Eye className="w-5 h-5 text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">Total Impresiones</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">Total Impresiones</h3>
               <div className="mt-2 h-10">
                 {loadingGsc ? <Skeleton className="h-9 w-32" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{totalGscImpressions.toLocaleString('es-CL')}</p>}
               </div>
@@ -187,7 +187,7 @@ export default function MarketingPage() {
               <Search className="w-5 h-5 text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" />
             </div>
             <div>
-              <h3 className="text-zinc-400 font-medium text-sm">CTR Promedio</h3>
+              <h3 className="text-zinc-600 font-medium text-sm">CTR Promedio</h3>
               <div className="mt-2 h-10">
                 {loadingGsc ? <Skeleton className="h-9 w-16" /> : <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-zinc-400">{avgGscCtr}%</p>}
               </div>
@@ -196,14 +196,14 @@ export default function MarketingPage() {
         </div>
 
         <div className="glass-card mt-6 p-8">
-          <h3 className="text-xl font-semibold text-white/90 mb-8 tracking-tight">Evolución de Tráfico Orgánico</h3>
+          <h3 className="text-xl font-semibold text-zinc-800 mb-8 tracking-tight">Evolución de Tráfico Orgánico</h3>
           <div className="h-[350px] w-full">
             {loadingGsc ? (
               <div className="w-full h-full flex items-center justify-center">
                  <Skeleton className="w-full h-full rounded-xl opacity-20" />
               </div>
             ) : gscData.length === 0 ? (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500 font-medium">No hay datos para este periodo</div>
+              <div className="w-full h-full flex items-center justify-center text-zinc-600 font-medium">No hay datos para este periodo</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={gscData} margin={{ top: 10, right: 0, bottom: 0, left: 0 }}>

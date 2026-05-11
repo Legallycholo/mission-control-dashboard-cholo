@@ -86,17 +86,17 @@ export default function EquipoActividadPage() {
   }
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto text-slate-100">
+    <div className="p-8 space-y-8 max-w-7xl mx-auto text-zinc-900">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-teal-400 to-emerald-500 bg-clip-text text-transparent">
             Actividad del Equipo
           </h1>
-          <p className="text-slate-400 mt-2">Monitoreo y atribución de acciones en Shopify Audit Logs</p>
+          <p className="text-zinc-600 mt-2">Monitoreo y atribución de acciones en Shopify Audit Logs</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-slate-800/80 p-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
-            <Filter className="w-5 h-5 text-slate-400 ml-2" />
+            <Filter className="w-5 h-5 text-zinc-600 ml-2" />
             <select 
               value={filterAction} 
               onChange={(e) => setFilterAction(e.target.value)}
@@ -111,14 +111,14 @@ export default function EquipoActividadPage() {
           <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 flex items-center gap-3">
             <Activity className="w-6 h-6 text-emerald-400" />
             <span className="font-semibold text-xl">{filteredTotalEvents}</span>
-            <span className="text-slate-400 text-sm">Eventos Atribuidos</span>
+            <span className="text-zinc-600 text-sm">Eventos Atribuidos</span>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Gráfico Principal */}
-        <Card className="col-span-2 bg-slate-900/60 border-slate-800 backdrop-blur-xl">
+        <Card className="col-span-2 bg-white/60 border-zinc-200 backdrop-blur-xl">
           <CardHeader>
             <CardTitle className="text-lg text-slate-200">Operaciones por Empleado {filterAction !== 'all' && <span className="text-emerald-400 text-sm ml-2">({filterAction})</span>}</CardTitle>
           </CardHeader>
@@ -141,7 +141,7 @@ export default function EquipoActividadPage() {
                     <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
                     <Tooltip 
                       cursor={{ fill: '#1e293b' }}
-                      contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '8px' }}
+                      contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e4e4e7', borderRadius: '8px' }}
                     />
                     <Bar dataKey="total" fill="#10b981" radius={[6, 6, 0, 0]} barSize={40} />
                   </BarChart>
@@ -152,7 +152,7 @@ export default function EquipoActividadPage() {
         </Card>
 
         {/* Top Acciones */}
-        <Card className="bg-slate-900/60 border-slate-800 backdrop-blur-xl">
+        <Card className="bg-white/60 border-zinc-200 backdrop-blur-xl">
           <CardHeader>
             <CardTitle className="text-lg text-slate-200">Top Tipos de Acción</CardTitle>
           </CardHeader>
@@ -162,7 +162,7 @@ export default function EquipoActividadPage() {
                 <div key={idx} className="flex justify-between items-center p-3 rounded-lg bg-slate-800/40 hover:bg-slate-800/80 transition">
                   <div className="flex flex-col">
                     <span className="font-medium text-emerald-400 text-sm">{item.action}</span>
-                    <span className="text-xs text-slate-400">{item.full_name}</span>
+                    <span className="text-xs text-zinc-600">{item.full_name}</span>
                   </div>
                   <span className="bg-slate-700/50 text-slate-200 px-3 py-1 rounded-full text-xs font-semibold">
                     {item.event_count}
@@ -175,10 +175,10 @@ export default function EquipoActividadPage() {
       </div>
 
       {/* Tabla de Registros */}
-      <Card className="bg-slate-900/60 border-slate-800 backdrop-blur-xl overflow-hidden">
+      <Card className="bg-white/60 border-zinc-200 backdrop-blur-xl overflow-hidden">
         <CardHeader>
           <CardTitle className="text-lg text-slate-200 flex items-center gap-2">
-            <Clock className="w-5 h-5 text-slate-400" />
+            <Clock className="w-5 h-5 text-zinc-600" />
             Últimos Eventos Registrados
           </CardTitle>
         </CardHeader>
@@ -186,7 +186,7 @@ export default function EquipoActividadPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-800/50 text-slate-400 text-sm uppercase tracking-wider">
+                <tr className="bg-slate-800/50 text-zinc-600 text-sm uppercase tracking-wider">
                   <th className="p-4 font-semibold">Fecha y Hora</th>
                   <th className="p-4 font-semibold">Empleado</th>
                   <th className="p-4 font-semibold">Acción</th>
@@ -213,7 +213,7 @@ export default function EquipoActividadPage() {
                         {evt.action}
                       </span>
                     </td>
-                    <td className="p-4 text-slate-400 capitalize">{evt.subject_type?.toLowerCase().replace('_', ' ') || 'N/A'}</td>
+                    <td className="p-4 text-zinc-600 capitalize">{evt.subject_type?.toLowerCase().replace('_', ' ') || 'N/A'}</td>
                     <td className="p-4 text-right text-slate-500 font-mono text-xs">{evt.subject_id || '-'}</td>
                   </tr>
                 ))}

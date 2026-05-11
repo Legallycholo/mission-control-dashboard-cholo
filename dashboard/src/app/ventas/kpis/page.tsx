@@ -124,30 +124,30 @@ export default function VentasKpisPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Ventas: Indicadores (KPIs)</h1>
-          <p className="text-zinc-400 mt-1">Rendimiento financiero y volumen de pedidos.</p>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Ventas: Indicadores (KPIs)</h1>
+          <p className="text-zinc-600 mt-1">Rendimiento financiero y volumen de pedidos.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-zinc-900/50 border border-white/10 p-1.5 rounded-xl backdrop-blur-md">
-            <CalendarDays className="w-4 h-4 text-zinc-400 ml-2" />
+          <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 p-1.5 rounded-xl backdrop-blur-md">
+            <CalendarDays className="w-4 h-4 text-zinc-600 ml-2" />
             <input 
               type="date" 
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
-            <span className="text-zinc-500">-</span>
+            <span className="text-zinc-600">-</span>
             <input 
               type="date" 
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-sm text-white focus:outline-none px-2"
+              className="bg-transparent text-sm text-zinc-900 focus:outline-none px-2"
             />
           </div>
           <button 
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-white/5"
+            className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
@@ -217,11 +217,11 @@ export default function VentasKpisPage() {
 
       {/* Chart Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden group">
+        <div className="lg:col-span-2 p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
           <div className="flex items-center justify-between mb-6 relative z-10">
             <div>
-              <h2 className="text-lg font-bold text-white">Evolución de Ventas Pagadas</h2>
-              <p className="text-sm text-zinc-400">Ventas cobradas diariamente</p>
+              <h2 className="text-lg font-bold text-zinc-900">Evolución de Ventas Pagadas</h2>
+              <p className="text-sm text-zinc-600">Ventas cobradas diariamente</p>
             </div>
           </div>
           
@@ -255,9 +255,9 @@ export default function VentasKpisPage() {
                     fontSize={12}
                     tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
                   />
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
                   <RechartsTooltip 
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
                     itemStyle={{ color: '#3b82f6' }}
                     formatter={(value: any) => [formatCurrency(Number(value)), 'Ventas Pagadas']}
                     labelFormatter={(label) => `Fecha: ${label}`}
@@ -273,7 +273,7 @@ export default function VentasKpisPage() {
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-zinc-500">
+              <div className="w-full h-full flex items-center justify-center text-zinc-600">
                 No hay datos para este rango.
               </div>
             )}
@@ -282,8 +282,8 @@ export default function VentasKpisPage() {
         </div>
 
         {/* Placeholder for future Donut Charts */}
-        <div className="p-6 rounded-2xl border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden">
-          <h2 className="text-lg font-bold text-white mb-6 relative z-10">Estados de Pago</h2>
+        <div className="p-6 rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
+          <h2 className="text-lg font-bold text-zinc-900 mb-6 relative z-10">Estados de Pago</h2>
           
           <div className="h-[300px] w-full relative z-10 flex items-center justify-center">
             {loading ? (
@@ -306,7 +306,7 @@ export default function VentasKpisPage() {
                     ))}
                   </Pie>
                   <RechartsTooltip 
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.75rem', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e4e4e7', borderRadius: '0.75rem', color: '#18181b' }}
                     itemStyle={{ color: '#e4e4e7' }}
                     formatter={(value: any, name: any, props: any) => [
                       `${value} órdenes (${formatCurrency(props.payload.amount)})`, 
@@ -316,14 +316,14 @@ export default function VentasKpisPage() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-zinc-500 text-sm">No hay datos</div>
+              <div className="text-zinc-600 text-sm">No hay datos</div>
             )}
             
             {/* Custom Legend */}
             {!loading && data && data.paymentStatuses && (
               <div className="absolute bottom-0 w-full flex flex-wrap justify-center gap-3">
                 {data.paymentStatuses.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <div key={entry.name} className="flex items-center gap-1.5 text-xs text-zinc-600">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
                     <span className="capitalize">{entry.name}</span>
                   </div>
@@ -345,30 +345,30 @@ function KpiCard({ title, value, icon: Icon, color, loading, subtitle }: any) {
     emerald: 'from-emerald-500/20 to-emerald-600/5 border-emerald-500/20 text-emerald-400',
     indigo: 'from-indigo-500/20 to-indigo-600/5 border-indigo-500/20 text-indigo-400',
     rose: 'from-rose-500/20 to-rose-600/5 border-rose-500/20 text-rose-400',
-    zinc: 'from-zinc-500/20 to-zinc-600/5 border-white/10 text-zinc-400',
+    zinc: 'from-zinc-500/20 to-zinc-600/5 border-zinc-200 text-zinc-600',
   };
 
   return (
     <div className={cn(
       "relative overflow-hidden rounded-2xl border p-6 backdrop-blur-xl transition-all duration-300 hover:shadow-xl group",
-      "bg-gradient-to-br bg-zinc-950/50",
+      "bg-gradient-to-br bg-white/85",
       colorMap[color].split(' ')[0], 
       colorMap[color].split(' ')[1],
       colorMap[color].split(' ')[2]
     )}>
       <div className="flex items-center justify-between relative z-10">
-        <p className="text-sm font-medium text-zinc-400">{title}</p>
-        <div className={cn("p-2 rounded-xl bg-white/5", colorMap[color].split(' ')[3])}>
+        <p className="text-sm font-medium text-zinc-600">{title}</p>
+        <div className={cn("p-2 rounded-xl bg-zinc-100/80", colorMap[color].split(' ')[3])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
       <div className="mt-4 relative z-10">
         {loading ? (
-          <div className="h-8 w-24 bg-white/10 rounded animate-pulse" />
+          <div className="h-8 w-24 bg-zinc-100 rounded animate-pulse" />
         ) : (
-          <h3 className="text-2xl font-bold text-white tracking-tight">{value}</h3>
+          <h3 className="text-2xl font-bold text-zinc-900 tracking-tight">{value}</h3>
         )}
-        <p className="text-xs text-zinc-500 mt-1">{subtitle}</p>
+        <p className="text-xs text-zinc-600 mt-1">{subtitle}</p>
       </div>
       <div className={cn(
         "absolute -bottom-4 -right-4 w-24 h-24 rounded-full blur-2xl opacity-20 transition-transform duration-500 group-hover:scale-150",

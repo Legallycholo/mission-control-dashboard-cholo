@@ -50,14 +50,14 @@ export default function SignupPage() {
             <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
               <span className="text-3xl">⏳</span>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Solicitud enviada</h2>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <h2 className="text-xl font-semibold text-zinc-900 mb-2">Solicitud enviada</h2>
+            <p className="text-zinc-600 text-sm leading-relaxed">
               Tu cuenta fue creada. Un administrador revisará tu solicitud y te dará acceso al dashboard.
               Recibirás acceso una vez aprobado.
             </p>
             <Link
               href="/login"
-              className="inline-block mt-6 px-6 py-2.5 rounded-xl bg-white/5 border border-white/10 text-zinc-300 text-sm hover:bg-white/10 transition-all"
+              className="inline-block mt-6 px-6 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200 text-zinc-600 text-sm hover:bg-zinc-100 transition-all"
             >
               Volver al inicio de sesión
             </Link>
@@ -76,10 +76,10 @@ export default function SignupPage() {
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 mb-4 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
-            <span className="text-2xl font-black text-blue-400">G</span>
+            <span className="text-2xl font-black text-blue-600">G</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">GMS PRO</h1>
-          <p className="text-zinc-500 text-sm mt-1">Solicitar acceso al dashboard</p>
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight">GMS PRO</h1>
+          <p className="text-zinc-600 text-sm mt-1">Solicitar acceso al dashboard</p>
         </div>
 
         {/* Approval notice */}
@@ -90,8 +90,8 @@ export default function SignupPage() {
 
         <div className="glass-card">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white">Crear cuenta</h2>
-            <p className="text-zinc-500 text-sm mt-1">Completa el formulario para solicitar acceso</p>
+            <h2 className="text-xl font-semibold text-zinc-900">Crear cuenta</h2>
+            <p className="text-zinc-600 text-sm mt-1">Completa el formulario para solicitar acceso</p>
           </div>
 
           {error && (
@@ -102,7 +102,7 @@ export default function SignupPage() {
 
           <form onSubmit={handleSignup} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-600 mb-1.5">
                 Nombre completo
               </label>
               <input
@@ -111,12 +111,12 @@ export default function SignupPage() {
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 placeholder="Tu nombre"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                className="w-full bg-zinc-100/80 border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-600 mb-1.5">
                 Correo electrónico
               </label>
               <input
@@ -125,12 +125,12 @@ export default function SignupPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="tu@email.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                className="w-full bg-zinc-100/80 border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-400 mb-1.5">
+              <label className="block text-sm font-medium text-zinc-600 mb-1.5">
                 Contraseña
               </label>
               <input
@@ -139,7 +139,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
+                className="w-full bg-zinc-100/80 border border-zinc-200 rounded-xl px-4 py-2.5 text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
               />
             </div>
 
@@ -154,7 +154,7 @@ export default function SignupPage() {
 
           <p className="text-center text-sm text-zinc-600 mt-6">
             ¿Ya tienes acceso?{' '}
-            <Link href="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
               Iniciar sesión
             </Link>
           </p>

@@ -86,13 +86,13 @@ export default function AdminPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Panel de Administración</h1>
-          <p className="text-zinc-400 text-sm mt-1">Gestiona el acceso de usuarios al dashboard</p>
+          <h1 className="text-2xl font-bold text-zinc-900">Panel de Administración</h1>
+          <p className="text-zinc-600 text-sm mt-1">Gestiona el acceso de usuarios al dashboard</p>
         </div>
         <button
           onClick={fetchUsers}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:bg-white/10 transition-colors text-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-100/80 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 transition-colors text-sm disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           Actualizar
@@ -106,13 +106,13 @@ export default function AdminPage() {
           { label: 'Aprobados',  count: approved.length, icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
           { label: 'Rechazados', count: rejected.length, icon: XCircle,     color: 'text-red-400',     bg: 'bg-red-500/10' },
         ].map(({ label, count, icon: Icon, color, bg }) => (
-          <div key={label} className="p-4 rounded-2xl border border-white/10 bg-white/5 flex items-center gap-4">
+          <div key={label} className="p-4 rounded-2xl border border-zinc-200 bg-zinc-100/80 flex items-center gap-4">
             <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}>
               <Icon className={`w-5 h-5 ${color}`} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white">{count}</p>
-              <p className="text-xs text-zinc-400">{label}</p>
+              <p className="text-2xl font-bold text-zinc-900">{count}</p>
+              <p className="text-xs text-zinc-600">{label}</p>
             </div>
           </div>
         ))}
@@ -123,22 +123,22 @@ export default function AdminPage() {
       )}
 
       {/* Users table */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-          <Users className="w-4 h-4 text-zinc-400" />
-          <h2 className="text-sm font-semibold text-white">Todos los usuarios</h2>
-          <span className="ml-auto text-xs text-zinc-500">{users.length} total</span>
+      <div className="rounded-2xl border border-zinc-200 bg-zinc-100/80 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <Users className="w-4 h-4 text-zinc-600" />
+          <h2 className="text-sm font-semibold text-zinc-900">Todos los usuarios</h2>
+          <span className="ml-auto text-xs text-zinc-600">{users.length} total</span>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-zinc-500 text-sm">Cargando usuarios...</div>
+          <div className="flex items-center justify-center py-16 text-zinc-600 text-sm">Cargando usuarios...</div>
         ) : users.length === 0 ? (
-          <div className="flex items-center justify-center py-16 text-zinc-500 text-sm">No hay usuarios registrados aún.</div>
+          <div className="flex items-center justify-center py-16 text-zinc-600 text-sm">No hay usuarios registrados aún.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/5 text-xs text-zinc-500 uppercase tracking-wider">
+                <tr className="border-b border-zinc-200/70 text-xs text-zinc-600 uppercase tracking-wider">
                   <th className="text-left px-6 py-3 font-medium">Usuario</th>
                   <th className="text-left px-6 py-3 font-medium">Rol</th>
                   <th className="text-left px-6 py-3 font-medium">Estado</th>
@@ -148,13 +148,13 @@ export default function AdminPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {users.map(user => (
-                  <tr key={user.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={user.id} className="hover:bg-zinc-100/70 transition-colors">
                     <td className="px-6 py-4">
-                      <p className="text-white font-medium">{user.full_name || '—'}</p>
-                      <p className="text-zinc-500 text-xs">{user.email}</p>
+                      <p className="text-zinc-900 font-medium">{user.full_name || '—'}</p>
+                      <p className="text-zinc-600 text-xs">{user.email}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-white/5 text-zinc-400 border border-white/10'}`}>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-zinc-100/80 text-zinc-600 border border-zinc-200'}`}>
                         {user.role}
                       </span>
                     </td>
@@ -163,13 +163,13 @@ export default function AdminPage() {
                         {STATUS_LABELS[user.approval_status]}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-zinc-500 text-xs">
+                    <td className="px-6 py-4 text-zinc-600 text-xs">
                       {new Date(user.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         {user.id === currentUserId ? (
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-zinc-500 border border-white/10">Tú</span>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100/80 text-zinc-600 border border-zinc-200">Tú</span>
                         ) : (
                           <>
                             {user.approval_status !== 'approved' && (
