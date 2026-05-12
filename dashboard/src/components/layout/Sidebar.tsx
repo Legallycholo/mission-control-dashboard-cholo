@@ -20,16 +20,17 @@ import {
   HeadphonesIcon,
   LogOut,
 } from 'lucide-react';
-
-type SubItem = { name: string; href: string; adminOnly?: boolean };
+import { signOut as firebaseSignOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
-import { getUser, signOut as authSignOut } from '@/lib/auth';
-import type { AuthUser } from '@/lib/auth';
+import { useRole } from '@/hooks/useRole';
+import { auth } from '@/lib/firebase/client';
+
+type SubItem = { name: string; href: string };
 
 const navItems = [
-  { name: 'General', href: '/', icon: LayoutDashboard },
-  { 
-    name: 'Ventas', 
+  { name: 'General', href: '/dashboard', icon: LayoutDashboard },
+  {
+    name: 'Ventas',
     icon: ShoppingCart,
     subItems: [
       { name: 'Indicadores (KPIs)', href: '/ventas/kpis' },
@@ -48,8 +49,8 @@ const navItems = [
       { name: 'Lanzamientos', href: '/inteligencia-mercado/lanzamientos' },
     ]
   },
-  { 
-    name: 'Tráfico', 
+  {
+    name: 'Tráfico',
     icon: Globe,
     subItems: [
       { name: 'General', href: '/trafico/general' },
@@ -58,8 +59,8 @@ const navItems = [
       { name: 'Pagado (Meta Ads)', href: '/trafico/pagado-meta' },
     ]
   },
-  { 
-    name: 'Marketing', 
+  {
+    name: 'Marketing',
     icon: BarChart3,
     subItems: [
       { name: 'Email', href: '/marketing/email' },
@@ -67,39 +68,39 @@ const navItems = [
       { name: 'Otros', href: '/marketing/otros' },
     ]
   },
-  { 
-    name: 'Servicio al Cliente', 
+  {
+    name: 'Servicio al Cliente',
     icon: HeadphonesIcon,
     subItems: [
       { name: 'Mensajería CRM (Crisp)', href: '/servicio-cliente/mensajeria' },
       { name: 'Llamadas (RingCentral)', href: '/servicio-cliente/llamadas' },
     ]
   },
-  { 
-    name: 'Equipo', 
+  {
+    name: 'Equipo',
     icon: Users,
     subItems: [
       { name: 'Actividad y Atribución', href: '/equipo/actividad' },
     ]
   },
-  { 
-    name: 'Finanzas', 
+  {
+    name: 'Finanzas',
     icon: Wallet,
     subItems: [
       { name: 'Márgenes y P&L', href: '/finanzas/pnl' },
       { name: 'Gastos Fijos', href: '/finanzas/gastos' },
     ]
   },
-  { 
-    name: 'Compras', 
+  {
+    name: 'Compras',
     icon: Truck,
     subItems: [
       { name: 'Órdenes de Compra', href: '/compras/ordenes' },
       { name: 'Proveedores', href: '/compras/proveedores' },
     ]
   },
-  { 
-    name: 'Operaciones', 
+  {
+    name: 'Operaciones',
     icon: Package,
     subItems: [
       { name: 'Inventario y Stock', href: '/operaciones/inventario' },
@@ -107,8 +108,8 @@ const navItems = [
       { name: 'Devoluciones', href: '/operaciones/devoluciones' },
     ]
   },
-  { 
-    name: 'Clientes', 
+  {
+    name: 'Clientes',
     icon: UserCheck,
     subItems: [
       { name: 'Retención (LTV)', href: '/clientes/retencion' },
@@ -120,32 +121,22 @@ const navItems = [
     icon: Settings,
     subItems: [
       { name: 'Preferencias', href: '/settings' },
-      { name: 'Usuarios y Accesos', href: '/admin', adminOnly: true },
     ] as SubItem[],
   },
 ];
 
-
-
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, role } = useRole();
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
-  const [profile, setProfile] = useState<AuthUser | null>(null);
 
-  useEffect(() => {
-    getUser().then((user) => {
-      if (user) setProfile(user);
-    });
-  }, []);
-
-  // Auto-expand parent if a child is active
   useEffect(() => {
     const newExpanded = { ...expandedItems };
     let hasChanges = false;
     navItems.forEach(item => {
-      const visible = item.subItems?.filter(sub => !sub.adminOnly || profile?.role === 'admin') ?? [];
-      if (visible.some(sub => pathname.startsWith(sub.href))) {
+      if (!item.subItems) return;
+      if (item.subItems.some(sub => pathname.startsWith(sub.href))) {
         if (!newExpanded[item.name]) {
           newExpanded[item.name] = true;
           hasChanges = true;
@@ -153,11 +144,22 @@ export function Sidebar() {
       }
     });
     if (hasChanges) setExpandedItems(newExpanded);
-  }, [pathname, profile]);
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleExpand = (name: string) => {
     setExpandedItems(prev => ({ ...prev, [name]: !prev[name] }));
   };
+
+  const handleSignOut = async () => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error('Sidebar: signOut failed', error);
+    }
+    router.push('/login');
+  };
+
+  const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? 'U').toUpperCase();
 
   return (
     <aside className="w-64 h-[calc(100vh-2rem)] fixed top-4 left-4 border border-zinc-200 bg-white/90 backdrop-blur-3xl shadow-2xl shadow-zinc-300/40 z-50 flex flex-col rounded-3xl overflow-hidden">
@@ -173,11 +175,7 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-4 py-2 space-y-1.5 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navItems.map((item) => {
           const hasSubItems = !!item.subItems;
-          const visibleSubItems = hasSubItems
-            ? item.subItems!.filter(sub => !sub.adminOnly || profile?.role === 'admin')
-            : [];
-          if (hasSubItems && visibleSubItems.length === 0) return null;
-          const isActive = pathname === item.href || (hasSubItems && visibleSubItems.some(sub => pathname === sub.href));
+          const isActive = pathname === item.href || (hasSubItems && item.subItems!.some(sub => pathname === sub.href));
           const isExpanded = expandedItems[item.name];
 
           return (
@@ -188,7 +186,7 @@ export function Sidebar() {
                   className={cn(
                     "w-full group relative flex items-center justify-between px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-300 outline-none",
                     isActive && !isExpanded
-                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
+                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
                       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
                   )}
                 >
@@ -203,8 +201,8 @@ export function Sidebar() {
                   href={item.href!}
                   className={cn(
                     "group relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-300",
-                    pathname === item.href 
-                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
+                    pathname === item.href
+                      ? "bg-zinc-100 text-zinc-900 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
                       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
                   )}
                 >
@@ -216,10 +214,9 @@ export function Sidebar() {
                 </Link>
               )}
 
-              {/* Sub-items list */}
               {hasSubItems && isExpanded && (
                 <div className="mt-1 mb-2 ml-4 pl-4 border-l border-zinc-200 space-y-1 overflow-hidden transition-all duration-300">
-                  {visibleSubItems.map((sub) => (
+                  {item.subItems!.map((sub) => (
                     <Link
                       key={sub.name}
                       href={sub.href}
@@ -243,17 +240,19 @@ export function Sidebar() {
       <div className="p-4 mt-auto space-y-2">
         <div className="relative overflow-hidden group p-4 rounded-2xl flex items-center gap-3 border border-zinc-200/70 bg-zinc-100/80">
           <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/30 shrink-0">
-            {(profile?.full_name?.[0] ?? profile?.email?.[0] ?? 'U').toUpperCase()}
+            {initial}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-zinc-900 truncate">{profile?.full_name ?? 'Usuario'}</p>
-            <p className="text-xs text-zinc-600 truncate">{profile?.email ?? ''}</p>
+            <p className="text-sm font-semibold text-zinc-900 truncate">
+              {user?.displayName ?? 'Usuario'}
+            </p>
+            <p className="text-xs text-zinc-600 truncate">
+              {user?.email ?? ''}
+              {role ? ` · ${role}` : ''}
+            </p>
           </div>
           <button
-            onClick={async () => {
-              await authSignOut();
-              router.push('/login');
-            }}
+            onClick={() => void handleSignOut()}
             title="Cerrar sesión"
             className="text-zinc-500 hover:text-zinc-800 transition-colors shrink-0"
           >

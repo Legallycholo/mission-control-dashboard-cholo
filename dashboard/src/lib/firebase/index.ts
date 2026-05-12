@@ -1,1 +1,1 @@
-export { firebaseApp, firebaseAuth } from './client'
+export { auth, db, googleProvider } from './client'

@@ -1,52 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { User, Mail, Shield, CheckCircle } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
-
-type Profile = { email: string; full_name: string | null; role: string; approval_status: string };
+import { useRouter } from 'next/navigation';
+import { signOut as firebaseSignOut } from 'firebase/auth';
+import { User, Mail, Shield, LogOut } from 'lucide-react';
+import { useRole } from '@/hooks/useRole';
+import { auth } from '@/lib/firebase/client';
 
 export default function SettingsPage() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [name, setName]       = useState('');
-  const [saving, setSaving]   = useState(false);
-  const [saved, setSaved]     = useState(false);
+  const router = useRouter();
+  const { user, role, loading } = useRole();
 
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) return;
-      const { data } = await supabase
-        .from('profiles')
-        .select('email, full_name, role, approval_status')
-        .eq('id', user.id)
-        .single();
-      if (data) { setProfile(data); setName(data.full_name ?? ''); }
-    });
-  }, []);
-
-  async function handleSave() {
-    if (!profile) return;
-    setSaving(true);
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await supabase.from('profiles').update({ full_name: name }).eq('id', user.id);
-      setProfile(prev => prev ? { ...prev, full_name: name } : prev);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2500);
+  const handleSignOut = async () => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error('SettingsPage: signOut failed', error);
     }
-    setSaving(false);
-  }
+    router.push('/login');
+  };
 
   return (
     <div className="space-y-8 animate-fade-in max-w-2xl">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Preferencias</h1>
-        <p className="text-zinc-600 text-sm mt-1">Administra tu perfil y configuración de cuenta</p>
+        <p className="text-zinc-600 text-sm mt-1">
+          Tu perfil y rol detectado en el dashboard
+        </p>
       </div>
 
-      {/* Profile card */}
       <div className="rounded-2xl border border-zinc-200 bg-zinc-100/80 overflow-hidden">
         <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
           <User className="w-4 h-4 text-zinc-600" />
@@ -54,33 +35,34 @@ export default function SettingsPage() {
         </div>
         <div className="p-6 space-y-5">
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">Nombre completo</label>
-            <input
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Tu nombre"
-              className="w-full px-4 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200 text-zinc-900 text-sm placeholder:text-zinc-600 focus:outline-none focus:border-blue-500/50 focus:bg-zinc-100 transition-colors"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">Correo electrónico</label>
+            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">
+              Nombre
+            </label>
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200">
-              <Mail className="w-4 h-4 text-zinc-600 shrink-0" />
-              <span className="text-sm text-zinc-600">{profile?.email ?? '—'}</span>
+              <User className="w-4 h-4 text-zinc-600 shrink-0" />
+              <span className="text-sm text-zinc-900">
+                {loading ? '—' : user?.displayName ?? '—'}
+              </span>
             </div>
           </div>
-          <button
-            onClick={handleSave}
-            disabled={saving || !profile}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors disabled:opacity-50"
-          >
-            {saved ? <><CheckCircle className="w-4 h-4" /> Guardado</> : saving ? 'Guardando...' : 'Guardar cambios'}
-          </button>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-zinc-600 uppercase tracking-wider">
+              Correo electrónico
+            </label>
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-zinc-100/80 border border-zinc-200">
+              <Mail className="w-4 h-4 text-zinc-600 shrink-0" />
+              <span className="text-sm text-zinc-900">
+                {loading ? '—' : user?.email ?? '—'}
+              </span>
+            </div>
+          </div>
+          <p className="text-xs text-zinc-500">
+            Tu nombre proviene de tu cuenta de Google. Para cambiar tu rol o
+            acceso, contacta a un administrador.
+          </p>
         </div>
       </div>
 
-      {/* Account info card */}
       <div className="rounded-2xl border border-zinc-200 bg-zinc-100/80 overflow-hidden">
         <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
           <Shield className="w-4 h-4 text-zinc-600" />
@@ -89,22 +71,34 @@ export default function SettingsPage() {
         <div className="p-6 grid grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-zinc-100/80 border border-zinc-200 space-y-1">
             <p className="text-xs text-zinc-600 uppercase tracking-wider">Rol</p>
-            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${profile?.role === 'admin' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-zinc-100/80 text-zinc-600 border border-zinc-200'}`}>
-              {profile?.role ?? '—'}
+            <span
+              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
+                role === 'admin'
+                  ? 'bg-blue-500/10 text-blue-600 border border-blue-500/20'
+                  : 'bg-zinc-100/80 text-zinc-700 border border-zinc-200'
+              }`}
+            >
+              {loading ? '—' : role ?? 'sin rol'}
             </span>
           </div>
           <div className="p-4 rounded-xl bg-zinc-100/80 border border-zinc-200 space-y-1">
-            <p className="text-xs text-zinc-600 uppercase tracking-wider">Estado</p>
-            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
-              profile?.approval_status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-              profile?.approval_status === 'pending'  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-              'bg-red-500/10 text-red-400 border border-red-500/20'
-            }`}>
-              {profile?.approval_status === 'approved' ? 'Aprobado' : profile?.approval_status === 'pending' ? 'Pendiente' : 'Rechazado'}
+            <p className="text-xs text-zinc-600 uppercase tracking-wider">
+              Proveedor
+            </p>
+            <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100/80 text-zinc-700 border border-zinc-200">
+              Google
             </span>
           </div>
         </div>
       </div>
+
+      <button
+        onClick={() => void handleSignOut()}
+        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium transition-colors"
+      >
+        <LogOut className="w-4 h-4" />
+        Cerrar sesión
+      </button>
     </div>
   );
 }
