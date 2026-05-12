@@ -1,5 +1,6 @@
 import { noneProvider } from './providers/none'
 import { supabaseProvider } from './providers/supabase'
+import { firebaseProvider } from './providers/firebase'
 import type { AuthProvider } from './types'
 
 /**
@@ -7,23 +8,20 @@ import type { AuthProvider } from './types'
  *
  * Selecciona el proveedor de autenticación según la variable de entorno:
  *
+ *   NEXT_PUBLIC_AUTH_PROVIDER=firebase  → Google Identity Platform (producción GCP)
  *   NEXT_PUBLIC_AUTH_PROVIDER=supabase  → Vercel / staging (colaborador)
- *   NEXT_PUBLIC_AUTH_PROVIDER=none      → Cloud Run / producción (default)
- *
- * Para agregar un nuevo proveedor (ej: Google Identity):
- *   1. Crear `providers/google.ts` implementando AuthProvider
- *   2. Agregar el case aquí
- *   3. Los componentes UI no cambian
+ *   NEXT_PUBLIC_AUTH_PROVIDER=none      → Cloud Run sin auth (default)
  */
 function resolveProvider(): AuthProvider {
   const configured = process.env.NEXT_PUBLIC_AUTH_PROVIDER
 
   switch (configured) {
+    case 'firebase':
+      return firebaseProvider
     case 'supabase':
       return supabaseProvider
     case 'none':
     default:
-      // Default seguro: sin auth, sin crash — correcto para Cloud Run
       return noneProvider
   }
 }
