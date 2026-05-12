@@ -1,17 +1,118 @@
-# Dashboard GSMPRO.CL
+# Mission Control Dashboard
 
-## Arquitectura y Despliegue en Cloud Run
+Developer documentation for the GSMPRO mission-control platform: a business dashboard with data ingestion jobs and a product-intelligence service.
 
-El Dashboard opera sobre una arquitectura de **microservicios sin servidor** (Serverless) alojada en Google Cloud Run. Está compuesta por:
-1. **Frontend / Core Backend (Next.js):** Maneja la UI y las rutas API en `us-east1` (`dashboard-gsmpro-ui`).
-2. **Microservicio de IA (Python/FastAPI):** Procesa agentes de Vertex AI para inteligencia de mercado. Corre de forma privada e independiente.
+## What this project is
 
-### Autenticación y Seguridad
-El microservicio de Python tiene **acceso público bloqueado (No allUsers)**. Para que Next.js se comunique con él, utiliza `google-auth-library` generando un "Identity Token" firmado por su cuenta de servicio en tiempo de ejecución. 
+This repository combines:
 
-### Política de Variables de Entorno (`env.yaml`)
-Para asegurar la inmutabilidad de los despliegues, las credenciales críticas **NUNCA** deben inyectarse directamente en consola con flags como `--set-env-vars`. En su lugar, todas las variables maestras residen en `env.yaml`. 
-El despliegue oficial hacia producción siempre se realiza con:
+- A `Next.js` dashboard (`dashboard/`) for internal teams (admin, ventas, trafico, marketing, soporte, etc.).
+- Node.js data ingestion and ops scripts (`scripts/`) that sync external sources into BigQuery.
+
+In short: this is an internal analytics + operations control center running in Next.js-first mode.
+
+## Stack
+
+### Frontend + API layer
+
+- `Next.js 16` (App Router)
+- `React 19`
+- `TypeScript`
+- `Tailwind CSS 4`
+- `Supabase` (`@supabase/supabase-js`, `@supabase/ssr`)
+- `Recharts` + `Framer Motion`
+
+### Services + data processing
+
+- `Node.js` scripts for ETL/sync jobs
+- `Google Cloud BigQuery`
+- `Google APIs` (Shopify/marketing ingestion workflows via Node tooling)
+
+### Infrastructure
+
+- `Google Cloud Run` as production runtime
+- `Vercel` used for staging/preview workflows
+- Environment management through root `.env` (local) and `env.yaml` (Cloud Run)
+
+## Repository structure
+
+```text
+.
+├── dashboard/                      # Next.js app (UI + route handlers)
+│   ├── src/app/                    # App routes and pages
+│   ├── src/components/             # Reusable UI components
+│   ├── src/lib/                    # Shared frontend/server utilities
+│   └── package.json
+├── scripts/                        # Data ingestion, sync, seed, and DDL scripts
+├── docs/                           # Agent skills + project docs
+│   └── project/                    # Roadmap, architecture, changelog, specs
+├── package.json                    # Root orchestrator scripts
+└── env.yaml                        # Production env vars for Cloud Run deploys
+```
+
+## Project docs index
+
+- `docs/project/ROADMAP.md`
+- `docs/project/CHANGELOG.md`
+- `docs/project/PRODUCTION_ARCHITECTURE.md`
+- `docs/project/MARKET_INTELLIGENCE_SPECS.md`
+- `docs/project/ACCESSING_PRIOR_REPOSITORY_VERSION.md`
+
+## Local development
+
+### Prerequisites
+
+- Node.js + npm
+- Google Cloud credentials with BigQuery access
+- Root `.env` configured with required keys (for example `GCP_PROJECT_ID`)
+
+### Install
+
+```bash
+npm install
+cd dashboard && npm install
+```
+
+### Run locally
+
+From repository root:
+
+```bash
+npm run dev            # Next.js app
+```
+
+## Common developer commands
+
+```bash
+# Dashboard
+cd dashboard
+npm run dev
+npm run build
+npm run lint
+
+# Root sync jobs
+npm run sync:shopify
+npm run sync:klaviyo
+npm run sync:crisp
+npm run sync:gsc
+
+# Attribution DDL setup
+node scripts/apply-attribution-ddl.js
+
+# Audit log sync examples
+node scripts/sync-audit-log.js
+node scripts/sync-audit-log.js --backfill=7d
+node scripts/sync-audit-log.js --dry-run
+```
+
+## Deployment notes
+
+- Production source of truth is Cloud Run.
+- Keep critical deploy env vars in `env.yaml`; avoid ad-hoc `--set-env-vars` usage.
+- Market-intelligence scan trigger is currently disabled while running Next.js-only mode.
+
+Example production deploy command:
+
 ```bash
 gcloud run deploy dashboard-gsmpro-ui \
   --source . \
@@ -19,57 +120,3 @@ gcloud run deploy dashboard-gsmpro-ui \
   --env-vars-file ../env.yaml \
   --project atomic-box-494614-r5
 ```
-
-## Módulo de atribución — Setup
-
-Para configurar la base de datos necesaria para el módulo de atribución de actividad, sigue estos pasos:
-
-1. Asegúrate de tener configurado tu archivo `.env` en la raíz del proyecto con el `GCP_PROJECT_ID` y las credenciales de Service Account habilitadas.
-2. Ejecuta el script de aplicación de DDL, el cual es idempotente:
-
-```bash
-node scripts/apply-attribution-ddl.js
-```
-
-Esto se encargará de crear los datasets `raw_layer` y `marts_layer` (en la región US) si no existen, y creará/actualizará las siguientes 4 tablas con sus particiones y clusters correspondientes:
-- `raw_layer.shopify_staff`
-- `raw_layer.shopify_audit_log`
-- `raw_layer.shopify_snapshots`
-- `marts_layer.activity_log`
-
-Al finalizar, el script verificará e imprimirá en consola las estructuras creadas usando el `INFORMATION_SCHEMA` de BigQuery.
-
-## Audit Log Puller
-
-El Audit Log Puller es el motor de ingesta que extrae la actividad humana de Shopify y la deposita en BigQuery (`raw_layer.shopify_audit_log`). 
-
-### Comandos Disponibles
-
-- `node scripts/sync-audit-log.js`: **Modo Incremental** (Uso normal). Retoma desde el último checkpoint registrado en `audit_log_sync_state`.
-- `node scripts/sync-audit-log.js --backfill=7d`: Extrae eventos de los últimos N días, ignorando el checkpoint. Ideal para inicializar la tabla.
-- `node scripts/sync-audit-log.js --since=2024-01-01T00:00:00Z`: Extrae eventos desde una fecha y hora específica.
-- `node scripts/sync-audit-log.js --dry-run`: Prueba de escritorio. No escribe en la base de datos, solo muestra en consola cuántos eventos y atribuciones lograría.
-
-### Backfill Inicial
-
-Para inicializar la base de datos por primera vez con datos históricos:
-```bash
-node scripts/sync-audit-log.js --backfill=7d
-```
-
-### Monitoreo del Checkpoint
-
-El script mantiene su estado en la tabla `raw_layer.audit_log_sync_state`. Puedes consultar el estado de la sincronización con:
-```sql
-SELECT last_processed_at, events_processed, last_run_status, last_run_error 
-FROM `raw_layer.audit_log_sync_state`
-```
-
-### Resolución de staff_ids "unknown"
-
-Si en la vista `raw_layer.v_audit_log_enriched` encuentras registros con `employee_code = 'unknown'`, significa que Shopify reportó actividad de un `staff_id` que no está registrado en tu tabla `shopify_staff`. 
-**Solución**: Agrega ese `staff_id` a tu archivo CSV de identidades y vuelve a ejecutar `node scripts/seed-staff-from-csv.js`.
-
-### Cambio de Frecuencia
-
-La frecuencia de ejecución recomendada es cada 6 horas para no agotar la cuota de la API de Shopify. Cuando configures Cloud Scheduler (Tarea K), puedes ajustar el trigger cronológico (ej. `0 */6 * * *` para cada 6 horas).

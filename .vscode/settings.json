@@ -1,0 +1,22 @@
+{
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.next": true,
+    "**/__pycache__": true,
+    "**/node_modules": true,
+    "**/venv": true
+  },
+  "search.exclude": {
+    "**/.next": true,
+    "**/__pycache__": true,
+    "**/node_modules": true,
+    "**/venv": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json,.npmrc",
+    "tsconfig.json": "tsconfig.*.json",
+    ".env": ".env.*"
+  }
+}
