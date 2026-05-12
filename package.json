@@ -5,8 +5,9 @@
   "scripts": {
     "dev:frontend": "cd dashboard && npm run dev",
     "dev": "npm run dev:frontend",
-    "build": "cd dashboard && npm install && npm run build",
-    "start": "cd dashboard && npm start",
+    "build": "npm --prefix dashboard run build",
+    "start": "npm --prefix dashboard run start",
+    "lint": "npm --prefix dashboard run lint",
     "sync:shopify": "node scripts/sync-shopify.js",
     "sync:klaviyo": "node scripts/sync-klaviyo.js",
     "sync:crisp": "node scripts/sync-crisp.js",
