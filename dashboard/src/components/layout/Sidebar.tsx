@@ -19,6 +19,7 @@ import {
   Lightbulb,
   HeadphonesIcon,
   LogOut,
+  Brain,
 } from 'lucide-react';
 import { signOut as firebaseSignOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,9 @@ const navItems = [
     subItems: [
       { name: 'Indicadores (KPIs)', href: '/ventas/kpis' },
       { name: 'Análisis de Productos', href: '/ventas/productos' },
+      { name: 'Por Categoría', href: '/ventas/categorias' },
+      { name: 'Nuevos vs Recurrentes', href: '/ventas/retencion' },
+      { name: 'Métodos de Pago', href: '/ventas/metodo-pago' },
     ]
   },
   {
@@ -56,6 +60,8 @@ const navItems = [
       { name: 'General', href: '/trafico/general' },
       { name: 'Orgánico (Search Console)', href: '/trafico/organico' },
       { name: 'Pagado (Google Ads)', href: '/trafico/pagado-google' },
+      { name: 'Términos de Búsqueda', href: '/trafico/terminos-busqueda' },
+      { name: 'SKU Performance', href: '/trafico/sku-performance' },
       { name: 'Pagado (Meta Ads)', href: '/trafico/pagado-meta' },
     ]
   },
@@ -115,6 +121,13 @@ const navItems = [
       { name: 'Retención (LTV)', href: '/clientes/retencion' },
       { name: 'Segmentación', href: '/clientes/segmentacion' },
     ]
+  },
+  {
+    name: 'Vendor Intelligence',
+    icon: Brain,
+    subItems: [
+      { name: 'Proveedores (Coming Soon)', href: '/vendor-intelligence' },
+    ],
   },
   {
     name: 'Configuración',

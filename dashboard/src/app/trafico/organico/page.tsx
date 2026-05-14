@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  CalendarDays, 
+import {
+  CalendarDays,
   Download,
   MousePointerClick,
   Eye,
   Percent,
-  Search
+  Search,
+  Tag,
+  Globe,
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -58,10 +60,16 @@ interface ApiResponseData {
   topPages: PageData[];
 }
 
+interface SegmentKpis { clicks: number; impressions: number; avgCtr: number; avgPosition: number; queryCount: number; }
+interface SeoSegData { queries: QueryData[]; kpis: { branded: SegmentKpis; non_branded: SegmentKpis; all: SegmentKpis }; }
+
 export default function TraficoOrganicoPage() {
   const [data, setData] = useState<ApiResponseData | null>(null);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [seoSeg, setSeoSeg] = useState<SeoSegData | null>(null);
+  const [seoSegLoading, setSeoSegLoading] = useState(true);
+  const [activeSegTab, setActiveSegTab] = useState<'all' | 'branded' | 'non_branded'>('all');
   
   const now = new Date();
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -87,8 +95,19 @@ export default function TraficoOrganicoPage() {
     }
   };
 
+  const fetchSeoSeg = async () => {
+    setSeoSegLoading(true);
+    try {
+      const res = await fetch(`/api/trafico/seo-segmentado?startDate=${startDate}&endDate=${endDate}`);
+      const json = await res.json();
+      if (json.success) setSeoSeg(json.data);
+    } catch { /* ignore */ }
+    finally { setSeoSegLoading(false); }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchSeoSeg();
   }, [startDate, endDate]);
 
   const formatNumber = (val: number) => new Intl.NumberFormat('en-US').format(val);
@@ -362,6 +381,76 @@ export default function TraficoOrganicoPage() {
         </div>
 
       </div>
+
+      {/* Brand vs Non-Brand SEO */}
+      <div className="rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Tag className="w-4 h-4 text-zinc-500" />
+            <h2 className="font-bold text-zinc-900">SEO Marca vs No-Marca</h2>
+          </div>
+          <div className="flex items-center gap-1 bg-zinc-100 p-1 rounded-xl">
+            {([['all','Todas'], ['branded','Marca'], ['non_branded','No-Marca']] as const).map(([k, l]) => (
+              <button key={k} onClick={() => setActiveSegTab(k)} className={cn('px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors', activeSegTab === k ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-700')}>
+                {l}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {seoSeg && (
+          <div className="grid grid-cols-1 md:grid-cols-2 border-b border-zinc-100">
+            {([
+              { key: 'branded' as const, label: 'Marca (GSMPro)', icon: Tag, color: 'blue' },
+              { key: 'non_branded' as const, label: 'No-Marca (Discovery)', icon: Globe, color: 'emerald' },
+            ]).map(({ key, label, icon: Icon, color }) => {
+              const kpi = seoSeg.kpis[key];
+              return (
+                <div key={key} className="p-5 border-r last:border-r-0 border-zinc-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={cn('p-1.5 rounded-lg', color === 'blue' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600')}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-semibold text-zinc-700">{label}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    {[{l:'Clics',v:kpi.clicks.toLocaleString()},{l:'Impresiones',v:kpi.impressions.toLocaleString()},{l:'Pos. Prom.',v:kpi.avgPosition.toFixed(1)}].map(({l,v}) => (
+                      <div key={l}><p className="text-xs text-zinc-400">{l}</p><p className="text-lg font-bold text-zinc-900">{v}</p></div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead><tr className="bg-zinc-50 border-b border-zinc-100">{['Consulta','Segmento','Clics','Impresiones','CTR','Posición'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">{h}</th>)}</tr></thead>
+            <tbody>
+              {seoSegLoading ? Array.from({length:5}).map((_,i) => (
+                <tr key={i} className="border-b border-zinc-100">{Array.from({length:6}).map((_,j) => <td key={j} className="px-4 py-3"><div className="h-4 bg-zinc-100 rounded animate-pulse"/></td>)}</tr>
+              )) : ((seoSeg?.queries ?? []).filter((q: QueryData) => activeSegTab === 'all' || (q as QueryData & {segment?:string}).segment === activeSegTab)).slice(0,50).map((q: QueryData, i: number) => {
+                const seg = (q as QueryData & {segment?:string}).segment;
+                return (
+                  <tr key={i} className="border-b border-zinc-100/60 hover:bg-zinc-50/50 transition-colors">
+                    <td className="px-4 py-3 font-medium text-zinc-900 max-w-[260px] truncate" title={q.query}>{q.query}</td>
+                    <td className="px-4 py-3"><span className={cn('px-2 py-0.5 rounded-full text-xs font-semibold', seg === 'branded' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700')}>{seg === 'branded' ? 'Marca' : 'No-Marca'}</span></td>
+                    <td className="px-4 py-3 font-semibold text-zinc-900">{q.clicks.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-zinc-500">{q.impressions.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-amber-600">{(q.ctr * 100).toFixed(2)}%</td>
+                    <td className="px-4 py-3 text-purple-600">{q.position.toFixed(1)}</td>
+                  </tr>
+                );
+              })}
+              {!seoSegLoading && (!seoSeg?.queries || seoSeg.queries.length === 0) && (
+                <tr><td colSpan={6} className="px-4 py-6 text-center text-zinc-400 text-sm">Sin datos de segmentación SEO.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   );
 }

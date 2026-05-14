@@ -1,8 +1,81 @@
 'use client';
 
-import { Bell, Search, RefreshCw } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Bell, Search, RefreshCw, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface SyncSource {
+  source: string;
+  status: string;
+  lastSync: string | null;
+  recordsProcessed: number;
+}
+
+interface SyncStatus {
+  overallStatus: 'ok' | 'error' | 'no_data';
+  mostRecentSync: string | null;
+  sources: SyncSource[];
+}
+
+function relativeTime(iso: string | null): string {
+  if (!iso) return 'Sin datos';
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'ahora mismo';
+  if (mins < 60) return `hace ${mins} min`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours}h`;
+  return `hace ${Math.floor(hours / 24)}d`;
+}
+
+const SOURCE_LABELS: Record<string, string> = {
+  shopify: 'Shopify',
+  gsc: 'Search Console',
+  google_ads: 'Google Ads',
+  crisp: 'Crisp CRM',
+  ringcentral: 'RingCentral',
+};
 
 export function Header() {
+  const [sync, setSync] = useState<SyncStatus | null>(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  const fetchSyncStatus = async () => {
+    try {
+      const res = await fetch('/api/sync/status');
+      const json = await res.json();
+      if (json.success) setSync(json.data);
+    } catch {
+      // silently ignore
+    }
+  };
+
+  useEffect(() => {
+    fetchSyncStatus();
+    const interval = setInterval(fetchSyncStatus, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setPopoverOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const badgeConfig = {
+    ok: { color: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'bg-emerald-500', Icon: CheckCircle2 },
+    error: { color: 'bg-rose-50 text-rose-700 border-rose-200', dot: 'bg-rose-500', Icon: AlertCircle },
+    no_data: { color: 'bg-zinc-100 text-zinc-500 border-zinc-200', dot: 'bg-zinc-400', Icon: Clock },
+  };
+
+  const status = sync?.overallStatus ?? 'no_data';
+  const cfg = badgeConfig[status];
+
   return (
     <header className="h-16 border-b border-zinc-200/70 bg-white/85 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-40">
       <div className="flex items-center gap-4 flex-1">
@@ -17,10 +90,55 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-600/10 text-blue-700 text-sm font-medium hover:bg-blue-600/15 transition-all border border-blue-500/25">
-          <RefreshCw className="w-4 h-4" />
-          Sincronizar
-        </button>
+        {/* Sync Badge */}
+        <div className="relative" ref={popoverRef}>
+          <button
+            onClick={() => setPopoverOpen(!popoverOpen)}
+            className={cn(
+              'flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-medium border transition-all',
+              cfg.color
+            )}
+          >
+            <span className={cn('w-2 h-2 rounded-full shrink-0', cfg.dot,
+              status === 'ok' && 'shadow-[0_0_6px_rgba(16,185,129,0.7)]')} />
+            {status === 'ok' && `Sincronizado ${relativeTime(sync?.mostRecentSync ?? null)}`}
+            {status === 'error' && 'Error de sincronización'}
+            {status === 'no_data' && 'Sin sincronización'}
+          </button>
+
+          {popoverOpen && (
+            <div className="absolute top-full mt-2 right-0 z-50 bg-white border border-zinc-200 rounded-2xl shadow-xl p-4 min-w-[280px]">
+              <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">Estado de Fuentes</p>
+              <div className="space-y-2">
+                {(sync?.sources ?? []).map((s) => {
+                  const c = s.status === 'ok' ? 'text-emerald-600 bg-emerald-50' :
+                    s.status === 'error' ? 'text-rose-600 bg-rose-50' : 'text-zinc-400 bg-zinc-100';
+                  return (
+                    <div key={s.source} className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-zinc-700 font-medium">{SOURCE_LABELS[s.source] ?? s.source}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-zinc-400">{relativeTime(s.lastSync)}</span>
+                        <span className={cn('px-2 py-0.5 rounded-full text-xs font-semibold', c)}>
+                          {s.status === 'ok' ? 'OK' : s.status === 'error' ? 'Error' : 'Sin datos'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {(!sync?.sources || sync.sources.length === 0) && (
+                  <p className="text-sm text-zinc-400">No hay registros de sincronización aún.</p>
+                )}
+              </div>
+              <button
+                onClick={() => { fetchSyncStatus(); setPopoverOpen(false); }}
+                className="mt-3 w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-blue-600 hover:bg-blue-50 rounded-xl transition-colors border border-blue-100"
+              >
+                <RefreshCw className="w-3 h-3" />
+                Actualizar estado
+              </button>
+            </div>
+          )}
+        </div>
 
         <button className="relative w-9 h-9 rounded-xl bg-zinc-100/80 border border-zinc-200 flex items-center justify-center text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition-all">
           <Bell className="w-4 h-4" />
