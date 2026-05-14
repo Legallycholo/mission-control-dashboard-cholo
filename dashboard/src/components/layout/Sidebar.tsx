@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -18,13 +18,9 @@ import {
   UserCheck,
   Lightbulb,
   HeadphonesIcon,
-  LogOut,
   Brain,
 } from 'lucide-react';
-import { signOut as firebaseSignOut } from 'firebase/auth';
 import { cn } from '@/lib/utils';
-import { useRole } from '@/hooks/useRole';
-import { auth } from '@/lib/firebase/client';
 
 type SubItem = { name: string; href: string };
 
@@ -140,8 +136,6 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, role } = useRole();
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -163,16 +157,6 @@ export function Sidebar() {
     setExpandedItems(prev => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const handleSignOut = async () => {
-    try {
-      if (auth) await firebaseSignOut(auth);
-    } catch (error) {
-      console.error('Sidebar: signOut failed', error);
-    }
-    router.push('/login');
-  };
-
-  const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? 'U').toUpperCase();
 
   return (
     <aside className="w-64 h-[calc(100vh-2rem)] fixed top-4 left-4 border border-zinc-200 bg-white/90 backdrop-blur-3xl shadow-2xl shadow-zinc-300/40 z-50 flex flex-col rounded-3xl overflow-hidden">
@@ -250,27 +234,10 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 mt-auto space-y-2">
-        <div className="relative overflow-hidden group p-4 rounded-2xl flex items-center gap-3 border border-zinc-200/70 bg-zinc-100/80">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/30 shrink-0">
-            {initial}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-zinc-900 truncate">
-              {user?.displayName ?? 'Usuario'}
-            </p>
-            <p className="text-xs text-zinc-600 truncate">
-              {user?.email ?? ''}
-              {role ? ` · ${role}` : ''}
-            </p>
-          </div>
-          <button
-            onClick={() => void handleSignOut()}
-            title="Cerrar sesión"
-            className="text-zinc-500 hover:text-zinc-800 transition-colors shrink-0"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+      <div className="p-4 mt-auto">
+        <div className="p-4 rounded-2xl border border-zinc-200/70 bg-zinc-100/80 text-center">
+          <p className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">GSM Pro</p>
+          <p className="text-xs text-zinc-400 mt-0.5">Mission Control</p>
         </div>
       </div>
     </aside>

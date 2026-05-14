@@ -1,5 +1,25 @@
 'use client'
 
+import { Sidebar } from './Sidebar'
+import { Header } from './Header'
+
+export function LayoutShell({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Sidebar />
+      <div className="flex-1 ml-[288px] flex flex-col min-h-screen relative">
+        <Header />
+        <main className="flex-1 p-6 lg:p-8 pt-4">
+          <div className="max-w-[1440px] mx-auto">{children}</div>
+        </main>
+      </div>
+    </>
+  )
+}
+
+/* ─── AUTH GATE (re-enable when Firebase credentials are ready) ───────────────
+'use client'
+
 import { useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from 'firebase/auth'
@@ -20,13 +40,7 @@ function FullScreenLoader({ label }: { label: string }) {
   )
 }
 
-function UnauthorizedScreen({
-  email,
-  role,
-}: {
-  email: string | null
-  role: string | null
-}) {
+function UnauthorizedScreen({ email, role }: { email: string | null; role: string | null }) {
   const handleSignOut = async () => {
     try {
       if (auth) await signOut(auth)
@@ -34,7 +48,6 @@ function UnauthorizedScreen({
       console.error('UnauthorizedScreen: signOut failed', error)
     }
   }
-
   return (
     <div className="min-h-dvh w-full bg-[#F9FAFB] flex flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm flex flex-col items-center">
@@ -42,38 +55,24 @@ function UnauthorizedScreen({
           <div className="w-14 h-14 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <ShieldAlert className="w-7 h-7 text-red-600" aria-hidden />
           </div>
-          <h1 className="text-xl font-bold text-zinc-900 tracking-tight mb-2">
-            Access denied
-          </h1>
+          <h1 className="text-xl font-bold text-zinc-900 tracking-tight mb-2">Access denied</h1>
           <p className="text-sm text-zinc-600 leading-relaxed">
             Your account does not have permission to access this dashboard.
-            Contact your administrator if you believe this is an error.
           </p>
-
           <div className="mt-6 rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3 text-left">
-            <div className="text-xs uppercase tracking-wider text-zinc-400 font-medium">
-              Signed in as
-            </div>
-            <div className="text-sm font-semibold text-zinc-900 break-all">
-              {email ?? '(unknown)'}
-            </div>
-            <div className="mt-2 text-xs uppercase tracking-wider text-zinc-400 font-medium">
-              Detected role
-            </div>
-            <div className="text-sm font-semibold text-zinc-900">
-              {role ?? '(none)'}
-            </div>
+            <div className="text-xs uppercase tracking-wider text-zinc-400 font-medium">Signed in as</div>
+            <div className="text-sm font-semibold text-zinc-900 break-all">{email ?? '(unknown)'}</div>
+            <div className="mt-2 text-xs uppercase tracking-wider text-zinc-400 font-medium">Detected role</div>
+            <div className="text-sm font-semibold text-zinc-900">{role ?? '(none)'}</div>
           </div>
-
           <button
             type="button"
             onClick={() => void handleSignOut()}
-            className="inline-flex items-center justify-center w-full mt-6 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-700 text-white font-semibold text-sm transition-colors"
+            className="inline-flex items-center justify-center w-full mt-6 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-sm transition-colors"
           >
             Sign out
           </button>
         </div>
-
         <p className="text-center text-xs text-zinc-400 mt-8 max-w-sm">
           GSMPro · Restricted access — authorized personnel only
         </p>
@@ -85,50 +84,19 @@ function UnauthorizedScreen({
 function AuthGate({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const { user, role, loading } = useRole()
-
   useEffect(() => {
-    if (!loading && !user) {
-      router.replace('/login')
-    }
+    if (!loading && !user) router.replace('/login')
   }, [loading, user, router])
-
-  if (loading) {
-    return <FullScreenLoader label="Verifying access…" />
-  }
-
-  if (!user) {
-    return <FullScreenLoader label="Redirecting to sign in…" />
-  }
-
-  if (role !== 'admin') {
-    return <UnauthorizedScreen email={user.email ?? null} role={role} />
-  }
-
+  if (loading) return <FullScreenLoader label="Verifying access…" />
+  if (!user) return <FullScreenLoader label="Redirecting to sign in…" />
+  if (role !== 'admin') return <UnauthorizedScreen email={user.email ?? null} role={role} />
   return <>{children}</>
 }
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
-  // AUTH DISABLED — re-enable by restoring the AuthGate block below
-  return (
-    <>
-      <Sidebar />
-      <div className="flex-1 ml-[288px] flex flex-col min-h-screen relative">
-        <Header />
-        <main className="flex-1 p-6 lg:p-8 pt-4">
-          <div className="max-w-[1440px] mx-auto">{children}</div>
-        </main>
-      </div>
-    </>
-  )
-
-  /* AUTH GATE — restore this block and remove the return above to re-enable login
   const pathname = usePathname()
   const isPublicPage = PUBLIC_PATHS.some((p) => pathname.startsWith(p))
-
-  if (isPublicPage) {
-    return <>{children}</>
-  }
-
+  if (isPublicPage) return <>{children}</>
   return (
     <AuthGate>
       <Sidebar />
@@ -140,5 +108,5 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
       </div>
     </AuthGate>
   )
-  */
 }
+─────────────────────────────────────────────────────────────────────────────── */
