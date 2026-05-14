@@ -9,6 +9,7 @@ export default function TestAuthPage() {
 
   const handleSignIn = async () => {
     try {
+      if (!auth) return
       const result = await signInWithPopup(auth, googleProvider)
       console.log(result.user.displayName)
       alert('Connected!')
@@ -19,7 +20,7 @@ export default function TestAuthPage() {
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth)
+      if (auth) await signOut(auth)
     } catch (error) {
       console.error(error)
     }

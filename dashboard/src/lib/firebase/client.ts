@@ -11,8 +11,11 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
+// Guard: skip initialization at build time when env vars are not configured.
+const app = firebaseConfig.apiKey
+  ? getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
+  : null
 
-export const auth = getAuth(app)
-export const db = getFirestore(app)
+export const auth = app ? getAuth(app) : null
+export const db = app ? getFirestore(app) : null
 export const googleProvider = new GoogleAuthProvider()

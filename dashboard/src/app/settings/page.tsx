@@ -12,7 +12,7 @@ export default function SettingsPage() {
 
   const handleSignOut = async () => {
     try {
-      await firebaseSignOut(auth);
+      if (auth) await firebaseSignOut(auth);
     } catch (error) {
       console.error('SettingsPage: signOut failed', error);
     }

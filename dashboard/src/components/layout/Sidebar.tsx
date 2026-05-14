@@ -165,7 +165,7 @@ export function Sidebar() {
 
   const handleSignOut = async () => {
     try {
-      await firebaseSignOut(auth);
+      if (auth) await firebaseSignOut(auth);
     } catch (error) {
       console.error('Sidebar: signOut failed', error);
     }

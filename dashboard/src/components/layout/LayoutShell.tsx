@@ -29,7 +29,7 @@ function UnauthorizedScreen({
 }) {
   const handleSignOut = async () => {
     try {
-      await signOut(auth)
+      if (auth) await signOut(auth)
     } catch (error) {
       console.error('UnauthorizedScreen: signOut failed', error)
     }

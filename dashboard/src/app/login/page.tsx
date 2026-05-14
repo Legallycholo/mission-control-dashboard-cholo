@@ -57,6 +57,7 @@ export default function LoginPage() {
   }, [authLoading, user, router])
 
   const handleGoogleSignIn = async () => {
+    if (!auth) return
     setError(null)
     setSigningIn(true)
     try {
@@ -84,6 +85,7 @@ export default function LoginPage() {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!auth) return
     setError(null)
     setSigningIn(true)
     try {
@@ -110,6 +112,7 @@ export default function LoginPage() {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!auth) return
     setError(null)
     setResetting(true)
     try {

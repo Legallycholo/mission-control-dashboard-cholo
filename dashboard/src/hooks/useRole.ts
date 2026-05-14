@@ -18,6 +18,11 @@ export function useRole(): UseRoleResult {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
+    if (!auth || !db) {
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
 
@@ -29,7 +34,7 @@ export function useRole(): UseRoleResult {
 
       try {
         setLoading(true)
-        const userDocRef = doc(db, 'users', firebaseUser.email)
+        const userDocRef = doc(db!, 'users', firebaseUser.email)
         const snapshot = await getDoc(userDocRef)
 
         if (snapshot.exists()) {
