@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   DollarSign, ShoppingCart, TrendingUp, Download,
   CreditCard, Percent, Activity, Pencil, Target, ExternalLink,
+  FileJson, Printer, ChevronDown, FileSpreadsheet,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -38,6 +39,8 @@ export default function VentasKpisPage() {
   const [savingGoal, setSavingGoal] = useState(false);
   const [topCategories, setTopCategories] = useState<TopCategory[]>([]);
   const [catsLoading, setCatsLoading] = useState(true);
+  const [exportOpen, setExportOpen] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const now = new Date();
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -79,6 +82,16 @@ export default function VentasKpisPage() {
   useEffect(() => { fetchData(); fetchTopCategories(); }, [startDate, endDate]);
   useEffect(() => { fetchGoals(); }, []);
 
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
+        setExportOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
   const handleSaveGoal = async () => {
     const amount = parseFloat(goalInput.replace(/[^0-9.]/g, ''));
     if (!amount || amount <= 0) return;
@@ -99,19 +112,49 @@ export default function VentasKpisPage() {
 
   const handleExportCSV = () => {
     if (!data) return;
-    const csv = "data:text/csv;charset=utf-8,"
-      + "Metric,Value\n"
-      + `Ventas Totales,${data.kpis.grossSales}\n`
-      + `Ventas Pagadas,${data.kpis.netSales}\n`
-      + `Promedio Diario,${data.kpis.averageDailySales}\n`
-      + `Órdenes Totales,${data.kpis.grossOrderCount}\n`
-      + `Órdenes Pagadas,${data.kpis.netOrderCount}\n`
-      + `AOV,${data.kpis.aov}\n`
-      + `Descuentos,${data.kpis.totalDiscounts}\n`;
+    const rows = [
+      'Métrica,Valor',
+      `Ventas Pagadas,${data.kpis.netSales}`,
+      `Ventas Totales,${data.kpis.grossSales}`,
+      `Promedio Diario,${data.kpis.averageDailySales}`,
+      `Órdenes Cobradas,${data.kpis.netOrderCount}`,
+      `Órdenes Totales,${data.kpis.grossOrderCount}`,
+      `AOV,${data.kpis.aov}`,
+      `Total Descuentos,${data.kpis.totalDiscounts}`,
+      '',
+      'Fecha,Ventas Pagadas,Ventas Totales,Órdenes',
+      ...(data.trend ?? []).map(t => `${t.date},${t.netSales},${t.grossSales},${t.orders}`),
+    ].join('\n');
     const link = document.createElement('a');
-    link.href = encodeURI(csv);
+    link.href = `data:text/csv;charset=utf-8,${encodeURIComponent(rows)}`;
     link.download = `ventas_kpis_${startDate}_${endDate}.csv`;
     document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setExportOpen(false);
+  };
+
+  const handleExportJSON = () => {
+    if (!data) return;
+    const payload = {
+      periodo: { startDate, endDate },
+      kpis: data.kpis,
+      deltas: data.deltas,
+      trend: data.trend,
+      paymentStatuses: data.paymentStatuses,
+      topCategorias: topCategories,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ventas_kpis_${startDate}_${endDate}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setExportOpen(false);
+  };
+
+  const handlePrint = () => {
+    setExportOpen(false);
+    setTimeout(() => window.print(), 100);
   };
 
   if (!mounted) return null;
@@ -127,10 +170,41 @@ export default function VentasKpisPage() {
         </div>
         <div className="flex items-center gap-3">
           <DateRangePicker startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e); }} />
-          <button onClick={handleExportCSV} className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70">
-            <Download className="w-4 h-4" />
-            CSV
-          </button>
+          <div className="relative" ref={exportRef}>
+            <button
+              onClick={() => setExportOpen(prev => !prev)}
+              className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200/90 text-zinc-900 px-4 py-2 rounded-xl transition-colors text-sm font-medium border border-zinc-200/70"
+            >
+              <Download className="w-4 h-4" />
+              Exportar
+              <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", exportOpen && "rotate-180")} />
+            </button>
+            {exportOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-48 bg-white border border-zinc-200 rounded-xl shadow-lg z-50 overflow-hidden">
+                <button
+                  onClick={handleExportCSV}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                  Exportar CSV
+                </button>
+                <button
+                  onClick={handleExportJSON}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors"
+                >
+                  <FileJson className="w-4 h-4 text-blue-600" />
+                  Exportar JSON
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors border-t border-zinc-100"
+                >
+                  <Printer className="w-4 h-4 text-zinc-500" />
+                  Imprimir / PDF
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -151,28 +225,75 @@ export default function VentasKpisPage() {
       {/* Top Categories */}
       <div className="rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
-          <h2 className="font-bold text-zinc-900">Top Categorías del Periodo</h2>
+          <div>
+            <h2 className="font-bold text-zinc-900">Top Categorías del Periodo</h2>
+            <p className="text-xs text-zinc-400 mt-0.5">Participación en ingresos netos</p>
+          </div>
           <Link href="/ventas/categorias" className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium">
             Ver todas <ExternalLink className="w-3 h-3" />
           </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="bg-zinc-50 border-b border-zinc-100">{['Rank','Categoría','Ingresos','Unidades','% Total'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase tracking-wider">{h}</th>)}</tr></thead>
+            <thead>
+              <tr className="bg-zinc-50 border-b border-zinc-100">
+                {['#', 'Categoría', 'Ingresos', 'Unidades', 'Participación'].map(h => (
+                  <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase tracking-wider">{h}</th>
+                ))}
+              </tr>
+            </thead>
             <tbody>
-              {catsLoading ? Array.from({length:5}).map((_,i) => (
-                <tr key={i} className="border-b border-zinc-100">{Array.from({length:5}).map((_,j) => <td key={j} className="px-4 py-3"><div className="h-4 bg-zinc-100 rounded animate-pulse"/></td>)}</tr>
-              )) : topCategories.length === 0 ? (
-                <tr><td colSpan={5} className="px-4 py-6 text-center text-zinc-400 text-sm">Sin datos de categorías. Verifica que la tabla shopify_order_line_items exista en BigQuery.</td></tr>
-              ) : topCategories.map((c, i) => (
-                <tr key={c.category} className="border-b border-zinc-100/60 hover:bg-zinc-50/50 transition-colors">
-                  <td className="px-4 py-3 text-zinc-400 font-mono text-xs">{i+1}</td>
-                  <td className="px-4 py-3 font-medium text-zinc-900">{c.category}</td>
-                  <td className="px-4 py-3 font-semibold text-zinc-900">{new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(c.revenue)}</td>
-                  <td className="px-4 py-3 text-zinc-600">{new Intl.NumberFormat('en-US').format(c.unitsSold)}</td>
-                  <td className="px-4 py-3 text-blue-600 font-medium">{c.revenueShare.toFixed(1)}%</td>
+              {catsLoading ? Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="border-b border-zinc-100">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <td key={j} className="px-4 py-3"><div className="h-4 bg-zinc-100 rounded animate-pulse" /></td>
+                  ))}
                 </tr>
-              ))}
+              )) : topCategories.length === 0 ? (
+                <tr><td colSpan={5} className="px-4 py-6 text-center text-zinc-400 text-sm">Sin datos de categorías.</td></tr>
+              ) : topCategories.map((c, i) => {
+                const shareColor = c.revenueShare >= 30
+                  ? 'bg-blue-500'
+                  : c.revenueShare >= 15
+                    ? 'bg-emerald-500'
+                    : c.revenueShare >= 8
+                      ? 'bg-amber-400'
+                      : 'bg-zinc-300';
+                const badgeColor = c.revenueShare >= 30
+                  ? 'text-blue-700 bg-blue-50 border-blue-200'
+                  : c.revenueShare >= 15
+                    ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                    : c.revenueShare >= 8
+                      ? 'text-amber-700 bg-amber-50 border-amber-200'
+                      : 'text-zinc-600 bg-zinc-50 border-zinc-200';
+                const rankColors = ['text-yellow-600 bg-yellow-50 border-yellow-200', 'text-zinc-500 bg-zinc-50 border-zinc-200', 'text-orange-600 bg-orange-50 border-orange-200'];
+                return (
+                  <tr key={c.category} className="border-b border-zinc-100/60 hover:bg-zinc-50/50 transition-colors">
+                    <td className="px-4 py-3">
+                      <span className={cn('text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full border', rankColors[i] ?? 'text-zinc-400 bg-zinc-50 border-zinc-100')}>
+                        {i + 1}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-medium text-zinc-900 max-w-[180px] truncate">{c.category}</td>
+                    <td className="px-4 py-3 font-semibold text-zinc-900">
+                      {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(c.revenue)}
+                    </td>
+                    <td className="px-4 py-3 text-zinc-500 tabular-nums">
+                      {new Intl.NumberFormat('en-US').format(c.unitsSold)}
+                    </td>
+                    <td className="px-4 py-3 min-w-[160px]">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden max-w-[80px]">
+                          <div className={cn('h-full rounded-full transition-all duration-500', shareColor)} style={{ width: `${Math.min(100, c.revenueShare)}%` }} />
+                        </div>
+                        <span className={cn('text-[11px] font-bold px-2 py-0.5 rounded-full border', badgeColor)}>
+                          {c.revenueShare.toFixed(1)}%
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -65,6 +65,8 @@ const navItems: NavItem[] = [
       { name: 'Orgánico (Search Console)', href: '/trafico/organico' },
       { name: 'Pagado (Google Ads)', href: '/trafico/pagado-google' },
       { name: 'Términos de Búsqueda', href: '/trafico/terminos-busqueda' },
+      { name: 'Fuente / Medio', href: '/trafico/fuente-medio' },
+      { name: 'Dispositivos', href: '/trafico/dispositivos' },
       { name: 'SKU Performance', href: '/trafico/sku-performance' },
       { name: 'Pagado (Meta Ads)', href: '/trafico/pagado-meta' },
     ],

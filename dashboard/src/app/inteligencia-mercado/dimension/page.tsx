@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Globe, TrendingUp, ShoppingBag, BarChart2, RefreshCw, Clock, Search, Calculator, AlertTriangle } from 'lucide-react';
+import { Globe, TrendingUp, ShoppingBag, BarChart2, RefreshCw, Clock, Calculator, AlertTriangle } from 'lucide-react';
 import {
   Treemap,
   ResponsiveContainer,
@@ -42,7 +42,6 @@ const formatCurrency = (n: number) =>
 const formatNumber = (n: number) =>
   new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(n);
 
-// Custom TreeMap content for better labels
 const CustomTreemapContent = ({ x, y, width, height, name, value }: any) => {
   if (!width || !height || width < 40 || height < 30) return null;
   const fontSize = Math.min(12, Math.max(8, width / 12));
@@ -98,7 +97,6 @@ export default function DimensionMercadoPage() {
     }
   };
 
-  // Prepare treemap data (top 50 by market size)
   const treemapData = products.slice(0, 50).map(p => ({
     name: p.product_title.length > 30 ? p.product_title.slice(0, 27) + '...' : p.product_title,
     fullName: p.product_title,
@@ -108,7 +106,6 @@ export default function DimensionMercadoPage() {
     searches: p.avg_monthly_searches,
   }));
 
-  // Top 15 by market size for bar chart
   const top15 = products.slice(0, 15).map(p => ({
     name: p.product_title.length > 25 ? p.product_title.slice(0, 22) + '...' : p.product_title,
     fullName: p.product_title,
@@ -127,7 +124,7 @@ export default function DimensionMercadoPage() {
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Dimensión de Mercado</h1>
           <p className="text-zinc-600 mt-1">
-            Market Size y Market Share estimados a partir de volúmenes de búsqueda (Google Ads).
+            Market Size, Market Share y proyecciones con la Google Success Formula.
           </p>
         </div>
         <button
@@ -140,7 +137,7 @@ export default function DimensionMercadoPage() {
         </button>
       </div>
 
-      {/* KPI Cards Globales */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KpiCard
           title="Market Size Promedio"
@@ -159,7 +156,7 @@ export default function DimensionMercadoPage() {
         <KpiCard
           title="Market Share Promedio"
           value={loading ? "..." : globals ? formatCurrency(globals.totalShareAvg) : "Sin datos"}
-          subtitle="Nuestra cuota estimada (5%)"
+          subtitle="Nuestra cuota estimada"
           icon={ShoppingBag}
           color="emerald"
         />
@@ -172,14 +169,13 @@ export default function DimensionMercadoPage() {
         />
       </div>
 
-      {/* Chart Section */}
-      {noData ? (
-        <PendingState />
-      ) : (
+      {/* Pending State banner */}
+      {noData && !loading && <PendingStateBanner />}
+
+      {/* Charts (only when data exists) */}
+      {!noData && !loading && (
         <>
-          {/* View Toggle + Chart */}
           <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
-            {/* Toggle */}
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div>
                 <h2 className="text-lg font-bold text-zinc-900">Mapa de Mercado por Producto</h2>
@@ -203,11 +199,7 @@ export default function DimensionMercadoPage() {
               </div>
             </div>
 
-            {loading ? (
-              <div className="h-[400px] flex items-center justify-center">
-                <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-              </div>
-            ) : view === 'treemap' ? (
+            {view === 'treemap' ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <Treemap
@@ -252,7 +244,6 @@ export default function DimensionMercadoPage() {
             <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
           </div>
 
-          {/* Products Table */}
           <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
             <h2 className="text-lg font-bold text-zinc-900 mb-5">Detalle por Producto</h2>
             <div className="overflow-x-auto">
@@ -276,17 +267,17 @@ export default function DimensionMercadoPage() {
                         <div className="text-zinc-600 text-[10px] mt-0.5">{p.vendor}</div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="bg-blue-500/10 text-blue-300 border border-blue-500/20 rounded-lg px-2 py-0.5 text-[10px] font-mono">
+                        <span className="bg-blue-500/10 text-blue-700 border border-blue-200 rounded-lg px-2 py-0.5 text-[10px] font-mono">
                           {p.keyword}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right text-zinc-600 font-mono text-xs">
                         {formatNumber(p.avg_monthly_searches)}
                       </td>
-                      <td className="px-4 py-3 text-right text-blue-400 font-medium text-xs">
+                      <td className="px-4 py-3 text-right text-blue-600 font-medium text-xs">
                         {formatCurrency(p.market_size_avg)}
                       </td>
-                      <td className="px-4 py-3 text-right text-emerald-400 font-medium text-xs">
+                      <td className="px-4 py-3 text-right text-emerald-600 font-medium text-xs">
                         {formatCurrency(p.market_share_avg)}
                       </td>
                     </tr>
@@ -298,160 +289,305 @@ export default function DimensionMercadoPage() {
         </>
       )}
 
+      {/* Google Success Formula Simulator — always visible */}
+      <GoogleSuccessFormulaSimulator products={products} />
     </div>
   );
 }
 
-// ─── Pending State Component ──────────────────────────────────────────────────
+// ─── Google Success Formula Simulator ────────────────────────────────────────
 
-function PendingState() {
-  const [keyword, setKeyword]     = useState('');
-  const [price, setPrice]         = useState('');
-  const [searches, setSearches]   = useState('');
-  const [preview, setPreview]     = useState<{ marketSize: number; marketShare: number; buyers: number } | null>(null);
+const GSF_SCENARIOS = [
+  { label: 'Pesimista',   sov: 0.20, cardCls: 'bg-rose-50 border-rose-200',     badgeCls: 'bg-rose-100 text-rose-700',     valCls: 'text-rose-700' },
+  { label: 'Conservador', sov: 0.50, cardCls: 'bg-amber-50 border-amber-200',   badgeCls: 'bg-amber-100 text-amber-700',   valCls: 'text-amber-700' },
+  { label: 'Optimista',   sov: 0.85, cardCls: 'bg-emerald-50 border-emerald-200', badgeCls: 'bg-emerald-100 text-emerald-700', valCls: 'text-emerald-700' },
+];
 
-  const calculate = (e: React.FormEvent) => {
-    e.preventDefault();
-    const vol = parseFloat(searches);
-    const prc = parseFloat(price);
-    if (!vol || !prc) return;
-    const buyers     = vol * 0.01;
-    const marketSize = buyers * prc;
-    const marketShare = marketSize * 0.05;
-    setPreview({ marketSize, marketShare, buyers });
-  };
+const FORMULA_TOKENS = [
+  { label: 'MSV',     desc: 'Vol. búsquedas/mes',  cls: 'bg-blue-100 text-blue-700 border-blue-200' },
+  { symbol: '×' },
+  { label: '47%',     desc: 'CTR Shopping (fijo)',  cls: 'bg-violet-100 text-violet-700 border-violet-200' },
+  { symbol: '×' },
+  { label: 'SoV',     desc: 'Share of Voice',       cls: 'bg-amber-100 text-amber-700 border-amber-200' },
+  { symbol: '×' },
+  { label: 'CR%',     desc: 'Tasa conversión',      cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  { symbol: '×' },
+  { label: 'AOV',     desc: 'Ticket promedio',      cls: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
+  { symbol: '=' },
+  { label: 'Revenue', desc: 'Ingreso proyectado',   cls: 'bg-rose-100 text-rose-700 border-rose-200' },
+];
 
-  const fmtCurrency = (n: number) =>
-    new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+function GoogleSuccessFormulaSimulator({ products }: { products: ProductMetric[] }) {
+  const [selectedId, setSelectedId] = useState('');
+  const [msv, setMsv] = useState('');
+  const [aov, setAov] = useState('');
+  const [cr, setCr] = useState('2.0');
+
+  const CTR = 0.47;
+
+  useEffect(() => {
+    const p = products.find(x => String(x.product_id) === selectedId);
+    if (p) {
+      setMsv(String(Math.round(p.avg_monthly_searches)));
+      setAov(String(Math.round(p.avg_price)));
+    }
+  }, [selectedId, products]);
+
+  const msvNum = parseFloat(msv) || 0;
+  const aovNum = parseFloat(aov) || 0;
+  const crFrac = parseFloat(cr) / 100;
+  const hasInputs = msvNum > 0 && aovNum > 0;
+
+  const results = GSF_SCENARIOS.map(s => {
+    const clicks = msvNum * CTR * s.sov;
+    const buyers = clicks * crFrac;
+    const revenue = buyers * aovNum;
+    return { ...s, clicks, buyers, revenue };
+  });
 
   return (
-    <div className="space-y-6">
-      {/* Status banner */}
-      <div className="flex items-start gap-4 p-5 rounded-2xl border border-amber-500/30 bg-amber-500/5">
-        <div className="p-2 rounded-xl bg-amber-500/10 flex-shrink-0">
-          <Clock className="w-5 h-5 text-amber-400" />
+    <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden">
+      {/* Header */}
+      <div className="flex items-start gap-3 mb-6">
+        <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200/60 text-blue-600 shrink-0">
+          <Calculator className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-amber-400 font-semibold">Esperando Google Ads Basic Access</p>
-          <p className="text-zinc-600 text-sm mt-1">
-            El servicio <code className="text-xs bg-zinc-50 px-1.5 py-0.5 rounded text-blue-300">KeywordPlanIdeaService</code> requiere aprobación de Basic Access.
-            Puedes usar la calculadora abajo para estimar el mercado manualmente mientras tanto.
+          <h2 className="text-lg font-bold text-zinc-900">Google Success Formula — Simulador</h2>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            Proyección de revenue en 3 escenarios por nivel de Share of Voice.
           </p>
-          <div className="flex items-center gap-2 mt-3 flex-wrap">
-            <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3" />
-              Solicitado en ads.google.com
-            </span>
-            <span className="text-[10px] text-zinc-600">1-5 días hábiles · El token nuevo llegará por email</span>
-          </div>
         </div>
       </div>
 
-      {/* Formula explainer */}
-      <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
-        <h2 className="text-lg font-bold text-zinc-900 mb-1">Cómo se calcula el Market Size</h2>
-        <p className="text-zinc-600 text-sm mb-5">La fórmula que usará este módulo cuando Google Ads esté activo:</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-          {[
-            { step: '1', label: 'Compradores potenciales', formula: 'Búsquedas/mes × 1%', color: 'blue' },
-            { step: '2', label: 'Market Size',             formula: 'Compradores × Precio promedio', color: 'violet' },
-            { step: '3', label: 'Market Share estimado',   formula: 'Market Size × 5%', color: 'emerald' },
-          ].map(item => (
-            <div key={item.step} className="p-4 rounded-2xl border border-zinc-200/70 bg-zinc-50/90">
-              <span className="text-[10px] font-mono text-zinc-600">PASO {item.step}</span>
-              <p className="text-zinc-900 font-semibold mt-1">{item.label}</p>
-              <p className="text-xs font-mono text-zinc-600 mt-1">{item.formula}</p>
+      {/* Formula visualization */}
+      <div className="flex items-center gap-2 flex-wrap mb-6 p-4 rounded-2xl bg-zinc-50 border border-zinc-200">
+        {FORMULA_TOKENS.map((token, i) => {
+          if ('symbol' in token) {
+            return <span key={i} className="text-zinc-400 font-bold text-base">{token.symbol}</span>;
+          }
+          return (
+            <div key={i} className={cn('px-3 py-1.5 rounded-xl border text-center min-w-[70px]', token.cls)}>
+              <div className="text-xs font-bold leading-tight">{token.label}</div>
+              <div className="text-[10px] opacity-70 leading-tight mt-0.5">{token.desc}</div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
-      {/* Manual calculator */}
-      <div className="p-6 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl">
-        <div className="flex items-center gap-2 mb-5">
-          <Calculator className="w-5 h-5 text-blue-400" />
-          <h2 className="text-lg font-bold text-zinc-900">Calculadora Manual</h2>
-        </div>
-        <form onSubmit={calculate} className="flex flex-col md:flex-row gap-3 mb-5">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
-            <input
-              type="text"
-              value={keyword}
-              onChange={e => setKeyword(e.target.value)}
-              placeholder='Keyword (ej. "iPhone 15 case")'
-              className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl pl-9 pr-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-            />
-          </div>
-          <input
-            type="number"
-            value={searches}
-            onChange={e => setSearches(e.target.value)}
-            placeholder="Búsquedas/mes"
-            className="w-full md:w-44 bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-          />
-          <input
-            type="number"
-            value={price}
-            onChange={e => setPrice(e.target.value)}
-            placeholder="Precio USD"
-            className="w-full md:w-36 bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-          />
-          <button
-            type="submit"
-            disabled={!searches || !price}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap"
-          >
-            <Calculator className="w-4 h-4" />
-            Calcular
-          </button>
-        </form>
-
-        {preview && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 rounded-2xl border border-blue-500/20 bg-blue-500/5 text-center">
-              <p className="text-xs text-zinc-600 mb-1">Compradores Potenciales</p>
-              <p className="text-2xl font-bold text-zinc-900">{preview.buyers.toLocaleString('es-CL', { maximumFractionDigits: 0 })}</p>
-              <p className="text-[10px] text-zinc-600 mt-1">personas/mes</p>
-            </div>
-            <div className="p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5 text-center">
-              <p className="text-xs text-zinc-600 mb-1">Market Size Estimado</p>
-              <p className="text-2xl font-bold text-zinc-900">{fmtCurrency(preview.marketSize)}</p>
-              <p className="text-[10px] text-zinc-600 mt-1">tamaño del mercado</p>
-            </div>
-            <div className="p-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-center">
-              <p className="text-xs text-zinc-600 mb-1">Market Share Estimado</p>
-              <p className="text-2xl font-bold text-zinc-900">{fmtCurrency(preview.marketShare)}</p>
-              <p className="text-[10px] text-zinc-600 mt-1">nuestra cuota (5%)</p>
-            </div>
+      {/* Inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        {products.length > 0 && (
+          <div className="md:col-span-2 lg:col-span-4">
+            <label className="text-xs font-semibold text-zinc-500 mb-1.5 block">
+              Auto-completar desde producto (MSV y AOV en vivo)
+            </label>
+            <select
+              value={selectedId}
+              onChange={e => setSelectedId(e.target.value)}
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:border-blue-400 transition-colors"
+            >
+              <option value="">Seleccionar producto para auto-completar...</option>
+              {products.slice(0, 60).map(p => (
+                <option key={p.product_id} value={p.product_id}>
+                  {p.product_title.length > 55 ? p.product_title.slice(0, 52) + '...' : p.product_title}
+                  {' '}— {formatNumber(p.avg_monthly_searches)} búsq./mes · ${Math.round(p.avg_price)} AOV
+                </option>
+              ))}
+            </select>
           </div>
         )}
+
+        <div>
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 block">MSV — Búsquedas / mes</label>
+          <input
+            type="number"
+            value={msv}
+            onChange={e => setMsv(e.target.value)}
+            placeholder="Ej: 10 000"
+            className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-blue-400 transition-colors"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 block">CTR Shopping</label>
+          <div className="w-full bg-zinc-100 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm text-zinc-400 font-mono select-none">
+            47% (constante GSF)
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 block">CR — Tasa de Conversión (%)</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0.1"
+            max="100"
+            value={cr}
+            onChange={e => setCr(e.target.value)}
+            className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-blue-400 transition-colors"
+          />
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 block">AOV — Ticket Promedio (USD)</label>
+          <input
+            type="number"
+            value={aov}
+            onChange={e => setAov(e.target.value)}
+            placeholder="Ej: 150"
+            className="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-blue-400 transition-colors"
+          />
+        </div>
+      </div>
+
+      {/* Results */}
+      {hasInputs ? (
+        <>
+          {/* Formula substitution */}
+          <div className="mb-5 p-3 rounded-xl bg-zinc-50 border border-zinc-200 text-center">
+            <span className="text-xs font-mono text-zinc-500">
+              {formatNumber(msvNum)}
+              <span className="text-zinc-400"> × 47% × </span>
+              <span className="text-amber-600">SoV</span>
+              <span className="text-zinc-400"> × </span>
+              <span className="text-emerald-600">{cr}%</span>
+              <span className="text-zinc-400"> × </span>
+              {formatCurrency(aovNum)}
+              <span className="text-zinc-400"> = </span>
+              <span className="text-rose-600">?</span>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {results.map(r => (
+              <div key={r.label} className={cn('p-5 rounded-2xl border relative overflow-hidden', r.cardCls)}>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={cn('text-xs font-bold px-2.5 py-1 rounded-full', r.badgeCls)}>
+                    {r.label}
+                  </span>
+                  <span className={cn('text-xs font-mono font-bold', r.valCls)}>
+                    SoV {(r.sov * 100).toFixed(0)}%
+                  </span>
+                </div>
+
+                <div className="space-y-1 mb-3">
+                  <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wide">Revenue mensual</p>
+                  <p className={cn('text-2xl font-bold tracking-tight', r.valCls)}>
+                    {formatCurrency(r.revenue)}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-zinc-200/60">
+                  <div>
+                    <p className="text-[10px] text-zinc-500">Clicks / mes</p>
+                    <p className="text-sm font-bold text-zinc-700">{formatNumber(r.clicks)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-zinc-500">Compradores / mes</p>
+                    <p className="text-sm font-bold text-zinc-700">{formatNumber(r.buyers)}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Annual projection */}
+          <div className="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-200">
+            <p className="text-xs font-semibold text-blue-700 mb-2">Proyección Anual (escenario conservador)</p>
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <p className="text-[10px] text-blue-500">Revenue anual</p>
+                <p className="text-lg font-bold text-blue-800">{formatCurrency(results[1].revenue * 12)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-blue-500">Compradores / año</p>
+                <p className="text-lg font-bold text-blue-800">{formatNumber(results[1].buyers * 12)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-blue-500">SoV usado</p>
+                <p className="text-lg font-bold text-blue-800">50%</p>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="text-center py-10">
+          <Calculator className="w-10 h-10 text-zinc-300 mx-auto mb-3" />
+          <p className="text-zinc-500 text-sm font-medium">Ingresa MSV y AOV para ver las proyecciones</p>
+          <p className="text-zinc-400 text-xs mt-1">
+            {products.length > 0
+              ? 'Selecciona un producto arriba para auto-completar los valores en vivo.'
+              : 'Ingresa los valores manualmente para calcular.'}
+          </p>
+        </div>
+      )}
+
+      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+    </div>
+  );
+}
+
+// ─── Pending State Banner ─────────────────────────────────────────────────────
+
+function PendingStateBanner() {
+  return (
+    <div className="flex items-start gap-4 p-5 rounded-2xl border border-amber-200 bg-amber-50">
+      <div className="p-2 rounded-xl bg-amber-100 flex-shrink-0">
+        <Clock className="w-5 h-5 text-amber-600" />
+      </div>
+      <div>
+        <p className="text-amber-800 font-semibold">Esperando datos de Google Ads</p>
+        <p className="text-amber-700 text-sm mt-1">
+          El servicio{' '}
+          <code className="text-xs bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded text-amber-800 font-mono">
+            KeywordPlanIdeaService
+          </code>{' '}
+          requiere aprobación de Basic Access. Las tablas de BigQuery se poblarán automáticamente cuando se apruebe.
+        </p>
+        <div className="flex items-center gap-2 mt-3 flex-wrap">
+          <span className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-amber-100 border border-amber-200 text-amber-700 flex items-center gap-1">
+            <AlertTriangle className="w-3 h-3" />
+            Solicitado en ads.google.com
+          </span>
+          <span className="text-[10px] text-amber-600">1–5 días hábiles · El acceso llega por email</span>
+        </div>
+        <p className="text-amber-700 text-xs mt-3">
+          Mientras tanto, usa el Simulador de Google Success Formula abajo para calcular proyecciones manualmente.
+        </p>
       </div>
     </div>
   );
 }
+
+// ─── KPI Card ─────────────────────────────────────────────────────────────────
 
 function KpiCard({ title, value, subtitle, icon: Icon, color }: {
   title: string; value: string; subtitle: string; icon: any;
   color: 'blue' | 'violet' | 'emerald' | 'amber';
 }) {
   const styles = {
-    blue:    'text-blue-400   bg-blue-500/10   border-blue-500/20',
-    violet:  'text-violet-400 bg-violet-500/10 border-violet-500/20',
-    emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-    amber:   'text-amber-400  bg-amber-500/10  border-amber-500/20',
+    blue:    'text-blue-600   bg-blue-50   border-blue-200/60',
+    violet:  'text-violet-600 bg-violet-50 border-violet-200/60',
+    emerald: 'text-emerald-600 bg-emerald-50 border-emerald-200/60',
+    amber:   'text-amber-600  bg-amber-50  border-amber-200/60',
   };
   return (
     <div className="p-5 rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur-xl relative overflow-hidden group">
       <div className="flex justify-between items-start mb-3 relative z-10">
-        <p className="text-xs font-medium text-zinc-600 leading-tight">{title}</p>
+        <p className="text-xs font-medium text-zinc-500 leading-tight">{title}</p>
         <div className={cn("p-1.5 rounded-lg border", styles[color])}>
           <Icon className="w-4 h-4" />
         </div>
       </div>
       <p className="text-2xl font-bold text-zinc-900 tracking-tight relative z-10">{value}</p>
-      <p className="text-[10px] text-zinc-600 mt-1 relative z-10">{subtitle}</p>
-      <div className={cn("absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity", styles[color].split(' ')[1])} />
+      <p className="text-[10px] text-zinc-500 mt-1 relative z-10">{subtitle}</p>
+      <div className={cn("absolute -bottom-6 -right-6 w-20 h-20 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity",
+        color === 'blue' && 'bg-blue-400',
+        color === 'violet' && 'bg-violet-400',
+        color === 'emerald' && 'bg-emerald-400',
+        color === 'amber' && 'bg-amber-400',
+      )} />
     </div>
   );
 }
