@@ -19,6 +19,7 @@ import {
   Lightbulb,
   HeadphonesIcon,
   Sparkles,
+  Bot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -45,6 +46,7 @@ const navItems: NavItem[] = [
       { name: 'Métodos de Pago', href: '/ventas/metodo-pago' },
     ],
   },
+  { name: 'WhatsApp AI Agent', href: '/vendor-intelligence', icon: Bot },
   {
     name: 'Inteligencia de Mercado',
     icon: Lightbulb,

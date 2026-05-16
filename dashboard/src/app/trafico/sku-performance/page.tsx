@@ -1,139 +1,339 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { Package, Download, ArrowUpDown, Search } from 'lucide-react';
-import { DateRangePicker } from '@/components/ui/DateRangePicker';
+import { useState } from 'react';
+import { Package, TrendingUp, Zap, DollarSign } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { cn } from '@/lib/utils';
+import { DeltaBadge } from '@/components/ui/DeltaBadge';
+import { DateRangePicker } from '@/components/ui/DateRangePicker';
 
-interface Sku {
-  itemId: string; title: string; brand: string; impressions: number; clicks: number;
-  cost: number; conversions: number; conversionsValue: number; roas: number; ctr: number;
-  roasLabel: 'high' | 'medium' | 'low';
+interface SkuRow {
+  sku: string;
+  product: string;
+  category: string;
+  sessions: number;
+  addToCart: number;
+  addToCartRate: number;
+  conversions: number;
+  conversionRate: number;
+  revenue: number;
 }
 
-type SortKey = keyof Pick<Sku, 'cost' | 'clicks' | 'impressions' | 'conversions' | 'roas' | 'ctr'>;
+const MOCK_SKUS: SkuRow[] = [
+  { sku: 'APL-IP16P-256', product: 'iPhone 16 Pro 256GB', category: 'Smartphones', sessions: 4820, addToCart: 1205, addToCartRate: 24.99, conversions: 218, conversionRate: 4.52, revenue: 198000 },
+  { sku: 'SAM-GS25-128', product: 'Samsung Galaxy S25', category: 'Smartphones', sessions: 3240, addToCart: 874, addToCartRate: 26.98, conversions: 187, conversionRate: 5.77, revenue: 149600 },
+  { sku: 'APL-IPDP-512', product: 'iPad Pro M4 512GB', category: 'Tablets', sessions: 2180, addToCart: 523, addToCartRate: 23.99, conversions: 89, conversionRate: 4.08, revenue: 98000 },
+  { sku: 'APL-MBM4-8', product: 'MacBook Air M4 8GB', category: 'Laptops', sessions: 1940, addToCart: 388, addToCartRate: 20.00, conversions: 52, conversionRate: 2.68, revenue: 87000 },
+  { sku: 'SON-WH1000-5', product: 'Sony WH-1000XM5', category: 'Audio', sessions: 1654, addToCart: 496, addToCartRate: 29.99, conversions: 124, conversionRate: 7.50, revenue: 42600 },
+  { sku: 'APL-AW10-45', product: 'Apple Watch Series 10 45mm', category: 'Wearables', sessions: 1420, addToCart: 341, addToCartRate: 24.01, conversions: 98, conversionRate: 6.90, revenue: 36800 },
+  { sku: 'APL-APP2', product: 'AirPods Pro 2da Gen', category: 'Audio', sessions: 1287, addToCart: 386, addToCartRate: 29.99, conversions: 187, conversionRate: 14.53, revenue: 28000 },
+  { sku: 'SAM-GW7-44', product: 'Samsung Galaxy Watch 7', category: 'Wearables', sessions: 987, addToCart: 197, addToCartRate: 19.96, conversions: 67, conversionRate: 6.79, revenue: 18700 },
+  { sku: 'LOG-MX3S', product: 'Logitech MX Master 3S', category: 'Accesorios', sessions: 876, addToCart: 263, addToCartRate: 30.02, conversions: 156, conversionRate: 17.81, revenue: 14000 },
+  { sku: 'APL-CAB30', product: 'Cable USB-C Apple 2m', category: 'Accesorios', sessions: 743, addToCart: 297, addToCartRate: 39.97, conversions: 234, conversionRate: 31.49, revenue: 7000 },
+];
 
-const ROAS_STYLE: Record<string, string> = {
-  high: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-  medium: 'bg-amber-50 text-amber-700 border border-amber-200',
-  low: 'bg-rose-50 text-rose-700 border border-rose-200',
-};
+const CATEGORIES = ['Todas', 'Smartphones', 'Tablets', 'Laptops', 'Audio', 'Wearables', 'Accesorios'];
 
-export default function SkuPerformancePage() {
-  const [skus, setSkus] = useState<Sku[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState<{ key: SortKey; dir: 'asc' | 'desc' }>({ key: 'cost', dir: 'desc' });
-
-  const now = new Date();
-  const [startDate, setStartDate] = useState(new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]);
-  const [endDate, setEndDate] = useState(now.toISOString().split('T')[0]);
-
-  useEffect(() => { setMounted(true); }, []);
-  useEffect(() => {
-    if (!mounted) return;
-    setLoading(true); setError(null);
-    fetch(`/api/trafico/sku-performance?startDate=${startDate}&endDate=${endDate}`)
-      .then(r => r.json()).then(j => { if (j.success) setSkus(j.data.skus); else setError(j.error); }).catch(e => setError(e.message)).finally(() => setLoading(false));
-  }, [startDate, endDate, mounted]);
-
-  const filtered = useMemo(() => {
-    let list = search ? skus.filter(s => s.title.toLowerCase().includes(search.toLowerCase()) || s.itemId.includes(search) || s.brand.toLowerCase().includes(search.toLowerCase())) : skus;
-    return [...list].sort((a, b) => {
-      const diff = a[sort.key] - b[sort.key];
-      return sort.dir === 'desc' ? -diff : diff;
-    });
-  }, [skus, search, sort]);
-
-  const toggleSort = (key: SortKey) => setSort(s => ({ key, dir: s.key === key && s.dir === 'desc' ? 'asc' : 'desc' }));
-
-  const fmt$ = (n: number) => `$${n.toFixed(2)}`;
-  const fmtPct = (n: number) => `${(n * 100).toFixed(2)}%`;
-
-  const handleExport = () => {
-    const rows = ['SKU,Título,Marca,Gasto,Clics,CTR,Conversiones,Valor Conv.,ROAS',
-      ...filtered.map(s => `"${s.itemId}","${s.title.replace(/"/g,'""')}","${s.brand}",${fmt$(s.cost)},${s.clicks},${fmtPct(s.ctr)},${s.conversions},${fmt$(s.conversionsValue)},${s.roas.toFixed(2)}`)
-    ].join('\n');
-    const a = document.createElement('a'); a.href = `data:text/csv;charset=utf-8,${encodeURIComponent(rows)}`; a.download = `sku_performance_${startDate}_${endDate}.csv`; a.click();
+function KpiCard({
+  title,
+  value,
+  icon: Icon,
+  color,
+  delta,
+}: {
+  title: string;
+  value: string | number;
+  icon: React.ElementType;
+  color: 'blue' | 'emerald' | 'violet' | 'amber';
+  delta?: number;
+}) {
+  const colorMap: Record<string, string> = {
+    blue: 'text-blue-600 bg-blue-50 border-blue-200',
+    emerald: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+    violet: 'text-violet-600 bg-violet-50 border-violet-200',
+    amber: 'text-amber-600 bg-amber-50 border-amber-200',
   };
 
-  if (!mounted) return null;
-
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Rendimiento por Producto (SKU)</h1>
-          <p className="text-zinc-500 mt-1">Gasto, conversiones y ROAS de productos en Google Shopping</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <DateRangePicker startDate={startDate} endDate={endDate} onChange={(s, e) => { setStartDate(s); setEndDate(e); }} />
-          <button onClick={handleExport} className="flex items-center gap-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 px-4 py-2 rounded-xl text-sm font-medium border border-zinc-200 transition-colors"><Download className="w-4 h-4" /> CSV</button>
+    <div className="relative overflow-hidden rounded-2xl border p-6 bg-white/85 backdrop-blur-xl transition-all duration-300 hover:shadow-xl group">
+      <div className="flex items-start justify-between">
+        <p className="text-sm font-medium text-zinc-500">{title}</p>
+        <div className={cn('p-2 rounded-xl border', colorMap[color])}>
+          <Icon className="w-4 h-4" />
         </div>
       </div>
+      <div className="mt-3 flex items-end gap-3">
+        <p className="text-2xl font-bold text-zinc-900 tracking-tight leading-tight">{value}</p>
+        {delta !== undefined && <DeltaBadge value={delta} />}
+      </div>
+      <div
+        className={cn(
+          'absolute -bottom-8 -right-8 w-28 h-28 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500',
+          color === 'blue' && 'bg-blue-400',
+          color === 'emerald' && 'bg-emerald-400',
+          color === 'violet' && 'bg-violet-400',
+          color === 'amber' && 'bg-amber-400',
+        )}
+      />
+    </div>
+  );
+}
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 text-xs">
-        <span className="text-zinc-400 font-medium">ROAS:</span>
-        {[['high','≥ 3.0 Excelente'], ['medium','1.0–2.9 Regular'], ['low','< 1.0 Ineficiente']].map(([k, l]) => (
-          <span key={k} className={cn('px-2.5 py-1 rounded-full font-semibold', ROAS_STYLE[k])}>{l}</span>
+export default function SkuPerformancePage() {
+  const now = new Date();
+  const [startDate, setStartDate] = useState(
+    new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0],
+  );
+  const [endDate, setEndDate] = useState(now.toISOString().split('T')[0]);
+
+  const [skus] = useState<SkuRow[]>(MOCK_SKUS);
+  const [category, setCategory] = useState('Todas');
+
+  const filtered = category === 'Todas' ? skus : skus.filter((s) => s.category === category);
+  const chartData = [...filtered].sort((a, b) => b.sessions - a.sessions).slice(0, 8);
+
+  const totalRevenue = skus
+    .reduce((s, r) => s + r.revenue, 0)
+    .toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+
+  const topBySession = skus.reduce((best, s) => (s.sessions > best.sessions ? s : best), skus[0]);
+  const topByConversion = skus.reduce(
+    (best, s) => (s.conversionRate > best.conversionRate ? s : best),
+    skus[0],
+  );
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">
+            Tráfico: SKU Performance
+          </h1>
+          <p className="text-zinc-500 mt-1">
+            Rendimiento de productos por sesiones, conversión e ingresos
+          </p>
+        </div>
+        <DateRangePicker
+          startDate={startDate}
+          endDate={endDate}
+          onChange={(s, e) => {
+            setStartDate(s);
+            setEndDate(e);
+          }}
+        />
+      </div>
+
+      {/* KPI Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <KpiCard
+          title="SKUs Tracked"
+          value={skus.length}
+          icon={Package}
+          color="blue"
+        />
+        <KpiCard
+          title="SKU Top Clicks"
+          value={`${topBySession.product.split(' ').slice(0, 3).join(' ')} (${topBySession.sessions.toLocaleString('es-CL')} sess.)`}
+          icon={TrendingUp}
+          color="emerald"
+        />
+        <KpiCard
+          title="Mejor Conversión"
+          value={`${topByConversion.product.split(' ').slice(0, 2).join(' ')} (${topByConversion.conversionRate.toFixed(1)}%)`}
+          icon={Zap}
+          color="violet"
+        />
+        <KpiCard
+          title="Revenue Total"
+          value={totalRevenue}
+          icon={DollarSign}
+          color="amber"
+          delta={15.2}
+        />
+      </div>
+
+      {/* Category Filter Tabs */}
+      <div className="flex gap-2 flex-wrap">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setCategory(cat)}
+            className={cn(
+              'px-4 py-1.5 rounded-full text-sm font-medium border transition-colors',
+              category === cat
+                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                : 'bg-zinc-100 text-zinc-600 border-zinc-200 hover:bg-zinc-200',
+            )}
+          >
+            {cat}
+          </button>
         ))}
       </div>
 
-      {error ? (
-        <div className="p-5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 text-sm">{error}</div>
-      ) : (
-        <div className="rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-zinc-100 flex items-center gap-3">
-            <Package className="w-4 h-4 text-zinc-400" />
-            <Search className="w-4 h-4 text-zinc-400" />
-            <input type="text" placeholder="Buscar por nombre, SKU o marca..." value={search} onChange={e => setSearch(e.target.value)} className="flex-1 text-sm text-zinc-900 placeholder:text-zinc-400 bg-transparent focus:outline-none" />
-            <span className="text-xs text-zinc-400">{filtered.length} SKUs</span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-zinc-50 border-b border-zinc-100">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">SKU / Título</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">Marca</th>
-                  {(['cost','clicks','ctr','conversions','roas'] as SortKey[]).map(k => (
-                    <th key={k} className="px-4 py-3 text-right text-xs font-semibold text-zinc-400 uppercase cursor-pointer hover:text-zinc-700 select-none" onClick={() => toggleSort(k)}>
-                      <span className="flex items-center justify-end gap-1">{k === 'ctr' ? 'CTR' : k === 'roas' ? 'ROAS' : k.charAt(0).toUpperCase()+k.slice(1)} <ArrowUpDown className="w-3 h-3" /></span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? Array.from({length:8}).map((_,i) => (
-                  <tr key={i} className="border-b border-zinc-100">{Array.from({length:7}).map((_,j) => <td key={j} className="px-4 py-3"><div className="h-4 bg-zinc-100 rounded animate-pulse"/></td>)}</tr>
-                )) : filtered.map((s, i) => (
-                  <tr key={i} className="border-b border-zinc-100/60 hover:bg-zinc-50/50 transition-colors">
+      {/* Horizontal Bar Chart */}
+      <div className="rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
+          <h2 className="font-semibold text-zinc-900">Top SKUs por Sesiones</h2>
+          <span className="text-xs text-zinc-400">
+            {chartData.length} productos
+          </span>
+        </div>
+        <div className="p-4" style={{ height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              layout="vertical"
+              margin={{ top: 4, right: 24, left: 0, bottom: 4 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" horizontal={false} />
+              <XAxis
+                type="number"
+                stroke="#a1a1aa"
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(v: number) => (v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v))}
+              />
+              <YAxis
+                type="category"
+                dataKey="product"
+                width={160}
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                stroke="#52525b"
+                tickFormatter={(v: string) =>
+                  v.length > 22 ? v.slice(0, 22) + '…' : v
+                }
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#ffffff',
+                  borderColor: '#e4e4e7',
+                  borderRadius: '0.75rem',
+                  color: '#18181b',
+                  fontSize: 12,
+                }}
+                formatter={(value: number | string | ReadonlyArray<number | string> | undefined) =>
+                  [typeof value === 'number' ? value.toLocaleString('es-CL') : String(value ?? ''), 'Sesiones'] as [string, string]
+                }
+              />
+              <Bar dataKey="sessions" fill="#3b82f6" radius={[0, 6, 6, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Full Table */}
+      <div className="rounded-2xl border border-zinc-200 bg-white/85 backdrop-blur-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
+          <h2 className="font-semibold text-zinc-900">Detalle por SKU</h2>
+          <span className="text-xs text-zinc-400">{filtered.length} SKUs</span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-zinc-50 border-b border-zinc-100">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
+                  SKU
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
+                  Producto
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase">
+                  Categoría
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-400 uppercase">
+                  Sesiones
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-zinc-400 uppercase min-w-[160px]">
+                  Add to Cart %
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-400 uppercase">
+                  Conversión %
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-zinc-400 uppercase">
+                  Revenue
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((s, i) => {
+                const convColor =
+                  s.conversionRate >= 15
+                    ? 'text-emerald-600 font-bold'
+                    : s.conversionRate >= 5
+                      ? 'text-blue-600 font-medium'
+                      : 'text-zinc-500';
+
+                return (
+                  <tr
+                    key={i}
+                    className="border-b border-zinc-100/60 hover:bg-zinc-50/50 transition-colors"
+                  >
                     <td className="px-4 py-3">
-                      <div>
-                        <p className="font-medium text-zinc-900 truncate max-w-[260px]" title={s.title}>{s.title}</p>
-                        <p className="text-xs text-zinc-400 font-mono">{s.itemId}</p>
-                      </div>
+                      <span className="text-xs text-zinc-400 font-mono">{s.sku}</span>
                     </td>
-                    <td className="px-4 py-3 text-zinc-500 text-xs">{s.brand || '—'}</td>
-                    <td className="px-4 py-3 text-right font-semibold text-zinc-900">{fmt$(s.cost)}</td>
-                    <td className="px-4 py-3 text-right text-zinc-600">{s.clicks.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right text-zinc-600">{fmtPct(s.ctr)}</td>
-                    <td className="px-4 py-3 text-right text-emerald-600 font-medium">{s.conversions}</td>
-                    <td className="px-4 py-3 text-right">
-                      <span className={cn('px-2.5 py-1 rounded-full text-xs font-bold', ROAS_STYLE[s.roasLabel])}>
-                        {s.roas.toFixed(2)}x
+                    <td className="px-4 py-3 font-medium text-zinc-900 max-w-[220px]">
+                      <span className="truncate block" title={s.product}>
+                        {s.product}
                       </span>
                     </td>
+                    <td className="px-4 py-3">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
+                        {s.category}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums font-semibold text-zinc-900">
+                      {s.sessions.toLocaleString('es-CL')}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-zinc-100 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="h-2 rounded-full bg-blue-500 transition-all"
+                            style={{ width: `${Math.min(s.addToCartRate, 100)}%` }}
+                          />
+                        </div>
+                        <span className="tabular-nums text-xs text-zinc-600 w-12 text-right">
+                          {s.addToCartRate.toFixed(1)}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className={cn('px-4 py-3 text-right tabular-nums', convColor)}>
+                      {s.conversionRate.toFixed(2)}%
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums text-zinc-700 font-medium">
+                      {s.revenue.toLocaleString('es-CL', {
+                        style: 'currency',
+                        currency: 'CLP',
+                        maximumFractionDigits: 0,
+                      })}
+                    </td>
                   </tr>
-                ))}
-                {!loading && filtered.length === 0 && <tr><td colSpan={7} className="px-4 py-8 text-center text-zinc-400">Sin resultados</td></tr>}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-4 py-10 text-center text-zinc-400 text-sm">
+                    Sin SKUs en esta categoría.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
     </div>
   );
 }

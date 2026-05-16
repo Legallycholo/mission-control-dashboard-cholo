@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Bell, Search, RefreshCw, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { Bell, Search, RefreshCw, CheckCircle2, AlertCircle, Clock, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SyncSource {
@@ -36,7 +36,7 @@ const SOURCE_LABELS: Record<string, string> = {
   ringcentral: 'RingCentral',
 };
 
-export function Header() {
+export function Header({ onOpenAI }: { onOpenAI?: () => void }) {
   const [sync, setSync] = useState<SyncStatus | null>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -139,6 +139,15 @@ export function Header() {
             </div>
           )}
         </div>
+
+        <button
+          onClick={onOpenAI}
+          title="GSM AI"
+          className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/10 to-violet-500/10 border border-blue-200/50 flex items-center justify-center text-blue-600 hover:from-blue-500/20 hover:to-violet-500/20 transition-all group"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-500 rounded-full animate-pulse" />
+        </button>
 
         <button className="relative w-9 h-9 rounded-xl bg-zinc-100/80 border border-zinc-200 flex items-center justify-center text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 transition-all">
           <Bell className="w-4 h-4" />
