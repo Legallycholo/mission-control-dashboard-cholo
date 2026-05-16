@@ -571,7 +571,7 @@ export default function VendorIntelligencePage() {
                 <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11, fill: '#a1a1aa' }} />
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 12, fill: '#52525b' }} width={80} />
                 <Tooltip
-                  formatter={(v: number) => [`${v}/100`, 'Score']}
+                  formatter={(v: unknown) => [`${Number(v ?? 0)}/100`, 'Score']}
                   contentStyle={{ borderRadius: 12, fontSize: 12, border: '1px solid #e4e4e7' }}
                 />
                 <Bar dataKey="score" radius={[0, 6, 6, 0]}>

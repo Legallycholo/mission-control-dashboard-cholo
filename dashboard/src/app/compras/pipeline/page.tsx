@@ -246,7 +246,7 @@ export default function ComprasPipelinePage() {
                 axisLine={false}
               />
               <Tooltip
-                formatter={(value: number) => [value, 'Envíos']}
+                formatter={(v: unknown) => [Number(v ?? 0), 'Envíos']}
                 contentStyle={{ borderRadius: 12, border: '1px solid #e4e4e7', fontSize: 12 }}
               />
               <Bar dataKey="volume" fill="#6366f1" radius={[6, 6, 0, 0]} maxBarSize={40} />

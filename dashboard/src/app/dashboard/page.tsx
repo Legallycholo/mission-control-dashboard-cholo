@@ -284,8 +284,8 @@ export default function DashboardPage() {
                 width={48}
               />
               <Tooltip
-                formatter={(value: number, name: string) => [
-                  `$${value.toLocaleString('es-CL')} CLP`,
+                formatter={(v: unknown, name: unknown) => [
+                  `$${Number(v ?? 0).toLocaleString('es-CL')} CLP`,
                   name === 'actual' ? 'Este período' : 'Período anterior',
                 ]}
                 labelStyle={{ fontSize: 11, color: '#3f3f46' }}
@@ -343,7 +343,7 @@ export default function DashboardPage() {
                 )}
               />
               <Tooltip
-                formatter={(value: number) => [`${value}%`, 'Participación']}
+                formatter={(v: unknown) => [`${Number(v ?? 0)}%`, 'Participación']}
                 contentStyle={{
                   fontSize: 11,
                   borderRadius: 12,

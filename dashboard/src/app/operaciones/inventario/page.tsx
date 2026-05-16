@@ -148,7 +148,7 @@ export default function InventarioPage() {
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f4f4f5" />
                 <XAxis type="number" domain={[0, 120]} tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="product" width={160} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number) => [`${v} días`, 'Cobertura']} />
+                <Tooltip formatter={(v: unknown) => [`${Number(v ?? 0)} días`, 'Cobertura']} />
                 <ReferenceLine x={7} stroke="#f43f5e" strokeDasharray="4 2" />
                 <ReferenceLine x={30} stroke="#3b82f6" strokeDasharray="4 2" />
                 <Bar dataKey="coverageDays" radius={[0, 4, 4, 0]}>
@@ -174,7 +174,7 @@ export default function InventarioPage() {
                     <Cell key={index} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: number) => [`${v} SKUs`]} />
+                <Tooltip formatter={(v: unknown) => [`${Number(v ?? 0)} SKUs`]} />
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-col gap-2 mt-2 w-full px-2">

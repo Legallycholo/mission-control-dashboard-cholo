@@ -149,7 +149,7 @@ export default function DevolucionesPage() {
                     <Cell key={index} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v: number) => [`${v} casos`]} />
+                <Tooltip formatter={(v: unknown) => [`${Number(v ?? 0)} casos`]} />
               </PieChart>
             </ResponsiveContainer>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-3 w-full px-2">
@@ -181,7 +181,7 @@ export default function DevolucionesPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number) => [`${v} devoluciones`]} />
+                <Tooltip formatter={(v: unknown) => [`${Number(v ?? 0)} devoluciones`]} />
                 <Area
                   type="monotone"
                   dataKey="returns"

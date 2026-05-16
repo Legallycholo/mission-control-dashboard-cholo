@@ -163,7 +163,7 @@ export default function FulfillmentPage() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f4f4f5" />
                 <XAxis dataKey="range" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v: number) => [`${v} órdenes`]} />
+                <Tooltip formatter={(v: unknown) => [`${Number(v ?? 0)} órdenes`]} />
                 <Bar dataKey="count" name="Órdenes" radius={[4, 4, 0, 0]}>
                   {TIME_DISTRIBUTION.map((entry, index) => (
                     <Cell key={index} fill={entry.color} />

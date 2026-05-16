@@ -212,7 +212,7 @@ export default function ComprasProveedoresPage() {
                 axisLine={false}
               />
               <Tooltip
-                formatter={(value: number) => [`${value}%`, 'Confiabilidad']}
+                formatter={(v: unknown) => [`${Number(v ?? 0)}%`, 'Confiabilidad']}
                 contentStyle={{ borderRadius: 12, border: '1px solid #e4e4e7', fontSize: 12 }}
               />
               <Bar dataKey="reliability" radius={[0, 6, 6, 0]} maxBarSize={20}>

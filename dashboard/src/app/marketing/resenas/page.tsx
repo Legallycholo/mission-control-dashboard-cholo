@@ -169,7 +169,7 @@ export default function ResenasPage() {
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => [new Intl.NumberFormat('es-CL').format(value), 'Reseñas']} />
+                <Tooltip formatter={(v: unknown) => [new Intl.NumberFormat('es-CL').format(Number(v ?? 0)), 'Reseñas']} />
               </PieChart>
             </ResponsiveContainer>
             <div className="space-y-2 mt-1">
