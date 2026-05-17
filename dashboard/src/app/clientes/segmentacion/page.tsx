@@ -219,7 +219,7 @@ export default function ClientesSegmentacionPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
         <Sparkles className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-blue-900">Oportunidad de Segmento — GSM AI</p>
+          <p className="text-sm font-semibold text-blue-900">Oportunidad de Segmento — GSM Pro AI</p>
           <p className="text-sm text-blue-700 mt-0.5">
             Los clientes <strong>Leales</strong> representan el 23.9% de la base pero solo el 30% del ingreso total.
             Activar una campaña de upgrade con descuento en accesorios podría mover hasta 180 clientes al segmento Champions en 60 días.

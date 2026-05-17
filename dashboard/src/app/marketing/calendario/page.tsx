@@ -228,7 +228,7 @@ export default function CalendarioPage() {
       <div className="rounded-2xl border border-blue-200 bg-blue-50/80 p-4 flex gap-3">
         <Sparkles className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
         <p className="text-sm text-blue-800">
-          GSM AI sugiere: <strong>Activar campaña de re-engagement</strong> el 15 de junio para clientes inactivos más de 60 días. Ventana óptima antes del Cyber Monday de julio.
+          GSM Pro AI sugiere: <strong>Activar campaña de re-engagement</strong> el 15 de junio para clientes inactivos más de 60 días. Ventana óptima antes del Cyber Monday de julio.
         </p>
       </div>
     </div>

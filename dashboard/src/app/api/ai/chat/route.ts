@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // const model = vertex.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 // SYSTEM PROMPT (inject live dashboard data before sending to Vertex AI):
-// const systemPrompt = `Eres GSM AI, el asistente de análisis del dashboard GSM PRO.
+// const systemPrompt = `Eres GSM Pro AI, el asistente de análisis del dashboard GSM PRO.
 //   Tienes acceso completo a: Shopify (ventas, órdenes), BigQuery (histórico),
 //   Google Analytics 4 (tráfico), Google Search Console (SEO), Google Ads,
 //   Klaviyo (email marketing) y Crisp (soporte al cliente).
@@ -32,7 +32,7 @@ function generateResponse(message: string): string {
     return `**Finanzas — GSM PRO**\n\n• Margen bruto estimado: 34.2%\n• OPEX como % de ingresos: 18.7%\n• Comisiones de pasarela: 2.1% del GMV\n• Margen operacional proyectado al cierre: 15.5%\n\n_Para análisis preciso, completa la configuración de costos en P&L._`;
   }
 
-  return `**GSM AI — Analizando dashboard...**\n\n• ✓ Shopify — conectado\n• ✓ Google Analytics 4 — conectado\n• ✓ Google Search Console — conectado\n• ✓ Crisp CRM — conectado\n• ○ Vertex AI (Gemini 2.0) — pendiente de credenciales\n\nLas métricas generales están dentro del rango esperado. Configura la Google Cloud API Key para análisis completo con IA.\n\n> Pregúntame sobre ventas, tráfico, clientes, marketing o finanzas.`;
+  return `**GSM Pro AI — Analizando dashboard...**\n\n• ✓ Shopify — conectado\n• ✓ Google Analytics 4 — conectado\n• ✓ Google Search Console — conectado\n• ✓ Crisp CRM — conectado\n• ○ Vertex AI (Gemini 2.0) — pendiente de credenciales\n\nLas métricas generales están dentro del rango esperado. Configura la Google Cloud API Key para análisis completo con IA.\n\n> Pregúntame sobre ventas, tráfico, clientes, marketing o finanzas.`;
 }
 
 export async function POST(req: NextRequest) {

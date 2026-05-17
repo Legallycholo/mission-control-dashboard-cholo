@@ -344,7 +344,7 @@ export default function ClientesPerfilPage() {
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-zinc-900">GSM AI — Perfil de {data.nombre}</p>
+                    <p className="text-sm font-bold text-zinc-900">GSM Pro AI — Perfil de {data.nombre}</p>
                     <p className="text-xs text-zinc-400">Análisis generado · 16 May 2026</p>
                   </div>
                 </div>
@@ -383,7 +383,7 @@ export default function ClientesPerfilPage() {
                         {
                           num: '03',
                           titulo: 'Riesgo de Churn Bajo',
-                          texto: 'El modelo de predicción de GSM AI asigna un riesgo de abandono del 4% a Carlos, muy por debajo del 8.4% promedio. No requiere campaña de retención activa.',
+                          texto: 'El modelo de predicción de GSM Pro AI asigna un riesgo de abandono del 4% a Carlos, muy por debajo del 8.4% promedio. No requiere campaña de retención activa.',
                           color: 'bg-emerald-50 border-emerald-200 text-emerald-900',
                           numColor: 'text-emerald-400',
                         },

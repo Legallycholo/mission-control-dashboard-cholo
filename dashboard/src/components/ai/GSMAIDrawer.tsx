@@ -79,7 +79,7 @@ function generateMockResponse(input: string): string {
     return `**Finanzas — GSM PRO**\n\n• Margen bruto estimado: 34.2% (ajustado por COGS)\n• OPEX como % de ingresos: 18.7% (threshold de alerta: >35%)\n• Pasarela de pago (Webpay/MP): 2.1% del GMV en comisiones\n• Proyección de margen operacional al cierre del mes: 15.5%\n\n_Para análisis más preciso, completa la configuración de costos en P&L._`;
   }
 
-  return `**GSM AI — Analizando dashboard...**\n\n• ✓ Shopify (Ventas & Órdenes) — conectado\n• ✓ Google Analytics 4 (Tráfico) — conectado\n• ✓ Google Search Console (SEO) — conectado\n• ✓ Crisp CRM (Soporte) — conectado\n• ○ Vertex AI (Gemini 2.0) — pendiente de credenciales\n\nLas métricas generales del período están **dentro del rango esperado**. Para análisis más específicos, configura la Google Cloud API Key en los ajustes del dashboard.\n\n> Escríbeme sobre ventas, tráfico, clientes, marketing o finanzas para un análisis detallado.`;
+  return `**GSM Pro AI — Analizando dashboard...**\n\n• ✓ Shopify (Ventas & Órdenes) — conectado\n• ✓ Google Analytics 4 (Tráfico) — conectado\n• ✓ Google Search Console (SEO) — conectado\n• ✓ Crisp CRM (Soporte) — conectado\n• ○ Vertex AI (Gemini 2.0) — pendiente de credenciales\n\nLas métricas generales del período están **dentro del rango esperado**. Para análisis más específicos, configura la Google Cloud API Key en los ajustes del dashboard.\n\n> Escríbeme sobre ventas, tráfico, clientes, marketing o finanzas para un análisis detallado.`;
 }
 
 function renderMarkdown(text: string): { __html: string } {
@@ -366,7 +366,7 @@ export function GSMAIDrawer({ isOpen, onClose }: GSMAIDrawerProps) {
                         <Sparkles className="w-3.5 h-3.5 text-white" />
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-zinc-900 leading-none">GSM AI</p>
+                        <p className="text-sm font-bold text-zinc-900 leading-none">GSM Pro AI</p>
                         <p className="text-[10px] text-zinc-400 font-medium mt-0.5">
                           Powered by Vertex AI
                         </p>
@@ -564,7 +564,7 @@ export function GSMAIDrawer({ isOpen, onClose }: GSMAIDrawerProps) {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-zinc-900 leading-none">
-                            GSM AI
+                            GSM Pro AI
                           </p>
                           <p className="text-xs text-zinc-400 mt-0.5">gemini-2.0-flash</p>
                         </div>

@@ -95,10 +95,10 @@ export function Header({ onOpenAI }: { onOpenAI?: () => void }) {
   const cfg = badgeConfig[status];
 
   return (
-    <header className="h-16 border-b border-zinc-200/70 dark:border-sky-500/10 bg-white/85 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-40 transition-colors duration-300">
+    <header className="h-16 border-b border-zinc-200/70 dark:border-sky-500/10 bg-white/85 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-8 sticky top-0 z-40 transition-colors duration-300">
       {/* Search */}
       <div className="flex items-center gap-4 flex-1">
-        <div className="relative w-80">
+        <div className="relative w-48 md:w-64 lg:w-80">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-sky-500/60" />
           <input
             type="text"
@@ -179,7 +179,7 @@ export function Header({ onOpenAI }: { onOpenAI?: () => void }) {
         {/* AI button */}
         <button
           onClick={onOpenAI}
-          title="GSM AI"
+          title="GSM Pro AI"
           className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-sky-500/10 to-violet-500/10 dark:from-sky-500/15 dark:to-violet-500/15 border border-sky-200/60 dark:border-sky-500/25 flex items-center justify-center text-sky-600 dark:text-sky-400 hover:from-sky-500/20 hover:to-violet-500/20 hover:border-sky-400/50 dark:hover:border-sky-400/50 hover:shadow-[0_0_16px_rgba(14,165,233,0.2)] transition-all group"
         >
           <Sparkles className="w-4 h-4 group-hover:animate-spin" style={{ animationDuration: '3s' }} />

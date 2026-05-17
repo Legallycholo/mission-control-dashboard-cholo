@@ -346,7 +346,7 @@ export default function VendorIntelligencePage() {
           <Bot className="w-5 h-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-violet-900">GSM AI Agent — Ciclo semanal completado</p>
+          <p className="text-sm font-semibold text-violet-900">GSM Pro AI Agent — Ciclo semanal completado</p>
           <p className="text-xs text-violet-700 mt-0.5">
             Contactó 5 proveedores · Recibió 4 listas de precios · Procesó 144 SKUs · 1 proveedor con respuesta tardía
           </p>
@@ -497,7 +497,7 @@ export default function VendorIntelligencePage() {
           <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-zinc-900">Lista de Precios Consolidada</h2>
-              <p className="text-xs text-zinc-400 mt-0.5">Extraída automáticamente por GSM AI Agent · 144 SKUs activos</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Extraída automáticamente por GSM Pro AI Agent · 144 SKUs activos</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-zinc-400">Actualizada hoy</span>
@@ -644,7 +644,7 @@ export default function VendorIntelligencePage() {
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
             <Sparkles className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-blue-900">GSM AI — Análisis de proveedores</p>
+              <p className="text-sm font-semibold text-blue-900">GSM Pro AI — Análisis de proveedores</p>
               <p className="text-xs text-blue-700 mt-1">
                 Samsung Distribución y Apple Autorizado mantienen scores de élite. Lenovo Corporativo tiene el score más bajo (61) por tiempos de respuesta superiores a 7 días — considerar proveedor alternativo para laptops. Xiaomi Chile ofrece el mejor margen promedio del catálogo (25.9%).
               </p>

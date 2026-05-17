@@ -127,7 +127,7 @@ export default function ClientesRetencionPage() {
       <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
         <Sparkles className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-blue-900">Alerta de Retención — GSM AI</p>
+          <p className="text-sm font-semibold text-blue-900">Alerta de Retención — GSM Pro AI</p>
           <p className="text-sm text-blue-700 mt-0.5">
             La cohorte de Enero 2026 muestra caída de retención en Mes 4 (28%) por debajo del benchmark histórico (34%).
             Se recomienda activar campaña de reactivación vía email para los 89 clientes en riesgo.

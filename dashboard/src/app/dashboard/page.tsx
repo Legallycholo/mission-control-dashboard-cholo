@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import {
   ShoppingBag,
   Users,
@@ -138,8 +136,6 @@ function formatCLP(value: number) {
 }
 
 export default function DashboardPage() {
-  const [_ready] = useState(true);
-
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       {/* Page header */}
@@ -153,7 +149,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="font-mono text-xs font-medium text-zinc-400 dark:text-sky-500/70 bg-zinc-100 dark:bg-slate-800/60 border border-zinc-200 dark:border-sky-500/15 px-3 py-1.5 rounded-xl">
-          16 mayo 2026
+          {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
         </div>
       </div>
 
@@ -401,7 +397,7 @@ export default function DashboardPage() {
           <Sparkles className="w-4 h-4 text-sky-500 dark:text-sky-400" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-sky-800 dark:text-sky-300 mb-0.5">GSM AI</p>
+          <p className="text-sm font-semibold text-sky-800 dark:text-sky-300 mb-0.5">GSM Pro AI</p>
           <p className="text-sm text-sky-700 dark:text-sky-400/80">
             Detectado: Las ventas de hoy superan el promedio semanal en un 18%. El ROAS de Google Ads mejoró 0.4x respecto al lunes.
           </p>

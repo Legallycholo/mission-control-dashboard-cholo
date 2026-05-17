@@ -340,7 +340,7 @@ export default function FinanzasCashflowPage() {
       <div className="rounded-2xl border border-violet-200 bg-violet-50/80 p-4 flex gap-3 items-start">
         <Bot className="w-5 h-5 text-violet-600 shrink-0 mt-0.5" />
         <p className="text-sm text-violet-800">
-          <strong className="font-semibold">Proyección GSM AI:</strong> Al ritmo actual, el saldo de
+          <strong className="font-semibold">Proyección GSM Pro AI:</strong> Al ritmo actual, el saldo de
           cierre de junio será aproximadamente{' '}
           <strong className="font-bold">$510,000 USD</strong>. Flujo positivo estable — sin alertas
           de liquidez.
