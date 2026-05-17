@@ -11,6 +11,10 @@ import {
   Sparkles,
   CheckCircle,
   AlertOctagon,
+  DollarSign,
+  Package,
+  Eye,
+  Percent,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -35,6 +39,8 @@ const kpis = [
     delta: '+18%',
     positive: true,
     sub: 'vs ayer',
+    icon: DollarSign,
+    color: 'sky',
   },
   {
     label: 'Órdenes Hoy',
@@ -43,6 +49,8 @@ const kpis = [
     delta: '+12%',
     positive: true,
     sub: 'vs ayer',
+    icon: Package,
+    color: 'violet',
   },
   {
     label: 'Visitantes',
@@ -51,6 +59,8 @@ const kpis = [
     delta: '-3%',
     positive: false,
     sub: 'vs ayer',
+    icon: Eye,
+    color: 'emerald',
   },
   {
     label: 'Tasa Conversión',
@@ -59,46 +69,25 @@ const kpis = [
     delta: '+0,3%',
     positive: true,
     sub: 'vs ayer',
+    icon: Percent,
+    color: 'amber',
   },
 ];
 
+const kpiIconStyles: Record<string, { bg: string; icon: string; glow: string; watermark: string }> = {
+  sky:     { bg: 'bg-sky-500/12 dark:bg-sky-500/15',     icon: 'text-sky-500 dark:text-sky-400',     glow: 'dark:shadow-[0_0_20px_rgba(56,189,248,0.12)]',   watermark: 'text-sky-500/6 dark:text-sky-400/5'   },
+  violet:  { bg: 'bg-violet-500/12 dark:bg-violet-500/15', icon: 'text-violet-500 dark:text-violet-400', glow: 'dark:shadow-[0_0_20px_rgba(139,92,246,0.12)]',   watermark: 'text-violet-500/6 dark:text-violet-400/5' },
+  emerald: { bg: 'bg-emerald-500/12 dark:bg-emerald-500/15', icon: 'text-emerald-500 dark:text-emerald-400', glow: 'dark:shadow-[0_0_20px_rgba(52,211,153,0.12)]', watermark: 'text-emerald-500/6 dark:text-emerald-400/5' },
+  amber:   { bg: 'bg-amber-500/12 dark:bg-amber-500/15',  icon: 'text-amber-500 dark:text-amber-400',  glow: 'dark:shadow-[0_0_20px_rgba(245,158,11,0.12)]',   watermark: 'text-amber-500/6 dark:text-amber-400/5'  },
+};
+
 const moduleHealth = [
-  {
-    name: 'Shopify',
-    status: 'ok',
-    sync: 'hace 2 min',
-    detail: '47 órdenes hoy',
-  },
-  {
-    name: 'Google Analytics',
-    status: 'ok',
-    sync: 'hace 8 min',
-    detail: '2,3K sesiones',
-  },
-  {
-    name: 'Search Console',
-    status: 'ok',
-    sync: 'hace 1h',
-    detail: '847 clics',
-  },
-  {
-    name: 'Google Ads',
-    status: 'ok',
-    sync: 'hace 30 min',
-    detail: 'ROAS 4.2x',
-  },
-  {
-    name: 'Crisp CRM',
-    status: 'ok',
-    sync: 'hace 5 min',
-    detail: '3 tickets abiertos',
-  },
-  {
-    name: 'RingCentral',
-    status: 'warn',
-    sync: 'hace 3h',
-    detail: 'datos parciales',
-  },
+  { name: 'Shopify',           status: 'ok',   sync: 'hace 2 min', detail: '47 órdenes hoy' },
+  { name: 'Google Analytics',  status: 'ok',   sync: 'hace 8 min', detail: '2,3K sesiones' },
+  { name: 'Search Console',    status: 'ok',   sync: 'hace 1h',    detail: '847 clics' },
+  { name: 'Google Ads',        status: 'ok',   sync: 'hace 30 min',detail: 'ROAS 4.2x' },
+  { name: 'Crisp CRM',         status: 'ok',   sync: 'hace 5 min', detail: '3 tickets abiertos' },
+  { name: 'RingCentral',       status: 'warn', sync: 'hace 3h',    detail: 'datos parciales' },
 ];
 
 const salesData = [
@@ -119,52 +108,30 @@ const salesData = [
 ];
 
 const trafficData = [
-  { name: 'Orgánico', value: 38 },
-  { name: 'Google Ads', value: 24 },
-  { name: 'Directo', value: 18 },
-  { name: 'Social', value: 12 },
-  { name: 'Email', value: 8 },
+  { name: 'Orgánico',    value: 38 },
+  { name: 'Google Ads',  value: 24 },
+  { name: 'Directo',     value: 18 },
+  { name: 'Social',      value: 12 },
+  { name: 'Email',       value: 8  },
 ];
 
-const TRAFFIC_COLORS = ['#3b82f6', '#8b5cf6', '#6b7280', '#10b981', '#f59e0b'];
+const TRAFFIC_COLORS = ['#38bdf8', '#8b5cf6', '#6b7280', '#34d399', '#f59e0b'];
 
 const activityFeed = [
-  {
-    icon: ShoppingBag,
-    iconColor: 'text-blue-600',
-    iconBg: 'bg-blue-50',
-    text: 'Nueva orden #GSM-2847 — iPhone 15 Pro, $1.2M CLP',
-    time: 'hace 3 min',
-  },
-  {
-    icon: Users,
-    iconColor: 'text-violet-600',
-    iconBg: 'bg-violet-50',
-    text: 'Cliente VIP: María González realizó su 8ª compra',
-    time: 'hace 12 min',
-  },
-  {
-    icon: AlertCircle,
-    iconColor: 'text-amber-600',
-    iconBg: 'bg-amber-50',
-    text: 'Stock bajo: AirPods Pro 2 — 5 unidades restantes',
-    time: 'hace 28 min',
-  },
-  {
-    icon: TrendingUp,
-    iconColor: 'text-emerald-600',
-    iconBg: 'bg-emerald-50',
-    text: 'Meta mensual alcanzada al 87% — 13 días restantes',
-    time: 'hace 1h',
-  },
-  {
-    icon: MessageSquare,
-    iconColor: 'text-zinc-600',
-    iconBg: 'bg-zinc-100',
-    text: 'Crisp: 2 conversaciones pendientes de respuesta',
-    time: 'hace 2h',
-  },
+  { icon: ShoppingBag, color: 'sky',     text: 'Nueva orden #GSM-2847 — iPhone 15 Pro, $1.2M CLP',        time: 'hace 3 min'  },
+  { icon: Users,       color: 'violet',  text: 'Cliente VIP: María González realizó su 8ª compra',          time: 'hace 12 min' },
+  { icon: AlertCircle, color: 'amber',   text: 'Stock bajo: AirPods Pro 2 — 5 unidades restantes',          time: 'hace 28 min' },
+  { icon: TrendingUp,  color: 'emerald', text: 'Meta mensual alcanzada al 87% — 13 días restantes',         time: 'hace 1h'     },
+  { icon: MessageSquare, color: 'zinc',  text: 'Crisp: 2 conversaciones pendientes de respuesta',           time: 'hace 2h'     },
 ];
+
+const feedIconStyles: Record<string, { bg: string; icon: string }> = {
+  sky:     { bg: 'bg-sky-500/12 dark:bg-sky-500/15',     icon: 'text-sky-500 dark:text-sky-400'     },
+  violet:  { bg: 'bg-violet-500/12 dark:bg-violet-500/15', icon: 'text-violet-500 dark:text-violet-400' },
+  amber:   { bg: 'bg-amber-500/12 dark:bg-amber-500/15', icon: 'text-amber-500 dark:text-amber-400'   },
+  emerald: { bg: 'bg-emerald-500/12 dark:bg-emerald-500/15', icon: 'text-emerald-500 dark:text-emerald-400' },
+  zinc:    { bg: 'bg-zinc-100 dark:bg-slate-800',         icon: 'text-zinc-500 dark:text-slate-400'  },
+};
 
 function formatCLP(value: number) {
   return `$${(value / 1000000).toFixed(1).replace('.', ',')}M`;
@@ -174,111 +141,151 @@ export default function DashboardPage() {
   const [_ready] = useState(true);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Centro de Comando</h2>
-          <p className="text-zinc-500 mt-1 text-sm">Visión general en tiempo real — GSM PRO</p>
+          <h2 className="text-2xl font-bold text-zinc-900 dark:text-slate-100 tracking-tight">
+            Centro de Comando
+          </h2>
+          <p className="text-zinc-500 dark:text-slate-400 mt-0.5 text-sm">
+            Visión general en tiempo real — GSM PRO
+          </p>
         </div>
-        <div className="text-xs font-medium text-zinc-400 bg-zinc-100 border border-zinc-200 px-3 py-1.5 rounded-xl">
+        <div className="font-mono text-xs font-medium text-zinc-400 dark:text-sky-500/70 bg-zinc-100 dark:bg-slate-800/60 border border-zinc-200 dark:border-sky-500/15 px-3 py-1.5 rounded-xl">
           16 mayo 2026
         </div>
       </div>
 
+      {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi) => (
-          <div
-            key={kpi.label}
-            className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl p-5 shadow-sm"
-          >
-            <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{kpi.label}</p>
-            <p className="text-2xl font-bold text-zinc-900 mt-2 tracking-tight">
-              {kpi.value}
-              {kpi.unit && <span className="text-sm font-medium text-zinc-400 ml-1">{kpi.unit}</span>}
-            </p>
-            <div className="flex items-center gap-1.5 mt-2">
-              <span
-                className={cn(
-                  'text-xs font-semibold px-1.5 py-0.5 rounded-md',
-                  kpi.positive
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'bg-red-50 text-red-600'
+        {kpis.map((kpi) => {
+          const s = kpiIconStyles[kpi.color];
+          const Icon = kpi.icon;
+          return (
+            <div
+              key={kpi.label}
+              className={cn(
+                'hud-card relative p-5 overflow-hidden transition-all duration-300',
+                s.glow
+              )}
+            >
+              {/* Watermark icon */}
+              <Icon className={cn('absolute -bottom-2 -right-2 w-20 h-20', s.watermark)} />
+
+              {/* Icon badge */}
+              <div className={cn('w-8 h-8 rounded-xl flex items-center justify-center mb-3', s.bg)}>
+                <Icon className={cn('w-4 h-4', s.icon)} />
+              </div>
+
+              <p className="text-[10px] font-semibold text-zinc-500 dark:text-slate-400 uppercase tracking-widest">
+                {kpi.label}
+              </p>
+              <p className="text-2xl font-bold text-zinc-900 dark:text-slate-100 mt-1 tracking-tight font-mono">
+                {kpi.value}
+                {kpi.unit && (
+                  <span className="text-sm font-medium text-zinc-400 dark:text-slate-500 ml-1 font-sans">
+                    {kpi.unit}
+                  </span>
                 )}
-              >
-                {kpi.delta}
-              </span>
-              <span className="text-xs text-zinc-400">{kpi.sub}</span>
+              </p>
+              <div className="flex items-center gap-1.5 mt-2">
+                <span
+                  className={cn(
+                    'text-xs font-semibold px-1.5 py-0.5 rounded-md border',
+                    kpi.positive
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                      : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                  )}
+                >
+                  {kpi.delta}
+                </span>
+                <span className="text-xs text-zinc-400 dark:text-slate-500">{kpi.sub}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl shadow-sm p-6">
-        <h3 className="text-sm font-semibold text-zinc-700 mb-4">Estado de Módulos</h3>
+      {/* Module health */}
+      <div className="hud-card p-6">
+        <h3 className="text-xs font-semibold text-zinc-500 dark:text-sky-500/70 uppercase tracking-widest mb-4">
+          Estado de Módulos
+        </h3>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {moduleHealth.map((mod) => (
             <div
               key={mod.name}
-              className="flex items-start gap-3 p-4 rounded-xl border border-zinc-100 bg-zinc-50/60"
+              className="flex items-start gap-3 p-3.5 rounded-xl border border-zinc-100 dark:border-sky-500/10 bg-zinc-50/60 dark:bg-slate-800/40 transition-colors"
             >
-              {mod.status === 'ok' ? (
-                <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-              ) : (
-                <AlertOctagon className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-              )}
+              <div className="relative mt-0.5 shrink-0">
+                {mod.status === 'ok' ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+                    <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-30" style={{ animationDuration: '2.5s' }} />
+                  </>
+                ) : (
+                  <AlertOctagon className="w-4 h-4 text-amber-500 dark:text-amber-400 animate-pulse" />
+                )}
+              </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-zinc-800 truncate">{mod.name}</p>
-                <p className="text-xs text-zinc-400 mt-0.5">{mod.sync}</p>
-                <p className="text-xs text-zinc-500 mt-0.5">{mod.detail}</p>
+                <p className="text-sm font-semibold text-zinc-800 dark:text-slate-200 truncate">{mod.name}</p>
+                <p className="font-mono text-[10px] text-zinc-400 dark:text-slate-500 mt-0.5">{mod.sync}</p>
+                <p className="text-xs text-zinc-500 dark:text-slate-400 mt-0.5">{mod.detail}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+      {/* Alerts */}
+      <div className="rounded-2xl border border-amber-200 dark:border-amber-500/25 bg-amber-50 dark:bg-amber-500/8 p-4 transition-colors">
         <div className="flex items-center gap-2 mb-3">
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-          <h3 className="text-sm font-semibold text-amber-800">Alertas Activas</h3>
+          <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+          <h3 className="text-sm font-semibold text-amber-800 dark:text-amber-300">Alertas Activas</h3>
         </div>
         <ul className="space-y-2">
-          <li className="text-sm text-amber-700 flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+          <li className="text-sm text-amber-700 dark:text-amber-400 flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.6)]" />
             Stock crítico: iPhone 15 Pro 256GB — 3 unidades
           </li>
-          <li className="text-sm text-amber-700 flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+          <li className="text-sm text-amber-700 dark:text-amber-400 flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0 shadow-[0_0_6px_rgba(245,158,11,0.6)]" />
             Carrito abandonado: 23 carritos en las últimas 4h
           </li>
         </ul>
       </div>
 
+      {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3 bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl shadow-sm p-6">
-          <h3 className="text-sm font-semibold text-zinc-700 mb-1">Ventas últimos 14 días</h3>
-          <p className="text-xs text-zinc-400 mb-5">Comparación con período anterior</p>
+        {/* Sales trend */}
+        <div className="lg:col-span-3 hud-card p-6 scan-container">
+          <h3 className="text-xs font-semibold text-zinc-500 dark:text-sky-500/70 uppercase tracking-widest mb-1">
+            Ventas últimos 14 días
+          </h3>
+          <p className="text-xs text-zinc-400 dark:text-slate-500 mb-5">Comparación con período anterior</p>
           <ResponsiveContainer width="100%" height={240}>
             <AreaChart data={salesData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradActual" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="5%"  stopColor="#38bdf8" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#38bdf8" stopOpacity={0}   />
                 </linearGradient>
                 <linearGradient id="gradAnterior" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#71717a" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#71717a" stopOpacity={0} />
+                  <stop offset="5%"  stopColor="#94a3b8" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#94a3b8" stopOpacity={0}   />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.12)" />
               <XAxis
                 dataKey="dia"
-                tick={{ fontSize: 10, fill: '#a1a1aa' }}
+                tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
                 tickFormatter={formatCLP}
-                tick={{ fontSize: 10, fill: '#a1a1aa' }}
+                tick={{ fontSize: 10, fill: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}
                 tickLine={false}
                 axisLine={false}
                 width={48}
@@ -288,18 +295,20 @@ export default function DashboardPage() {
                   `$${Number(v ?? 0).toLocaleString('es-CL')} CLP`,
                   name === 'actual' ? 'Este período' : 'Período anterior',
                 ]}
-                labelStyle={{ fontSize: 11, color: '#3f3f46' }}
+                labelStyle={{ fontSize: 11, color: '#94a3b8' }}
                 contentStyle={{
                   fontSize: 11,
                   borderRadius: 12,
-                  border: '1px solid #e4e4e7',
-                  background: 'rgba(255,255,255,0.95)',
+                  border: '1px solid rgba(56,189,248,0.15)',
+                  background: 'rgba(15,28,55,0.92)',
+                  color: '#e2e8f0',
+                  backdropFilter: 'blur(12px)',
                 }}
               />
               <Area
                 type="monotone"
                 dataKey="anterior"
-                stroke="#71717a"
+                stroke="#94a3b8"
                 strokeWidth={1.5}
                 strokeDasharray="4 3"
                 fill="url(#gradAnterior)"
@@ -308,18 +317,22 @@ export default function DashboardPage() {
               <Area
                 type="monotone"
                 dataKey="actual"
-                stroke="#3b82f6"
+                stroke="#38bdf8"
                 strokeWidth={2}
                 fill="url(#gradActual)"
                 name="actual"
+                style={{ filter: 'drop-shadow(0 0 6px rgba(56,189,248,0.3))' }}
               />
             </AreaChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="lg:col-span-2 bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl shadow-sm p-6">
-          <h3 className="text-sm font-semibold text-zinc-700 mb-1">Fuentes de Tráfico</h3>
-          <p className="text-xs text-zinc-400 mb-2">Distribución de sesiones hoy</p>
+        {/* Traffic pie */}
+        <div className="lg:col-span-2 hud-card p-6">
+          <h3 className="text-xs font-semibold text-zinc-500 dark:text-sky-500/70 uppercase tracking-widest mb-1">
+            Fuentes de Tráfico
+          </h3>
+          <p className="text-xs text-zinc-400 dark:text-slate-500 mb-2">Distribución de sesiones hoy</p>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
@@ -339,7 +352,7 @@ export default function DashboardPage() {
                 iconType="circle"
                 iconSize={8}
                 formatter={(value) => (
-                  <span style={{ fontSize: 11, color: '#52525b' }}>{value}</span>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>{value}</span>
                 )}
               />
               <Tooltip
@@ -347,8 +360,10 @@ export default function DashboardPage() {
                 contentStyle={{
                   fontSize: 11,
                   borderRadius: 12,
-                  border: '1px solid #e4e4e7',
-                  background: 'rgba(255,255,255,0.95)',
+                  border: '1px solid rgba(56,189,248,0.15)',
+                  background: 'rgba(15,28,55,0.92)',
+                  color: '#e2e8f0',
+                  backdropFilter: 'blur(12px)',
                 }}
               />
             </PieChart>
@@ -356,19 +371,23 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl p-6 shadow-sm">
-        <h3 className="text-sm font-semibold text-zinc-700 mb-4">Actividad Reciente</h3>
-        <div className="space-y-4">
+      {/* Activity feed */}
+      <div className="hud-card p-6">
+        <h3 className="text-xs font-semibold text-zinc-500 dark:text-sky-500/70 uppercase tracking-widest mb-4">
+          Actividad Reciente
+        </h3>
+        <div className="space-y-3">
           {activityFeed.map((item, idx) => {
             const Icon = item.icon;
+            const s = feedIconStyles[item.color];
             return (
-              <div key={idx} className="flex items-start gap-3">
-                <div className={cn('p-2 rounded-xl shrink-0', item.iconBg)}>
-                  <Icon className={cn('w-4 h-4', item.iconColor)} />
+              <div key={idx} className="flex items-start gap-3 group">
+                <div className={cn('p-2 rounded-xl shrink-0 transition-all duration-200 group-hover:scale-105', s.bg)}>
+                  <Icon className={cn('w-4 h-4', s.icon)} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-zinc-800">{item.text}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">{item.time}</p>
+                  <p className="text-sm text-zinc-800 dark:text-slate-200">{item.text}</p>
+                  <p className="font-mono text-[10px] text-zinc-400 dark:text-slate-500 mt-0.5">{item.time}</p>
                 </div>
               </div>
             );
@@ -376,12 +395,15 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
-        <Sparkles className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+      {/* AI insight */}
+      <div className="rounded-2xl border border-sky-200 dark:border-sky-500/25 bg-sky-50 dark:bg-sky-500/8 p-4 flex items-start gap-3 transition-colors">
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500/20 to-violet-500/20 border border-sky-500/25 flex items-center justify-center shrink-0 mt-0.5">
+          <Sparkles className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+        </div>
         <div>
-          <p className="text-sm font-semibold text-blue-800 mb-0.5">GSM AI</p>
-          <p className="text-sm text-blue-700">
-            GSM AI detectó: Las ventas de hoy superan el promedio semanal en un 18%. El ROAS de Google Ads mejoró 0.4x respecto al lunes.
+          <p className="text-sm font-semibold text-sky-800 dark:text-sky-300 mb-0.5">GSM AI</p>
+          <p className="text-sm text-sky-700 dark:text-sky-400/80">
+            Detectado: Las ventas de hoy superan el promedio semanal en un 18%. El ROAS de Google Ads mejoró 0.4x respecto al lunes.
           </p>
         </div>
       </div>
