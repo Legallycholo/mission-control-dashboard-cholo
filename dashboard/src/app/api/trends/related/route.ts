@@ -16,42 +16,60 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'SERPAPI_KEY no configurada' }, { status: 500 });
   }
 
-  // RELATED_QUERIES only supports one term at a time — fetch each term in parallel
+  // RELATED_QUERIES and RELATED_TOPICS only support one term at a time — fetch each in parallel
   const terms = q.split(',').map(s => s.trim()).filter(Boolean);
 
   try {
     const results = await Promise.all(
       terms.map(async term => {
-        const url = new URL(`${SERPAPI}/search.json`);
-        url.searchParams.set('engine',    'google_trends');
-        url.searchParams.set('q',         term);
-        url.searchParams.set('date',      date);
-        url.searchParams.set('data_type', 'RELATED_QUERIES');
-        url.searchParams.set('api_key',   apiKey);
+        const makeUrl = (dataType: string) => {
+          const url = new URL(`${SERPAPI}/search.json`);
+          url.searchParams.set('engine',    'google_trends');
+          url.searchParams.set('q',         term);
+          url.searchParams.set('date',      date);
+          url.searchParams.set('data_type', dataType);
+          url.searchParams.set('api_key',   apiKey);
+          return url.toString();
+        };
 
-        const res  = await fetch(url.toString(), { cache: 'no-store' });
-        const json = await res.json();
+        const [queriesRes, topicsRes] = await Promise.all([
+          fetch(makeUrl('RELATED_QUERIES'), { cache: 'no-store' }),
+          fetch(makeUrl('RELATED_TOPICS'),  { cache: 'no-store' }),
+        ]);
 
-        if (json.error) return { term, data: null, error: json.error };
+        const [queriesJson, topicsJson] = await Promise.all([
+          queriesRes.json(),
+          topicsRes.json().catch(() => ({})),
+        ]);
 
-        // SerpAPI returns related_queries keyed by the term
-        const termData = json.related_queries?.[term] ?? json.related_queries ?? {};
-        return { term, data: termData };
+        if (queriesJson.error) return { term, queries: null, topics: null, error: queriesJson.error };
+
+        const qData = queriesJson.related_queries?.[term] ?? queriesJson.related_queries ?? {};
+        const tData = topicsJson.related_topics?.[term]   ?? topicsJson.related_topics   ?? {};
+
+        return { term, queries: qData, topics: tData, error: null };
       }),
     );
 
-    // Build a map: { "iPhone": { top: [...], rising: [...] }, "Samsung": {...} }
     const relatedQueries: Record<string, { top: unknown[]; rising: unknown[] }> = {};
+    const relatedTopics:  Record<string, { top: unknown[]; rising: unknown[] }> = {};
+
     for (const result of results) {
-      if (result.data) {
+      if (result.queries) {
         relatedQueries[result.term] = {
-          top:    result.data.top    ?? [],
-          rising: result.data.rising ?? [],
+          top:    result.queries.top    ?? [],
+          rising: result.queries.rising ?? [],
+        };
+      }
+      if (result.topics) {
+        relatedTopics[result.term] = {
+          top:    result.topics.top    ?? [],
+          rising: result.topics.rising ?? [],
         };
       }
     }
 
-    return NextResponse.json({ success: true, data: { relatedQueries } });
+    return NextResponse.json({ success: true, data: { relatedQueries, relatedTopics } });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

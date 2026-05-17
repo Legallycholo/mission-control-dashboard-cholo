@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Package, Ship, FileCheck, DollarSign, AlertCircle } from 'lucide-react';
+import { Package, Ship, FileCheck, DollarSign, AlertCircle, Newspaper, ExternalLink, RefreshCw, Search } from 'lucide-react';
+import { Skeleton } from '@/components/ui/Skeleton';
 import {
   BarChart,
   Bar,
@@ -60,15 +62,55 @@ const ORIGIN_FLAG: Record<string, string> = {
   'China': '🇨🇳',
 };
 
+interface NewsArticle {
+  title:     string;
+  link:      string | null;
+  source:    string;
+  date:      string | null;
+  snippet:   string | null;
+  thumbnail: string | null;
+}
+
 const usd = (n: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
-const activeCount = MOCK_SHIPMENTS.filter(s => s.stage !== 'Bodega').length;
+const activeCount  = MOCK_SHIPMENTS.filter(s => s.stage !== 'Bodega').length;
 const transitCount = MOCK_SHIPMENTS.filter(s => s.stage === 'En tránsito').length;
-const aduanaCount = MOCK_SHIPMENTS.filter(s => s.stage === 'Aduana').length;
-const totalValue = MOCK_SHIPMENTS.filter(s => s.stage !== 'Bodega').reduce((sum, s) => sum + s.estimatedValue, 0);
+const aduanaCount  = MOCK_SHIPMENTS.filter(s => s.stage === 'Aduana').length;
+const totalValue   = MOCK_SHIPMENTS.filter(s => s.stage !== 'Bodega').reduce((sum, s) => sum + s.estimatedValue, 0);
+
+const NEWS_QUERIES = ['smartphones Chile', 'tecnología importación Chile', 'Apple Samsung Chile'];
 
 export default function ComprasPipelinePage() {
+  const [newsQuery,    setNewsQuery]    = useState(NEWS_QUERIES[0]);
+  const [newsInput,    setNewsInput]    = useState('');
+  const [articles,     setArticles]     = useState<NewsArticle[]>([]);
+  const [newsLoading,  setNewsLoading]  = useState(false);
+  const [newsError,    setNewsError]    = useState<string | null>(null);
+  const [newsFetched,  setNewsFetched]  = useState(false);
+
+  const fetchNews = async (q: string) => {
+    setNewsLoading(true);
+    setNewsError(null);
+    try {
+      const res  = await fetch(`/api/trends/news?q=${encodeURIComponent(q)}&gl=cl&hl=es`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error);
+      setArticles(json.data.articles);
+      setNewsFetched(true);
+    } catch (e: any) {
+      setNewsError(e.message);
+    } finally {
+      setNewsLoading(false);
+    }
+  };
+
+  const handleNewsSearch = () => {
+    const q = (newsInput.trim() || newsQuery);
+    setNewsQuery(q);
+    fetchNews(q);
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header */}

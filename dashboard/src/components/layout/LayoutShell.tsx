@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/lib/theme-context'
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const [aiOpen, setAiOpen] = useState(false)
+
   return (
     <ThemeProvider>
       <Sidebar />

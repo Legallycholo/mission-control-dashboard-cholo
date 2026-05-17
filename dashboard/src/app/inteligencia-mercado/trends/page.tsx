@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Search, RefreshCw, Plus, X, Save, Download,
   AlertCircle, Activity, Clock, Trophy, MapPin,
-  Trash2, ChevronDown, Sparkles,
+  Trash2, ChevronDown, Sparkles, Tag,
 } from 'lucide-react';
+import { collection, doc, setDoc, deleteDoc, onSnapshot, query as fsQuery, orderBy } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase/client';
 import {
   ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
@@ -64,6 +67,7 @@ const GPROP_OPTIONS = [
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+const MAX_TERMS = 5;
 const LS_KEY = 'serpapi_saved_searches';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -107,6 +111,12 @@ interface OverlayEntry {
 interface RelatedQuery { query: string; value: string }
 interface RelatedQueriesForTerm { top: RelatedQuery[]; rising: RelatedQuery[] }
 type RelatedQueriesMap = Record<string, RelatedQueriesForTerm>;
+
+interface RelatedTopic { topic: { title: string; type: string }; value: string }
+interface RelatedTopicsForTerm { top: RelatedTopic[]; rising: RelatedTopic[] }
+type RelatedTopicsMap = Record<string, RelatedTopicsForTerm>;
+
+interface AutocompleteSuggestion { value: string; type: string; boldText: string | null }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -159,19 +169,51 @@ export default function TrendsDashboard() {
   const [overlays,       setOverlays]       = useState<OverlayEntry[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
   const [relatedData,    setRelatedData]    = useState<RelatedQueriesMap | null>(null);
+  const [relatedTopics,  setRelatedTopics]  = useState<RelatedTopicsMap | null>(null);
   const [relatedError,   setRelatedError]   = useState<string | null>(null);
+  const [userEmail,      setUserEmail]      = useState<string | null>(null);
+  const [suggestions,    setSuggestions]    = useState<AutocompleteSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const acTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Track Firebase auth state
   useEffect(() => {
+    if (!auth) return;
+    return onAuthStateChanged(auth, u => setUserEmail(u?.email ?? null));
+  }, []);
+
+  // Load saved searches — Firestore when signed in, localStorage fallback
+  useEffect(() => {
+    if (db && userEmail) {
+      const q = fsQuery(
+        collection(db, 'users', userEmail, 'serp_saved_searches'),
+        orderBy('savedAt', 'desc'),
+      );
+      return onSnapshot(q, snap => {
+        setSavedSearches(snap.docs.map(d => d.data() as SavedSearch));
+      });
+    }
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) setSavedSearches(JSON.parse(raw));
     } catch {}
-  }, []);
+  }, [userEmail]);
 
-  const persistSaved = (list: SavedSearch[]) => {
-    setSavedSearches(list);
-    try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
-  };
+  // Debounced autocomplete as user types the primary term
+  useEffect(() => {
+    const q = primaryTerm.trim();
+    if (q.length < 2) { setSuggestions([]); return; }
+    if (acTimerRef.current) clearTimeout(acTimerRef.current);
+    acTimerRef.current = setTimeout(async () => {
+      try {
+        const gl  = geo || 'cl';
+        const res = await fetch(`/api/trends/autocomplete?q=${encodeURIComponent(q)}&gl=${gl}`);
+        const json = await res.json();
+        if (json.success) setSuggestions(json.data.suggestions);
+      } catch {}
+    }, 280);
+    return () => { if (acTimerRef.current) clearTimeout(acTimerRef.current); };
+  }, [primaryTerm, geo]);
 
   const doSearch = async (q: string, date: string, geoParam: string, gpropParam: string) => {
     setLoading(true);
@@ -217,7 +259,7 @@ export default function TrendsDashboard() {
     doSearch(remaining.join(','), dateRange, geo, gprop);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!data) return;
     const entry: SavedSearch = {
       id:        Date.now().toString(),
@@ -230,7 +272,14 @@ export default function TrendsDashboard() {
       averages:  data.averages,
       topRegion: data.topRegion,
     };
-    persistSaved([entry, ...savedSearches]);
+    if (db && userEmail) {
+      await setDoc(doc(db, 'users', userEmail, 'serp_saved_searches', entry.id), entry);
+      // onSnapshot keeps savedSearches in sync automatically
+    } else {
+      const list = [entry, ...savedSearches];
+      setSavedSearches(list);
+      try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
+    }
   };
 
   const loadOverlay = (s: SavedSearch, colorOffset: number) => {
@@ -242,9 +291,15 @@ export default function TrendsDashboard() {
 
   const unloadOverlay = (id: string) => setOverlays(prev => prev.filter(o => o.id !== id));
 
-  const removeSaved = (id: string) => {
-    persistSaved(savedSearches.filter(s => s.id !== id));
+  const removeSaved = async (id: string) => {
     setOverlays(prev => prev.filter(o => o.id !== id));
+    if (db && userEmail) {
+      await deleteDoc(doc(db, 'users', userEmail, 'serp_saved_searches', id));
+    } else {
+      const list = savedSearches.filter(s => s.id !== id);
+      setSavedSearches(list);
+      try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
+    }
   };
 
   const loadRelated = async () => {
@@ -257,6 +312,7 @@ export default function TrendsDashboard() {
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
       setRelatedData(json.data.relatedQueries);
+      setRelatedTopics(json.data.relatedTopics ?? null);
     } catch (e: any) {
       setRelatedError(e.message);
     } finally {
@@ -310,22 +366,47 @@ export default function TrendsDashboard() {
             {/* Primary term row */}
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 pointer-events-none z-10" />
                 <input
                   type="text"
                   value={primaryTerm}
                   onChange={e => setPrimaryTerm(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') { setShowSuggestions(false); handleSearch(); }
+                    if (e.key === 'Escape') setShowSuggestions(false);
+                  }}
                   placeholder="Search term…"
-                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-100/80 border border-zinc-200 rounded-xl text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 bg-zinc-100/80 border border-zinc-200 rounded-2xl text-zinc-900 placeholder:text-zinc-600 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
                 />
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 z-50 mt-1.5 bg-white/95 backdrop-blur-xl border border-zinc-200 rounded-2xl shadow-xl overflow-hidden">
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onMouseDown={() => { setPrimaryTerm(s.value); setShowSuggestions(false); setSuggestions([]); }}
+                        className="w-full text-left px-4 py-2.5 text-sm text-zinc-900 hover:bg-zinc-50 transition-colors flex items-center gap-2.5"
+                      >
+                        <Search className="w-3 h-3 text-zinc-400 shrink-0" />
+                        <span className="flex-1 truncate">{s.value}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => setCompareTerms(prev => [...prev, ''])}
-                className="flex items-center gap-1.5 px-3 py-2.5 border border-zinc-200 bg-zinc-100/80 hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 rounded-xl text-sm transition-all shrink-0"
+                disabled={compareTerms.length >= MAX_TERMS - 1}
+                className="flex items-center gap-1.5 px-3 py-2.5 border border-zinc-200 bg-zinc-100/80 hover:bg-zinc-100 text-zinc-600 hover:text-zinc-900 rounded-xl text-sm transition-all shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                title={compareTerms.length >= MAX_TERMS - 1 ? `Maximum ${MAX_TERMS} terms` : undefined}
               >
                 <Plus className="w-3.5 h-3.5" />
                 Compare
+                <span className="text-[10px] text-zinc-500 tabular-nums">
+                  {1 + compareTerms.length}/{MAX_TERMS}
+                </span>
               </button>
               <button
                 onClick={handleSearch}
@@ -669,7 +750,7 @@ export default function TrendsDashboard() {
                   )}
                 </>
               ) : (
-                <RelatedQueriesSection relatedData={relatedData} queries={data.queries} />
+                <RelatedQueriesSection relatedData={relatedData} relatedTopics={relatedTopics} queries={data.queries} />
               )}
             </div>
           )}
@@ -909,16 +990,37 @@ function ComparisonTable({ data }: { data: TrendsData }) {
 // ─── RelatedQueriesSection ────────────────────────────────────────────────────
 
 function RelatedQueriesSection({
-  relatedData, queries,
-}: { relatedData: RelatedQueriesMap; queries: string[] }) {
+  relatedData, relatedTopics, queries,
+}: { relatedData: RelatedQueriesMap | null; relatedTopics: RelatedTopicsMap | null; queries: string[] }) {
   const [expanded, setExpanded] = useState<string | null>(queries[0] ?? null);
+  const [tab, setTab]           = useState<'queries' | 'topics'>('queries');
 
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-bold text-zinc-900">Related Queries</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-bold text-zinc-900">Related</h2>
+        <div className="flex bg-zinc-100/80 border border-zinc-200 rounded-xl p-0.5 gap-0.5">
+          <button
+            onClick={() => setTab('queries')}
+            className={cn('px-3 py-1 rounded-lg text-xs font-medium transition-all',
+              tab === 'queries' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-600 hover:text-zinc-900')}
+          >
+            Queries
+          </button>
+          <button
+            onClick={() => setTab('topics')}
+            className={cn('px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1',
+              tab === 'topics' ? 'bg-white shadow-sm text-zinc-900' : 'text-zinc-600 hover:text-zinc-900')}
+          >
+            <Tag className="w-3 h-3" /> Topics
+          </button>
+        </div>
+      </div>
+
       {queries.map((q, qi) => {
-        const related = relatedData[q];
-        if (!related) return null;
+        const related = relatedData?.[q];
+        const topics  = relatedTopics?.[q];
+        if (!related && !topics) return null;
         const isOpen = expanded === q;
         const color  = LINE_COLORS[qi % LINE_COLORS.length];
 
@@ -931,14 +1033,21 @@ function RelatedQueriesSection({
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
                 <span className="text-sm font-semibold text-zinc-900">{q}</span>
-                <span className="text-xs text-zinc-600">
-                  {(related.top?.length ?? 0)} top · {(related.rising?.length ?? 0)} rising
-                </span>
+                {tab === 'queries' && related && (
+                  <span className="text-xs text-zinc-600">
+                    {(related.top?.length ?? 0)} top · {(related.rising?.length ?? 0)} rising
+                  </span>
+                )}
+                {tab === 'topics' && topics && (
+                  <span className="text-xs text-zinc-600">
+                    {(topics.top?.length ?? 0)} top · {(topics.rising?.length ?? 0)} rising
+                  </span>
+                )}
               </div>
-              <ChevronDown className={cn('w-4 h-4 text-zinc-600 transition-transform', isOpen && 'rotate-180')} />
+              <ChevronDown className={cn('w-4 h-4 text-zinc-600 transition-transform duration-200', isOpen && 'rotate-180')} />
             </button>
 
-            {isOpen && (
+            {isOpen && tab === 'queries' && related && (
               <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-zinc-200/70 pt-5">
                 <div>
                   <p className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-3">Top</p>
@@ -948,14 +1057,10 @@ function RelatedQueriesSection({
                       return (
                         <div key={rq.query} className="flex items-center gap-3">
                           <div className="flex-1 relative h-1.5 bg-zinc-100/80 rounded-full overflow-hidden">
-                            <div
-                              className="absolute inset-y-0 left-0 rounded-full"
-                              style={{ width: `${pct}%`, backgroundColor: color + '80' }}
-                            />
+                            <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                              style={{ width: `${pct}%`, backgroundColor: color + '80' }} />
                           </div>
-                          <span className="text-xs text-zinc-600 min-w-0 flex-shrink truncate max-w-[200px] text-right">
-                            {rq.query}
-                          </span>
+                          <span className="text-xs text-zinc-600 min-w-0 flex-shrink truncate max-w-[200px] text-right">{rq.query}</span>
                           <span className="text-xs text-zinc-600 tabular-nums w-7 text-right shrink-0">{pct}</span>
                         </div>
                       );
@@ -968,14 +1073,9 @@ function RelatedQueriesSection({
                     {(related.rising || []).slice(0, 12).map(rq => {
                       const isBreakout = rq.value === 'Breakout';
                       return (
-                        <div
-                          key={rq.query}
-                          className={cn(
-                            'flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs',
-                            isBreakout
-                              ? 'border-amber-500/30 bg-amber-500/10 text-amber-300'
-                              : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
-                          )}
+                        <div key={rq.query}
+                          className={cn('flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs',
+                            isBreakout ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300')}
                         >
                           <span className="truncate max-w-[140px]">{rq.query}</span>
                           <span className={cn('font-semibold shrink-0', isBreakout ? 'text-amber-400' : 'text-emerald-400')}>
@@ -986,6 +1086,58 @@ function RelatedQueriesSection({
                     })}
                     {(!related.rising || related.rising.length === 0) && (
                       <p className="text-xs text-zinc-600">No rising data available</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isOpen && tab === 'topics' && topics && (
+              <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-zinc-200/70 pt-5">
+                <div>
+                  <p className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-3">Top Topics</p>
+                  <div className="space-y-2">
+                    {(topics.top || []).slice(0, 10).map((t, i) => {
+                      const pct = Math.min(100, parseInt(String(t.value), 10) || 0);
+                      return (
+                        <div key={i} className="flex items-center gap-3">
+                          <div className="flex-1 relative h-1.5 bg-zinc-100/80 rounded-full overflow-hidden">
+                            <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                              style={{ width: `${pct}%`, backgroundColor: color + '80' }} />
+                          </div>
+                          <div className="text-right min-w-0 flex-shrink">
+                            <span className="text-xs text-zinc-600 truncate block max-w-[160px]">{t.topic?.title ?? '—'}</span>
+                            {t.topic?.type && <span className="text-[10px] text-zinc-600">{t.topic.type}</span>}
+                          </div>
+                          <span className="text-xs text-zinc-600 tabular-nums w-7 text-right shrink-0">{pct}</span>
+                        </div>
+                      );
+                    })}
+                    {(!topics.top || topics.top.length === 0) && (
+                      <p className="text-xs text-zinc-600">No topic data available</p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-3">Rising Topics</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(topics.rising || []).slice(0, 12).map((t, i) => {
+                      const isBreakout = String(t.value) === 'Breakout';
+                      return (
+                        <div key={i}
+                          className={cn('flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs',
+                            isBreakout ? 'border-amber-500/30 bg-amber-500/10 text-amber-300' : 'border-violet-500/20 bg-violet-500/10 text-violet-300')}
+                        >
+                          <Tag className="w-2.5 h-2.5 shrink-0" />
+                          <span className="truncate max-w-[130px]">{t.topic?.title ?? '—'}</span>
+                          <span className={cn('font-semibold shrink-0 text-[10px]', isBreakout ? 'text-amber-400' : 'text-violet-400')}>
+                            {isBreakout ? '🔥' : `+${t.value}`}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    {(!topics.rising || topics.rising.length === 0) && (
+                      <p className="text-xs text-zinc-600">No rising topics available</p>
                     )}
                   </div>
                 </div>

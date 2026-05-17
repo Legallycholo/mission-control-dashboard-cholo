@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_u58cVqRfswq6qwuBWf4d7jRtXRuv",
+      "name": "mission-control-dashboard-cholo",
+      "directory": "dashboard",
+      "orgId": "team_50eC8IBZelaAuAoPsyh0ZoG5"
+    }
+  ]
+}

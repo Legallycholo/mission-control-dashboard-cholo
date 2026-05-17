@@ -6,6 +6,9 @@ import {
   ShoppingCart, TrendingUp, ExternalLink, Search,
   CheckCircle2, XCircle, CreditCard, Settings, ChevronDown,
 } from 'lucide-react';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase/client';
 import { cn } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -48,7 +51,8 @@ const COUNTRY_OPTIONS = [
   { label: 'España',    value: 'es' },
 ];
 
-const STORAGE_KEYS = { keywords: 'gsmpro_pos_keywords', brand: 'gsmpro_pos_brand', country: 'gsmpro_pos_country' };
+const STORAGE_KEYS  = { keywords: 'gsmpro_pos_keywords', brand: 'gsmpro_pos_brand', country: 'gsmpro_pos_country' };
+const FS_CONFIG_DOC = (email: string) => ['users', email, 'preferences', 'shopping_position'] as const;
 
 // ─── Position Badge ───────────────────────────────────────────────────────────
 
@@ -88,38 +92,65 @@ export default function ShoppingPositionPage() {
   const [expanded, setExpanded]     = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [searchesLeft, setSearchesLeft] = useState<number | null>(null);
+  const [userEmail, setUserEmail]   = useState<string | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
+  // Track Firebase auth state
+  useEffect(() => {
+    if (!auth) return;
+    return onAuthStateChanged(auth, u => setUserEmail(u?.email ?? null));
+  }, []);
+
+  // Load config — Firestore when signed in, localStorage fallback
   useEffect(() => {
     if (!mounted) return;
-    const kw  = localStorage.getItem(STORAGE_KEYS.keywords);
-    const br  = localStorage.getItem(STORAGE_KEYS.brand);
-    const co  = localStorage.getItem(STORAGE_KEYS.country);
+
+    if (db && userEmail) {
+      const [col1, col2, col3, docId] = FS_CONFIG_DOC(userEmail);
+      const ref = doc(db, col1, col2, col3, docId);
+      return onSnapshot(ref, snap => {
+        if (snap.exists()) {
+          const d = snap.data() as { keywords?: string[]; brand?: string; country?: string };
+          if (d.keywords) setKeywords(d.keywords);
+          if (d.brand)    setBrand(d.brand);
+          if (d.country)  setCountry(d.country);
+        }
+      });
+    }
+
+    const kw = localStorage.getItem(STORAGE_KEYS.keywords);
+    const br = localStorage.getItem(STORAGE_KEYS.brand);
+    const co = localStorage.getItem(STORAGE_KEYS.country);
     if (kw) setKeywords(JSON.parse(kw));
     if (br) setBrand(br);
     if (co) setCountry(co);
-  }, [mounted]);
+  }, [mounted, userEmail]);
 
-  const persist = (kw: string[], br: string, co: string) => {
-    localStorage.setItem(STORAGE_KEYS.keywords, JSON.stringify(kw));
-    localStorage.setItem(STORAGE_KEYS.brand,    br);
-    localStorage.setItem(STORAGE_KEYS.country,  co);
+  const persist = async (kw: string[], br: string, co: string) => {
+    if (db && userEmail) {
+      const [col1, col2, col3, docId] = FS_CONFIG_DOC(userEmail);
+      await setDoc(doc(db, col1, col2, col3, docId), { keywords: kw, brand: br, country: co }, { merge: true });
+    } else {
+      localStorage.setItem(STORAGE_KEYS.keywords, JSON.stringify(kw));
+      localStorage.setItem(STORAGE_KEYS.brand,    br);
+      localStorage.setItem(STORAGE_KEYS.country,  co);
+    }
   };
 
-  const addKeyword = () => {
+  const addKeyword = async () => {
     const kw = newKw.trim();
     if (!kw || keywords.includes(kw)) return;
     const next = [...keywords, kw];
     setKeywords(next);
-    persist(next, brand, country);
+    await persist(next, brand, country);
     setNewKw('');
   };
 
-  const removeKeyword = (kw: string) => {
+  const removeKeyword = async (kw: string) => {
     const next = keywords.filter(k => k !== kw);
     setKeywords(next);
-    persist(next, brand, country);
+    await persist(next, brand, country);
     setResults(prev => { const c = { ...prev }; delete c[kw]; return c; });
   };
 
@@ -218,7 +249,7 @@ export default function ShoppingPositionPage() {
             <input
               type="text"
               value={brand}
-              onChange={e => { setBrand(e.target.value); persist(keywords, e.target.value, country); }}
+              onChange={e => { setBrand(e.target.value); persist(keywords, e.target.value, country).catch(() => {}); }}
               placeholder="ej. GSMPRO, Importadora GSMPRO"
               className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 placeholder-zinc-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
             />
@@ -228,7 +259,7 @@ export default function ShoppingPositionPage() {
             <label className="text-xs text-zinc-600 uppercase tracking-widest mb-1.5 block">País</label>
             <select
               value={country}
-              onChange={e => { setCountry(e.target.value); persist(keywords, brand, e.target.value); }}
+              onChange={e => { setCountry(e.target.value); persist(keywords, brand, e.target.value).catch(() => {}); }}
               className="w-full md:w-36 bg-zinc-50 border border-zinc-200 text-zinc-900 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
             >
               {COUNTRY_OPTIONS.map(c => <option key={c.value} value={c.value} className="bg-zinc-50">{c.label}</option>)}
