@@ -6,7 +6,7 @@
 --   Orgánico: 07:00, 12:00, 17:00 (America/Santiago)
 --   Pagado:   08:00, 13:00, 18:00 (America/Santiago)
 
-CREATE TABLE IF NOT EXISTS `atomic-box-494614-r5.ecommerce_data.shopping_positions` (
+CREATE TABLE IF NOT EXISTS `YOUR_GCP_PROJECT_ID.ecommerce_data.shopping_positions` (
   -- Identificadores de ejecución
   run_id          STRING    NOT NULL OPTIONS(description="UUID de la ejecución. Agrupa todos los keywords de una misma corrida."),
   run_type        STRING    NOT NULL OPTIONS(description="Tipo de disparo: 'scheduled' o 'manual'"),

@@ -19,7 +19,6 @@ In short: this is an internal analytics + operations control center running in N
 - `React 19`
 - `TypeScript`
 - `Tailwind CSS 4`
-- `Supabase` (`@supabase/supabase-js`, `@supabase/ssr`)
 - `Recharts` + `Framer Motion`
 
 ### Services + data processing
@@ -43,8 +42,17 @@ In short: this is an internal analytics + operations control center running in N
 │   ├── src/components/             # Reusable UI components
 │   ├── src/lib/                    # Shared frontend/server utilities
 │   └── package.json
-├── scripts/                        # Data ingestion, sync, seed, and DDL scripts
+├── scripts/                        # Data ingestion, sync, and DDL scripts
+│   ├── sync-*.js                   # Production sync jobs (Shopify, Crisp, Klaviyo, GSC…)
+│   ├── lib/                        # Shared helpers (e.g. shopify-graphql)
+│   ├── sql/                        # BigQuery DDL + views
+│   ├── debug/                      # One-off debug/diagnostic scripts
+│   └── tests/                      # Connectivity / smoke test scripts
+├── services/
+│   └── product_intelligence/       # Python FastAPI service (BigQuery + GenAI)
 ├── docs/                           # Agent skills + project docs
+│   ├── context/                    # Strategic context + reference PDFs
+│   ├── .agents/                    # Cursor/Claude agent skill configs
 │   └── project/                    # Roadmap, architecture, changelog, specs
 ├── package.json                    # Root orchestrator scripts
 └── env.yaml                        # Production env vars for Cloud Run deploys
@@ -56,6 +64,7 @@ In short: this is an internal analytics + operations control center running in N
 - `docs/project/CHANGELOG.md`
 - `docs/project/PRODUCTION_ARCHITECTURE.md`
 - `docs/project/MARKET_INTELLIGENCE_SPECS.md`
+- `docs/project/DASHBOARDGOOGLE.md`
 - `docs/project/ACCESSING_PRIOR_REPOSITORY_VERSION.md`
 
 ## Local development

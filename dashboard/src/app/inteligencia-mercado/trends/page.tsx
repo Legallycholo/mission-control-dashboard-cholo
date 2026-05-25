@@ -6,9 +6,6 @@ import {
   AlertCircle, Activity, Clock, Trophy, MapPin,
   Trash2, ChevronDown, Sparkles, Tag,
 } from 'lucide-react';
-import { collection, doc, setDoc, deleteDoc, onSnapshot, query as fsQuery, orderBy } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase/client';
 import {
   ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip as RechartsTooltip, ResponsiveContainer, Legend,
@@ -171,33 +168,16 @@ export default function TrendsDashboard() {
   const [relatedData,    setRelatedData]    = useState<RelatedQueriesMap | null>(null);
   const [relatedTopics,  setRelatedTopics]  = useState<RelatedTopicsMap | null>(null);
   const [relatedError,   setRelatedError]   = useState<string | null>(null);
-  const [userEmail,      setUserEmail]      = useState<string | null>(null);
   const [suggestions,    setSuggestions]    = useState<AutocompleteSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const acTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Track Firebase auth state
   useEffect(() => {
-    if (!auth) return;
-    return onAuthStateChanged(auth, u => setUserEmail(u?.email ?? null));
-  }, []);
-
-  // Load saved searches — Firestore when signed in, localStorage fallback
-  useEffect(() => {
-    if (db && userEmail) {
-      const q = fsQuery(
-        collection(db, 'users', userEmail, 'serp_saved_searches'),
-        orderBy('savedAt', 'desc'),
-      );
-      return onSnapshot(q, snap => {
-        setSavedSearches(snap.docs.map(d => d.data() as SavedSearch));
-      });
-    }
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) setSavedSearches(JSON.parse(raw));
     } catch {}
-  }, [userEmail]);
+  }, []);
 
   // Debounced autocomplete as user types the primary term
   useEffect(() => {
@@ -272,14 +252,9 @@ export default function TrendsDashboard() {
       averages:  data.averages,
       topRegion: data.topRegion,
     };
-    if (db && userEmail) {
-      await setDoc(doc(db, 'users', userEmail, 'serp_saved_searches', entry.id), entry);
-      // onSnapshot keeps savedSearches in sync automatically
-    } else {
-      const list = [entry, ...savedSearches];
-      setSavedSearches(list);
-      try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
-    }
+    const list = [entry, ...savedSearches];
+    setSavedSearches(list);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
   };
 
   const loadOverlay = (s: SavedSearch, colorOffset: number) => {
@@ -293,13 +268,9 @@ export default function TrendsDashboard() {
 
   const removeSaved = async (id: string) => {
     setOverlays(prev => prev.filter(o => o.id !== id));
-    if (db && userEmail) {
-      await deleteDoc(doc(db, 'users', userEmail, 'serp_saved_searches', id));
-    } else {
-      const list = savedSearches.filter(s => s.id !== id);
-      setSavedSearches(list);
-      try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
-    }
+    const list = savedSearches.filter(s => s.id !== id);
+    setSavedSearches(list);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(list)); } catch {}
   };
 
   const loadRelated = async () => {

@@ -14,7 +14,7 @@ Este documento mantiene un registro vivo de los requerimientos y el avance estru
 2. Ejecutar validación: `cd /home/prllc/Escritorio/DashboardGSMPRO/scripts && node sync-market-size.js --dry-run`
 3. Si el dry-run muestra `avg_monthly_searches > 0`, ejecutar sync real: `node sync-market-size.js`
 4. Verificar en `http://localhost:3000/inteligencia-mercado/dimension` que los KPIs globales muestran datos.
-5. Desplegar a producción: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project atomic-box-494614-r5`
+5. Desplegar a producción: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project YOUR_GCP_PROJECT_ID`
 
 ### Infraestructura ya construida (No tocar)
 - `scripts/sync-market-size.js` — Pipeline completo y correcto, solo bloqueado por permisos.
@@ -43,7 +43,7 @@ Este documento mantiene un registro vivo de los requerimientos y el avance estru
 2. Ejecutar dry-run con 3 productos: `cd scripts && node sync-competitor-prices.js --limit=3 --dry-run`
 3. Sync completo: `node sync-competitor-prices.js`
 4. Verificar en `http://localhost:3000/inteligencia-mercado/competitividad`
-5. Desplegar a producción: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project atomic-box-494614-r5`
+5. Desplegar a producción: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project YOUR_GCP_PROJECT_ID`
 
 ### Infraestructura ya construida (No tocar)
 - `scripts/sync-competitor-prices.js` — Pipeline multi-proveedor (patrón Strategy). Listo.
@@ -70,7 +70,7 @@ Este documento mantiene un registro vivo de los requerimientos y el avance estru
 2. Dry-run top 5 marcas: `cd scripts && node sync-market-trends.js --top=5 --dry-run`
 3. Sync completo: `node sync-market-trends.js --top=30`
 4. Verificar en `http://localhost:3000/inteligencia-mercado/tendencias`
-5. Desplegar: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project atomic-box-494614-r5`
+5. Desplegar: `gcloud run deploy dashboard-gsmpro-ui --source . --region us-east1 --env-vars-file ../env.yaml --project YOUR_GCP_PROJECT_ID`
 
 ### Infraestructura ya construida (No tocar)
 - `scripts/sync-market-trends.js` — Pipeline multi-proveedor con algoritmo de señales (Breakout/Rising/Risk).

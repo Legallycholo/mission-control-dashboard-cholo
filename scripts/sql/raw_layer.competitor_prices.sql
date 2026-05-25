@@ -3,7 +3,7 @@
 -- La arquitectura de proveedores permite añadir fuentes adicionales en el futuro
 -- sin modificar esta tabla (campo `data_source` identifica el origen).
 
-CREATE TABLE IF NOT EXISTS `atomic-box-494614-r5.ecommerce_data.competitor_prices` (
+CREATE TABLE IF NOT EXISTS `YOUR_GCP_PROJECT_ID.ecommerce_data.competitor_prices` (
   -- Identificadores
   record_id         STRING    NOT NULL OPTIONS(description="UUID único de este registro de competidor"),
   product_id        INT64     NOT NULL OPTIONS(description="ID del producto en Shopify"),

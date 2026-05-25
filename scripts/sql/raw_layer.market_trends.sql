@@ -3,7 +3,7 @@
 -- Esto permite construir series temporales y detectar tendencias a largo plazo.
 -- Arquitectura multi-proveedor: campo `data_source` identifica el origen de los datos.
 
-CREATE TABLE IF NOT EXISTS `atomic-box-494614-r5.ecommerce_data.market_trends` (
+CREATE TABLE IF NOT EXISTS `YOUR_GCP_PROJECT_ID.ecommerce_data.market_trends` (
   -- Identificadores
   record_id       STRING    NOT NULL OPTIONS(description="UUID único de este punto de datos"),
   keyword         STRING    NOT NULL OPTIONS(description="Término analizado (marca, categoría o producto)"),

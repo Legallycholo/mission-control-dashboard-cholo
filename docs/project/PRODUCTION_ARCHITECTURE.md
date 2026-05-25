@@ -25,7 +25,7 @@ gcloud run deploy dashboard-gsmpro-ui \
   --source ./dashboard \
   --region us-east1 \
   --env-vars-file env.yaml \
-  --project atomic-box-494614-r5 \
+  --project YOUR_GCP_PROJECT_ID \
   --quiet
 ```
 
@@ -41,13 +41,13 @@ gcloud run deploy dashboard-gsmpro-ui \
 
 ```bash
 # Listar revisiones disponibles
-gcloud run revisions list --service=dashboard-gsmpro-ui --region=us-east1 --project=atomic-box-494614-r5
+gcloud run revisions list --service=dashboard-gsmpro-ui --region=us-east1 --project=YOUR_GCP_PROJECT_ID
 
 # Hacer rollback a una revisión anterior
 gcloud run services update-traffic dashboard-gsmpro-ui \
   --to-revisions=<REVISION_NAME>=100 \
   --region us-east1 \
-  --project atomic-box-494614-r5
+  --project YOUR_GCP_PROJECT_ID
 ```
 
 ## Verificación Post-Deploy

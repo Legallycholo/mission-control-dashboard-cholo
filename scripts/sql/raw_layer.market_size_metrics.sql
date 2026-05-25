@@ -2,7 +2,7 @@
 -- Calculadas a partir del volumen de búsqueda de Google Ads y el precio promedio de Shopify.
 -- Se actualiza mediante MERGE (upsert) para mantener el historial más reciente.
 
-CREATE TABLE IF NOT EXISTS `atomic-box-494614-r5.ecommerce_data.market_size_metrics` (
+CREATE TABLE IF NOT EXISTS `YOUR_GCP_PROJECT_ID.ecommerce_data.market_size_metrics` (
   product_id          INT64     NOT NULL OPTIONS(description="ID del producto en Shopify"),
   product_title       STRING    NOT NULL OPTIONS(description="Título completo del producto"),
   vendor              STRING             OPTIONS(description="Marca/Proveedor del producto"),
